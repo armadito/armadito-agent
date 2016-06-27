@@ -1,0 +1,10 @@
+Revision history for Perl extension Armadito::Agent.
+
+0.02  27/06/2016
+        - add basic perl module stuff
+        - add GPLv2+ license
+
+0.01  27/06/2016
+	- original version; created by h2xs 1.23 with options
+		-XAn Armadito::Agent -b 5.8.0
+
