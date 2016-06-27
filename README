@@ -1,20 +1,17 @@
-Armadito::Agent
-==============
+# Armadito::Agent
 
 ## Summary
 
-**Armadito Agent** is the interface between Armadito Antivirus and Armadito plugin for GLPI.
+Armadito Agent is the interface between Armadito Antivirus and Armadito plugin for GLPI.
 
 ## Installation
 
 To install this module type the following:
 
-```
    perl Makefile.PL
    make
    make test
    make install
-```
 
 ## Perl version
 
@@ -25,6 +22,7 @@ Minimum perl version: 5.8
 This module requires these other modules and libraries:
 
   FusionInventory::Agent
+  #TODO
 
 ## Author(s)
 
