@@ -25,7 +25,7 @@ GetOptions(
 pod2usage(-verbose => 0, -exitstatus => 0) if $options->{help};
 
 if ($options->{version}) {
-    print "fusioninventory-armadito $FusionInventory::Agent::Task::Armadito::VERSION\n";
+    print "armadito-agent $FusionInventory::Agent::Task::Armadito::VERSION\n";
     exit 0;
 }
 
@@ -56,11 +56,11 @@ __END__
 
 =head1 NAME
 
-fusioninventory-armadito - script binary used to call Fusion Inventory's Armadito module.
+armadito-agent - script binary used to call Fusion Inventory's Armadito module.
 
 =head1 SYNOPSIS
 
-fusioninventory-armadito --server <server> --task <task>
+armadito-agent --server <server> --task <task>
 
   Options:
     --help                 this menu
@@ -69,13 +69,13 @@ fusioninventory-armadito --server <server> --task <task>
 
 =head1 EXAMPLES
 
-    % fusioninventory-armadito --server http://armadito-glpi/glpi/ --task "Enrolment"
-    % fusioninventory-armadito --server http://armadito-glpi/glpi/ --task "State"
-    % fusioninventory-armadito --server http://armadito-glpi/glpi/ --task "PullRequest"
+    % armadito-agent --server http://armadito-glpi/glpi/ --task "Enrolment"
+    % armadito-agent --server http://armadito-glpi/glpi/ --task "State"
+    % armadito-agent --server http://armadito-glpi/glpi/ --task "PullRequest"
 
 =head1 DESCRIPTION
 
-F<fusioninventory-armadito> allows Armadito Antivirus to be managed remotely.
+F<armadito-agent> allows Armadito Antivirus to be managed remotely.
 
 Supported systems:
 
