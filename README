@@ -30,7 +30,9 @@ This module requires these other modules and libraries:
 
 * Valentin Hamon <vhamon@teclib.com>
 
-Copyright (C) 2016 by Teclib
+Copyright (C) 2006-2010 OCS Inventory contributors
+Copyright (C) 2010-2012 FusionInventory Team
+Copyright (C) 2011-2016 Teclib'
 
 ## License
 This software is licensed under the terms of GPLv2+, see LICENSE file for
