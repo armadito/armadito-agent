@@ -8,9 +8,9 @@ use English qw(-no_match_vars) ;
 use Getopt::Long;
 use Pod::Usage;
 
-use FusionInventory::Agent::Task::Armadito::State;
-use FusionInventory::Agent::Task::Armadito::PullRequest;
-use FusionInventory::Agent::Task::Armadito::Enrolment;
+use Armadito::Agent::Task::State;
+use Armadito::Agent::Task::PullRequest;
+use Armadito::Agent::Task::Enrolment;
 
 my $options = {};
 
@@ -25,7 +25,7 @@ GetOptions(
 pod2usage(-verbose => 0, -exitstatus => 0) if $options->{help};
 
 if ($options->{version}) {
-    print "armadito-agent $FusionInventory::Agent::Task::Armadito::VERSION\n";
+    print "armadito-agent $Armadito::Agent::Task::VERSION\n";
     exit 0;
 }
 
@@ -40,7 +40,7 @@ my $config = {
 };
 
 eval{  ## create and run task
-	my $armadito_task = "FusionInventory::Agent::Task::Armadito::$options->{task}"->new(config => $config);
+	my $armadito_task = "Armadito::Agent::Task::$options->{task}"->new(config => $config);
 	my $hasError = 0;
 	$armadito_task->run();
 };
@@ -56,7 +56,7 @@ __END__
 
 =head1 NAME
 
-armadito-agent - script binary used to call Fusion Inventory's Armadito module.
+armadito-agent - script binary used to call Armadito Agent.
 
 =head1 SYNOPSIS
 
