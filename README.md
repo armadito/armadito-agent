@@ -1,18 +1,20 @@
-Armadito-Agent version 0.02
-===========================
+Armadito::Agent
+==============
 
 ## Summary
 
-Armadito Agent is the interface between Armadito Antivirus and Armadito plugin for GLPI.
+**Armadito Agent** is the interface between Armadito Antivirus and Armadito plugin for GLPI.
 
 ## Installation
 
 To install this module type the following:
 
+```
    perl Makefile.PL
    make
    make test
    make install
+```
 
 ## Perl version
 
