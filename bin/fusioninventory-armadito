@@ -1,0 +1,94 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use lib './lib';
+
+use English qw(-no_match_vars) ;
+use Getopt::Long;
+use Pod::Usage;
+
+use FusionInventory::Agent::Task::Armadito::State;
+use FusionInventory::Agent::Task::Armadito::PullRequest;
+use FusionInventory::Agent::Task::Armadito::Enrolment;
+
+my $options = {};
+
+GetOptions(
+    $options,
+    'server=s',
+    'task=s',
+    'help',
+    'version',
+) or pod2usage(-verbose => 0);
+
+pod2usage(-verbose => 0, -exitstatus => 0) if $options->{help};
+
+if ($options->{version}) {
+    print "fusioninventory-armadito $FusionInventory::Agent::Task::Armadito::VERSION\n";
+    exit 0;
+}
+
+pod2usage(-verbose => 0) unless
+    $options->{server} && $options->{task};
+
+
+my $config = {
+    plugin_server_url => $options->{server}."/plugins/armadito/index.php",
+    av_server_url => "http://localhost/armaditoAV:8081",
+    task => $options->{task}
+};
+
+eval{  ## create and run task
+	my $armadito_task = "FusionInventory::Agent::Task::Armadito::$options->{task}"->new(config => $config);
+	my $hasError = 0;
+	$armadito_task->run();
+};
+
+if ($EVAL_ERROR) {
+    print STDERR "Execution failure:\n";
+    print STDERR $EVAL_ERROR;
+    exit(1);
+}
+
+exit(0);
+__END__
+
+=head1 NAME
+
+fusioninventory-armadito - script binary used to call Fusion Inventory's Armadito module.
+
+=head1 SYNOPSIS
+
+fusioninventory-armadito --server <server> --task <task>
+
+  Options:
+    --help                 this menu
+    --server server        Armadito GLPI Plugin server URL
+    --task task            Armadito task to be executed
+
+=head1 EXAMPLES
+
+    % fusioninventory-armadito --server http://armadito-glpi/glpi/ --task "Enrolment"
+    % fusioninventory-armadito --server http://armadito-glpi/glpi/ --task "State"
+    % fusioninventory-armadito --server http://armadito-glpi/glpi/ --task "PullRequest"
+
+=head1 DESCRIPTION
+
+F<fusioninventory-armadito> allows Armadito Antivirus to be managed remotely.
+
+Supported systems:
+
+=over 1
+
+=item F<Armadito 1.0>
+
+=back
+
+=head1 LIMITATION
+
+Nothing got implemented yet.
+
+=head1 SECURITY
+
+There is no real security by now.
