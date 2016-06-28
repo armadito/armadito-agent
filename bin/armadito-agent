@@ -8,6 +8,7 @@ use English qw(-no_match_vars) ;
 use Getopt::Long;
 use Pod::Usage;
 
+use Armadito::Agent;
 use Armadito::Agent::Task::State;
 use Armadito::Agent::Task::PullRequest;
 use Armadito::Agent::Task::Enrolment;
@@ -32,6 +33,12 @@ if ($options->{version}) {
 pod2usage(-verbose => 0) unless
     $options->{server} && $options->{task};
 
+my %setup = (
+    confdir => './etc',
+    datadir => './share',
+    libdir  => './lib',
+    vardir  => './var',
+);
 
 my $config = {
     plugin_server_url => $options->{server}."/plugins/armadito/index.php",
@@ -39,10 +46,18 @@ my $config = {
     task => $options->{task}
 };
 
-eval{  ## create and run task
-	my $armadito_task = "Armadito::Agent::Task::$options->{task}"->new(config => $config);
-	my $hasError = 0;
-	$armadito_task->run();
+
+eval{
+
+	## new agent instance
+	my $agent = Armadito::Agent->new(%setup);
+	$agent->init(options => $options);
+
+	## new task instance
+	my $task = "Armadito::Agent::Task::$options->{task}"->new(config => $config);
+
+	## run task
+	$task->run();
 };
 
 if ($EVAL_ERROR) {
