@@ -91,8 +91,5 @@ armadito-agent --server <server> --task <task>
 
 =head1 DESCRIPTION
 
-F<armadito-agent> is a command line interface of Armadito Agent.
+F<armadito-agent> is a command line interface for Armadito Agent.
 
-=head1 SECURITY
-
-There is no real security by now.
