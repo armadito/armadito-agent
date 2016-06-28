@@ -1,10 +1,18 @@
 Revision history for Perl extension Armadito::Agent.
 
+0.03_01 28/06/2016
+        - Set as a development version
+
+0.03  28/06/2016
+        - add previous work from fusioninventory-agent' 2.3.x-armadito branch
+        - set documentation in each existing classes
+        - renaming according to new code structure
+
 0.02  27/06/2016
         - add basic perl module stuff
         - add GPLv2+ license
 
 0.01  27/06/2016
-	- original version; created by h2xs 1.23 with options
-		-XAn Armadito::Agent -b 5.8.0
+        - original version; created by h2xs 1.23 with options
+                -XAn Armadito::Agent -b 5.8.0
 
