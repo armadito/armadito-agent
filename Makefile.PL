@@ -10,8 +10,9 @@ version_from 'lib/Armadito/Agent.pm';
 perl_version '5.008';
 authors 'Teclib';
 
-# requires 'FusionInventory::Agent'        => '0';
-# TODO : add dependencies requires
+requires 'FusionInventory::Agent'        => '0';
+requires 'FusionInventory::Agent::Config'     => '0';
+requires 'FusionInventory::Agent::HTTP::Client'     => '0';
 
 resources
     homepage    => "http://www.teclib-edition.com/en/teclib-products/armadito-antivirus/",
