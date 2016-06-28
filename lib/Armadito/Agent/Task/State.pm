@@ -163,10 +163,7 @@ Armadito::Agent::Task::State - State Task of Armadito Agent.
 
 =head1 DESCRIPTION
 
-With this module, F<FusionInventory> can be used to manage Armadito AntiVirus.
-
-This module uses SSL certificat to authentificate the server. You may have
-to point F<--ca-cert-file> or F<--ca-cert-dir> to your public certificate.
+This task inherits from L<Armadito::Agent::Task>. Ask for Armadito Antivirus state using AV's API REST protocol and then send it in a json formatted POST request to Armadito plugin for GLPI. 
 
 =head1 FUNCTIONS
 
