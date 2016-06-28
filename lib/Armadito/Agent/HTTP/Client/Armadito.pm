@@ -13,7 +13,7 @@ use Encode;
 use Data::Dumper;
 use URI::Escape;
 
-use Armadito::Agent::Tools;
+use FusionInventory::Agent::Tools;
 
 sub new {
    my ($class, %params) = @_;
