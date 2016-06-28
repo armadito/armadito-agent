@@ -20,6 +20,24 @@ our @EXPORT = qw(
 
 our $VERSION = "0.0.3_01";
 
+sub new {
+    my ($class, %params) = @_;
+
+    my $self = {
+        status  => 'unknown',
+        confdir => $params{confdir},
+        datadir => $params{datadir},
+        libdir  => $params{libdir},
+        vardir  => $params{vardir},
+        sigterm => $params{sigterm},
+        targets => [],
+        tasks   => []
+    };
+    bless $self, $class;
+
+    return $self;
+}
+
 1;
 __END__
 =head1 NAME
@@ -33,6 +51,33 @@ Armadito::Agent - Armadito Agent
 =head1 DESCRIPTION
 
 Agent interfacing between Armadito Antivirus and Armadito plugin for GLPI for Windows and Linux.
+
+=head1 METHODS
+
+=head2 new(%params)
+
+The constructor. The following parameters are allowed, as keys of the %params
+hash:
+
+=over
+
+=item I<confdir>
+
+the configuration directory.
+
+=item I<datadir>
+
+the read-only data directory.
+
+=item I<vardir>
+
+the read-write data directory.
+
+=item I<options>
+
+the options to use.
+
+=back
 
 =head1 SEE ALSO
 
