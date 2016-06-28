@@ -6,6 +6,8 @@ use warnings;
 
 require Exporter;
 
+use Armadito::Agent::Config;
+
 our @ISA = qw(Exporter);
 
 our %EXPORT_TAGS = ( 'all' => [ qw(
@@ -36,6 +38,15 @@ sub new {
     bless $self, $class;
 
     return $self;
+}
+
+sub init {
+    my ($self, %params) = @_;
+
+    $self->{config} = Armadito::Agent::Config->new(
+        confdir => $self->{confdir},
+        options => $params{options},
+    );
 }
 
 1;
@@ -78,6 +89,10 @@ the read-write data directory.
 the options to use.
 
 =back
+
+=head2 init()
+
+Initialize the agent.
 
 =head1 SEE ALSO
 
