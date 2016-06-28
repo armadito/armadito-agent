@@ -96,20 +96,19 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::HTTP::Client::Armadito - An HTTP client using Armadito protocol.
+Armadito::Agent::HTTP::Client::Armadito - An HTTP client based on L<FusionInventory::HTTP::Client> class.
 
 =head1 DESCRIPTION
 
-This is the class used by agent to communicate with armadito plugin in GLPI.
+This is the class used by Armadito agent to communicate with armadito plugin in GLPI or with Armadito Antiirus.
 
 =head1 METHODS
 
-=head2 send(%params)
+=head2 $task->send(%params)
 
-Send a request to the armadito plugin in GLPI.
+Send a request according to params given. If this is a GET request, params are formatted into URL with _prepareURL method. If this is a POST request, a message must be given in params. This should be a valid JSON message. 
 
-The following parameters are allowed, as keys of the %params
-hash:
+The following parameters are allowed, as keys of the %params hash :
 
 =over
 
@@ -117,10 +116,14 @@ hash:
 
 the url to send the message to (mandatory)
 
+=item I<method>
+
+the method used: GET or POST. (mandatory)
+
 =item I<message>
 
-the message to send (mandatory)
+the message to send (mandatory if method is POST)
 
 =back
 
-This method returns an unknown instance.
+The return value is a response object. See L<HTTP::Request> and L<HTTP::Response> for a description of the interface provided by these classes.
