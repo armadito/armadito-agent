@@ -6,7 +6,6 @@ use base 'Armadito::Agent::Task';
 
 use FusionInventory::Agent::Config;
 use FusionInventory::Agent::Logger;
-use FusionInventory::Agent::Tools::Hostname;
 use Data::Dumper;
 use JSON;
 

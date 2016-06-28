@@ -7,7 +7,6 @@ use base 'FusionInventory::Agent::Task';
 use FusionInventory::Agent;
 use FusionInventory::Agent::Config;
 use FusionInventory::Agent::Logger;
-use FusionInventory::Agent::Tools::Hostname;
 use Armadito::Agent::HTTP::Client::Armadito;
 use Data::Dumper;
 
