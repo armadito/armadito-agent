@@ -62,14 +62,11 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task - Armadito Agent task base class.
+Armadito::Agent::Task - Armadito Agent Task base class.
 
 =head1 DESCRIPTION
 
-With this module, F<FusionInventory> can be used to manage Armadito AntiVirus.
-
-This module uses SSL certificat to authentificate the server. You may have
-to point F<--ca-cert-file> or F<--ca-cert-dir> to your public certificate.
+This is a base class for each Tasks used to interact with Armadito Antivirus and Armadito plugin for GLPI.
 
 =head1 FUNCTIONS
 
@@ -83,5 +80,5 @@ Run the task.
 
 =head2 new ( $self, %params )
 
-Instanciate Armadito module.
+Instanciate Armadito module. Set task default logger.
 
