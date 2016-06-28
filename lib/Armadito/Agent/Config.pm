@@ -1,4 +1,4 @@
-package FusionInventory::Agent::Config;
+package Armadito::Agent::Config;
 
 use strict;
 use warnings;
