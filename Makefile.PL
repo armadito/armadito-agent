@@ -10,9 +10,7 @@ version_from 'lib/Armadito/Agent.pm';
 perl_version '5.008';
 authors 'Teclib';
 
-requires 'FusionInventory::Agent'        => '0';
-requires 'FusionInventory::Agent::Config'     => '0';
-requires 'FusionInventory::Agent::HTTP::Client'     => '0';
+requires 'FusionInventory::Agent'        => '2.3.18';
 
 install_script 'bin/armadito-agent';
 
