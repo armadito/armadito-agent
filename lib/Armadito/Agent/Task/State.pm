@@ -159,7 +159,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task::State - State task for Armadito AntiVirus.
+Armadito::Agent::Task::State - State Task of Armadito Agent.
 
 =head1 DESCRIPTION
 

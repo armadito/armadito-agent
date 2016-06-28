@@ -90,7 +90,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task::Enrolment - Enrolment task for Armadito Agent.
+Armadito::Agent::Task::Enrolment - Enrolment task of Armadito Agent.
 
 =head1 DESCRIPTION
 

@@ -104,7 +104,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task::PullRequest - PullRequest task for Armadito AntiVirus.
+Armadito::Agent::Task::PullRequest - PullRequest Task of Armadito Agent.
 
 =head1 DESCRIPTION
 
