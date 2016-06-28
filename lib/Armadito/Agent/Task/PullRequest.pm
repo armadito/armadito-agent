@@ -104,14 +104,11 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task::Armadito::PullRequest - PullRequest task for Armadito AntiVirus.
+Armadito::Agent::Task::PullRequest - PullRequest task for Armadito AntiVirus.
 
 =head1 DESCRIPTION
 
-With this module, F<FusionInventory> can be used to manage Armadito AntiVirus.
-
-This module uses SSL certificat to authentificate the server. You may have
-to point F<--ca-cert-file> or F<--ca-cert-dir> to your public certificate.
+This task inherits from L<Armadito::Agent::Task>. Send a pull GET request to get jobs agent has to do according to Armadito Plugin for GLPI.
 
 =head1 FUNCTIONS
 
