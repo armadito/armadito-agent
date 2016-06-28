@@ -14,6 +14,8 @@ requires 'FusionInventory::Agent'        => '0';
 requires 'FusionInventory::Agent::Config'     => '0';
 requires 'FusionInventory::Agent::HTTP::Client'     => '0';
 
+install_script 'bin/armadito-agent';
+
 resources
     homepage    => "http://www.teclib-edition.com/en/teclib-products/armadito-antivirus/",
     bugtracker  => "https://github.com/armadito/armadito-agent/issues",
