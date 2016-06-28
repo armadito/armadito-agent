@@ -90,14 +90,11 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task::Armadito::Enrolment - Enrolment task for Armadito AntiVirus.
+Armadito::Agent::Task::Enrolment - Enrolment task for Armadito Agent.
 
 =head1 DESCRIPTION
 
-With this module, F<FusionInventory> can be used to manage Armadito AntiVirus.
-
-This module uses SSL certificat to authentificate the server. You may have
-to point F<--ca-cert-file> or F<--ca-cert-dir> to your public certificate.
+This task inherits from L<Armadito::Agent::Task>. Enroll the device in Armadito plugin for GLPI server.
 
 =head1 FUNCTIONS
 
