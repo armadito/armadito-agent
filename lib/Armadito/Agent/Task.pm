@@ -80,5 +80,5 @@ Run the task.
 
 =head2 new ( $self, %params )
 
-Instanciate Armadito module. Set task default logger.
+Instanciate Armadito module. Set task's default logger.
 
