@@ -1,11 +1,10 @@
-package FusionInventory::Agent::Task::Armadito::PullRequest;
+package Armadito::Agent::Task::PullRequest;
 
 use strict;
 use warnings;
-use base 'FusionInventory::Agent::Task::Armadito';
+use base 'Armadito::Agent::Task';
 
 use FusionInventory::Agent::Config;
-use FusionInventory::Agent::HTTP::Client::Armadito;
 use FusionInventory::Agent::Logger;
 use FusionInventory::Agent::Tools::Hostname;
 use Data::Dumper;
@@ -106,7 +105,7 @@ __END__
 
 =head1 NAME
 
-FusionInventory::Agent::Task::Armadito::PullRequest - PullRequest task for Armadito AntiVirus.
+Armadito::Agent::Task::Armadito::PullRequest - PullRequest task for Armadito AntiVirus.
 
 =head1 DESCRIPTION
 

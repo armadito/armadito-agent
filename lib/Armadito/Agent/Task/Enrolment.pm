@@ -1,13 +1,11 @@
-package FusionInventory::Agent::Task::Armadito::Enrolment;
+package Armadito::Agent::Task::Enrolment;
 
 use strict;
 use warnings;
 use base 'FusionInventory::Agent::Task::Armadito';
 
 use FusionInventory::Agent::Config;
-use FusionInventory::Agent::HTTP::Client::Armadito;
 use FusionInventory::Agent::Logger;
-use FusionInventory::Agent::Tools::Hostname;
 use Data::Dumper;
 use JSON;
 
@@ -92,7 +90,7 @@ __END__
 
 =head1 NAME
 
-FusionInventory::Agent::Task::Armadito::Enrolment - Enrolment task for Armadito AntiVirus.
+Armadito::Agent::Task::Armadito::Enrolment - Enrolment task for Armadito AntiVirus.
 
 =head1 DESCRIPTION
 

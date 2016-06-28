@@ -1,4 +1,4 @@
-package FusionInventory::Agent::HTTP::Client::Armadito;
+package Armadito::Agent::HTTP::Client::Armadito;
 
 use strict;
 use warnings;
@@ -13,7 +13,7 @@ use Encode;
 use Data::Dumper;
 use URI::Escape;
 
-use FusionInventory::Agent::Tools;
+use Armadito::Agent::Tools;
 
 sub new {
    my ($class, %params) = @_;
@@ -96,7 +96,7 @@ __END__
 
 =head1 NAME
 
-FusionInventory::Agent::HTTP::Client::Armadito - An HTTP client using Armadito protocol.
+Armadito::Agent::HTTP::Client::Armadito - An HTTP client using Armadito protocol.
 
 =head1 DESCRIPTION
 

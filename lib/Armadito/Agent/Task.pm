@@ -1,4 +1,4 @@
-package FusionInventory::Agent::Task::Armadito;
+package Armadito::Agent::Task;
 
 use strict;
 use warnings;
@@ -6,9 +6,9 @@ use base 'FusionInventory::Agent::Task';
 
 use FusionInventory::Agent;
 use FusionInventory::Agent::Config;
-use FusionInventory::Agent::HTTP::Client::Armadito;
 use FusionInventory::Agent::Logger;
 use FusionInventory::Agent::Tools::Hostname;
+use Armadito::Agent::HTTP::Client::Armadito;
 use Data::Dumper;
 
 our $VERSION = "0.1.1";
@@ -63,7 +63,7 @@ __END__
 
 =head1 NAME
 
-FusionInventory::Agent::Task::Armadito - FusionInventory module for Armadito AntiVirus.
+Armadito::Agent::Task - Armadito Agent task base class.
 
 =head1 DESCRIPTION
 
