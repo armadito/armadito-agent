@@ -53,6 +53,7 @@ eval{
 	my $agent = Armadito::Agent->new(%setup);
 	$agent->init(options => $options);
 
+    ## TODO : Use switch to select tasks
 	## new task instance
 	my $task = "Armadito::Agent::Task::$options->{task}"->new(config => $config);
 
