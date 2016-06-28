@@ -2,7 +2,7 @@ package Armadito::Agent::Task::Enrolment;
 
 use strict;
 use warnings;
-use base 'FusionInventory::Agent::Task::Armadito';
+use base 'Armadito::Agent::Task';
 
 use FusionInventory::Agent::Config;
 use FusionInventory::Agent::Logger;
