@@ -75,19 +75,7 @@ armadito-agent --server <server> --task <task>
 
 =head1 DESCRIPTION
 
-F<armadito-agent> allows Armadito Antivirus to be managed remotely.
-
-Supported systems:
-
-=over 1
-
-=item F<Armadito 1.0>
-
-=back
-
-=head1 LIMITATION
-
-Nothing got implemented yet.
+F<armadito-agent> is a command line interface of Armadito Agent.
 
 =head1 SECURITY
 
