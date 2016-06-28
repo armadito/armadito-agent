@@ -18,6 +18,8 @@ requires 'URI::Escape' => '0';
 requires 'URI' => '0';
 requires 'JSON' => '0';
 requires 'Encode' => '0';
+requires 'Getopt::Long' => '0';
+requires 'Pod::Usage' => '0';
 
 install_script 'bin/armadito-agent';
 
