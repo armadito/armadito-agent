@@ -10,8 +10,6 @@ use FusionInventory::Agent::Logger;
 use Armadito::Agent::HTTP::Client::Armadito;
 use Data::Dumper;
 
-our $VERSION = "0.0.3_01";
-
 sub isEnabled {
     my ($self) = @_;
 
