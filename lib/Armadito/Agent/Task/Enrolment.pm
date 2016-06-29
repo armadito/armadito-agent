@@ -94,7 +94,7 @@ Armadito::Agent::Task::Enrolment - Enrolment task of Armadito Agent.
 
 =head1 DESCRIPTION
 
-This task inherits from L<Armadito::Agent::Task>. Enroll the device in Armadito plugin for GLPI server.
+This task inherits from L<Armadito::Agent::Task>. Enroll the device into Armadito plugin for GLPI.
 
 =head1 FUNCTIONS
 

@@ -104,7 +104,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task::PullRequest - PullRequest Task of Armadito Agent.
+Armadito::Agent::Task::PullRequest - PullRequest Task base class.
 
 =head1 DESCRIPTION
 

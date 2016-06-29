@@ -20,21 +20,12 @@ sub new {
 
     my $self = $class->SUPER::new(%params);
 
-    if ($params{debug}) {
-        $self->{debug} = 1;
-    }
-
     return $self;
 }
 
 sub _encapsulate {
 
    my ( $self, $msg ) = @_;
-
-   $self->{logger}->info("PullRequest Task Encapsulation...");
-
-   # add Task info here
-   $msg = '{ "taskname": "pullrequest", "msg": '.$msg."}"; 
 
    $msg = $self->SUPER::_encapsulate($msg);
 
@@ -45,13 +36,7 @@ sub _handleResponse {
 
     my ($self, $response) = @_;
 
-    # Parse response
-    # print Dumper($response);
-    print "Successful Response : ".$response->content()."\n";
-
-    my $obj =  from_json($response->content(), { utf8  => 1 });
-
-    print Dumper($obj);
+    $self = $self->SUPER::_handleResponse($response);
 
     return $self;
 }
@@ -60,17 +45,10 @@ sub _handleError {
 
     my ($self, $response) = @_;
 
-    # Parse response
-    # print Dumper($response);
-    print "Error Response : ".$response->content()."\n";
-
-    my $obj =  from_json($response->content(), { utf8  => 1 });
-
-    print Dumper($obj);
+	$self = $self->SUPER::_handleError($response);
 
     return $self;
 }
-
 
 sub run {
     my ( $self, %params ) = @_;
@@ -104,11 +82,11 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task::PullRequest - PullRequest Task of Armadito Agent.
+Armadito::Agent::Task::PullRequest::Armadito - PullRequest Task for Armadito Antivirus.
 
 =head1 DESCRIPTION
 
-This task inherits from L<Armadito::Agent::Task>. Send a pull GET request to get jobs agent has to do according to Armadito Plugin for GLPI.
+This task inherits from L<Armadito::Agent::Task::Armadito>. Send a pull GET request to get jobs agent has to do according to Armadito Plugin for GLPI.
 
 =head1 FUNCTIONS
 

@@ -20,10 +20,6 @@ sub new {
 
     my $self = $class->SUPER::new(%params);
 
-    if ($params{debug}) {
-        $self->{debug} = 1;
-    }
-
     return $self;
 }
 
@@ -31,13 +27,7 @@ sub _handleResponse {
 
     my ($self, $response) = @_;
 
-    # Parse response
-    # print Dumper($response);
-    print "Successful Response : ".$response->content()."\n";
-
-    my $obj =  from_json($response->content(), { utf8  => 1 });
-
-    print Dumper($obj);
+    $self = $self->SUPER::_handleResponse($response);
 
     return $self;
 }
@@ -46,13 +36,7 @@ sub _handleError {
 
     my ($self, $response) = @_;
 
-    # Parse response
-    # print Dumper($response);
-    print "Error Response : ".$response->content()."\n";
-
-    my $obj =  from_json($response->content(), { utf8  => 1 });
-
-    print Dumper($obj);
+	$self = $self->SUPER::_handleError($response);
 
     return $self;
 }
@@ -90,11 +74,11 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task::Enrolment - Enrolment task of Armadito Agent.
+Armadito::Agent::Task::Enrolment::Armadito - Enrolment task for Armadito Antivirus.
 
 =head1 DESCRIPTION
 
-This task inherits from L<Armadito::Agent::Task>. Enroll the device in Armadito plugin for GLPI server.
+This task inherits from L<Armadito::Agent::Task::Enrolment>. Enroll the device in Armadito plugin for GLPI server.
 
 =head1 FUNCTIONS
 

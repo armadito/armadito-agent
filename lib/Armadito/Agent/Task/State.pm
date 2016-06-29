@@ -76,80 +76,6 @@ sub run {
 
     $self = $self->SUPER::run(%params);
 
-    print "Client :\n";
-    print Dumper($self->{client})."\n";
-
-# 1 : Send GET request to AV, asking for AV state
-# 2 : Handle AV response
-# 3 : If successful, encapsulate AV state in a POST request to Armadito Plugin for GLPI 
-
-
-    # TODO: 
-    # 1 : Send GET request to AV, asking for AV state
-    # my $req = $self->{client}->send(
-    #    "url" => $self->{config}->{av_server_url},
-    #    method => "GET"
-    #    args  => { 
-    #        action    => "getState"
-    #    }
-    #);
-
-    my $av_response = '
-{ "av_response":"state", 
-  "id":123, 
-  "status":0, 
-  "info" : {
-    "antivirus" : {
-      "version": "3.14",
-      "realtime": "on",
-      "service": "on"
-    },
-    "agent": {
-      "status": "on",
-      "version": "1.0"
-    },
-    "update": {
-      "status": "up-to-date",
-      "last-update": "1970-01-01 00:00"
-    },
-    "modules": [
-      {
-        "name": "clamav",
-        "version": "1.2",
-        "update": {
-          "status": "up-to-date",
-          "last-update": "1970-01-01 00:00"
-        }
-      },
-      {
-        "name": "moduleH1",
-        "version": "1.0",
-        "update": {
-          "status": "up-to-date",
-          "last-update": "1970-01-01 00:00"
-        }
-      }
-    ]
-  }
-}';
-
-    my $plugin_request = $self->_encapsulate($av_response);
-
-    my $response = $self->{client}->send(
-        "url" => $self->{config}->{plugin_server_url},
-        message => $plugin_request,
-	method => "POST"
-    );
-
-    if($response->is_success()){
-         $self->_handleResponse($response);
-         $self->{logger}->info("State successful...");
-    }
-    else{
-         $self->_handleError($response);
-         $self->{logger}->info("State failed...");
-    }
-
     return $self;
 }
 
@@ -159,11 +85,11 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task::State - State Task of Armadito Agent.
+Armadito::Agent::Task::State - State Task base class
 
 =head1 DESCRIPTION
 
-This task inherits from L<Armadito::Agent::Task>. Ask for Armadito Antivirus state using AV's API REST protocol and then send it in a json formatted POST request to Armadito plugin for GLPI. 
+This task inherits from L<Armadito::Agent::Task>. Get Antivirus state and send it to GPLI server Armadito plugin.
 
 =head1 FUNCTIONS
 
