@@ -2,7 +2,7 @@
 
 ## Summary
 
-Armadito Agent is the interface between Armadito Antivirus and Armadito plugin for GLPI.
+Armadito Agent will be a generic agent for antiviruses management within a GLPI plugin.
 
 ## Installation
 
