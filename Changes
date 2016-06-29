@@ -1,8 +1,11 @@
 Revision history for Perl extension Armadito::Agent.
 
+0.0.3_02 29/06/2016
+		- fix doc mistakes
+
 0.0.3_01 28/06/2016
-        - Set as a development version
-        - Fix versioning
+        - fix versioning
+	    - fix naming problems
 
 0.0.3  28/06/2016
         - add previous work from fusioninventory-agent' 2.3.x-armadito branch

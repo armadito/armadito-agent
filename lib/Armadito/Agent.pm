@@ -20,7 +20,7 @@ our @EXPORT = qw(
 	
 );
 
-our $VERSION = "0.0.3_01";
+our $VERSION = "0.0.3_02";
 
 sub new {
     my ($class, %params) = @_;
@@ -57,7 +57,7 @@ Armadito::Agent - Armadito Agent
 
 =head1 VERSION
 
-0.0.3_01
+0.0.3_02
 
 =head1 DESCRIPTION
 
