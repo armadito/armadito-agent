@@ -118,11 +118,13 @@ GLPI Project main page.
 
 vhamon, E<lt>vhamon@teclib.comE<gt>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHTS
 
 Copyright (C) 2006-2010 OCS Inventory contributors
 Copyright (C) 2010-2012 FusionInventory Team
 Copyright (C) 2011-2016 Teclib'
+
+=head1 LICENSE
 
 This software is licensed under the terms of GPLv2+, see LICENSE file for
 details.
