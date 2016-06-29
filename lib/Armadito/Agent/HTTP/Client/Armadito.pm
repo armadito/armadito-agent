@@ -96,11 +96,11 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::HTTP::Client::Armadito - An HTTP client based on L<FusionInventory::Agent::HTTP::Client> class.
+Armadito::Agent::HTTP::Client::Armadito - Armadito HTTP Client class.
 
 =head1 DESCRIPTION
 
-This is the class used by Armadito agent to communicate with armadito plugin in GLPI or with Armadito Antiirus.
+This is the class used by Armadito agent to communicate with armadito plugin in GLPI or with Armadito Antivirus.
 
 =head1 METHODS
 
