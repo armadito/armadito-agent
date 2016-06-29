@@ -12,7 +12,7 @@ authors 'Teclib';
 
 requires 'FusionInventory::Agent' => '2.3.18';
 requires 'UNIVERSAL::require' => '0';
-requires 'HTTP:Request::Common' => '0';
+requires 'HTTP::Request::Common' => '0';
 requires 'HTTP::Request' => '0';
 requires 'URI::Escape' => '0';
 requires 'URI' => '0';
