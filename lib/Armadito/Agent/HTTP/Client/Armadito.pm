@@ -96,7 +96,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::HTTP::Client::Armadito - An HTTP client based on L<FusionInventory::HTTP::Client> class.
+Armadito::Agent::HTTP::Client::Armadito - An HTTP client based on L<FusionInventory::Agent::HTTP::Client> class.
 
 =head1 DESCRIPTION
 
