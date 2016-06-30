@@ -37,9 +37,6 @@ if ($options->{version}) {
     exit 0;
 }
 
-pod2usage(-verbose => 0) unless
-    $options->{server} && $options->{task};
-
 my %setup = (
     confdir => './etc',
     datadir => './share',
@@ -47,29 +44,29 @@ my %setup = (
     vardir  => './var',
 );
 
-my $config = {
-    plugin_server_url => $options->{server}."/plugins/armadito/index.php",
-    av_server_url => "http://localhost/armaditoAV:8081"
-};
 
+my $agent = Armadito::Agent->new(%setup);
 
 if ($options->{'list-tasks'}) {
+   $agent->displaySupportedTasks();
    exit 0;
 }
 
 if ($options->{'list-avs'}) {
+   $agent->displaySupportedAVs();
    exit 0;
 }
 
 ## default
 $options->{antivirus} = "Armadito" unless(defined($options->{antivirus}));
+$options->{server} = "http://armadito-glpi/glpi" unless(defined($options->{server}));
 
+my $config = {
+    plugin_server_url => $options->{server}."/plugins/armadito/index.php",
+    av_server_url => "http://localhost/armaditoAV:8081"
+};
 
 eval{
-
-	## new agent instance
-	my $agent = Armadito::Agent->new(%setup);
-
 	# validate args
 	$agent->isAntivirusSupported($options->{antivirus}) or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
 	$agent->isTaskSupported($options->{task}) or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
