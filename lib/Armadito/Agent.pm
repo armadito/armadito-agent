@@ -131,6 +131,22 @@ the options to use.
 
 Initialize the agent.
 
+=head2 isAVSupported($antivirus)
+
+Returns true if given antivirus is supported by the current version of the agent.
+
+=head2 isTaskSupported($task)
+
+Returns true if given task is supported by the current version of the agent.
+
+=head2 displaySupportedTasks()
+
+Display all currently supported tasks to stdout.
+
+=head2 displaySupportedAVs()
+
+Display all currently supported Antiviruses to stdout.
+
 =head1 SEE ALSO
 
 =over 4
