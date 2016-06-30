@@ -71,8 +71,21 @@ sub isTaskSupported {
 	return 0;
 }
 
+sub displaySupportedTasks {
+	my ($self) = @_;
+	print "List of supported tasks :\n";
+	foreach(@supported_tasks) {
+		print $_."\n";
+	}
+}
 
-
+sub displaySupportedAVs {
+	my ($self) = @_;
+	print "List of supported antiviruses :\n";
+	foreach(@supported_antiviruses) {
+		print $_."\n";
+	}
+}
 1;
 __END__
 =head1 NAME
