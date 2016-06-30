@@ -23,6 +23,7 @@ GetOptions(
     $options,
     'server=s',
     'task=s',
+    'antivirus=s',
     'help',
     'version',
 ) or pod2usage(-verbose => 0);
@@ -50,6 +51,8 @@ my $config = {
     task => $options->{task}
 };
 
+## default
+$options->{antivirus} = "Armadito" unless(defined($options->{antivirus}));
 
 eval{
 
@@ -59,7 +62,7 @@ eval{
 
     ## TODO : Use switch to select tasks
 	## new task instance
-	my $task = "Armadito::Agent::Task::$options->{task}"->new(config => $config);
+	my $task = "Armadito::Agent::Task::$options->{task}::$options->{antivirus}"->new(config => $config);
 
 	## run task
 	$task->run();
