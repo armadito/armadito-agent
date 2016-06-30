@@ -57,9 +57,10 @@ eval{
 
 	## new agent instance
 	my $agent = Armadito::Agent->new(%setup);
+
+	## init
 	$agent->init(options => $options);
 
-    ## TODO : Use switch to select tasks
 	## new task instance
 	my $task = "Armadito::Agent::Task::$options->{task}::$options->{antivirus}"->new(config => $config);
 
