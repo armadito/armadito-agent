@@ -52,7 +52,7 @@ sub init {
 }
 
 sub isAntivirusSupported {
-	my ($antivirus) = @_;
+	my ($self, $antivirus) = @_;
     foreach (@supported_antiviruses) {
 	  if( $antivirus eq $_ ) {
 		return 1;
@@ -62,7 +62,7 @@ sub isAntivirusSupported {
 }
 
 sub isTaskSupported {
-	my ($task) = @_;
+	my ($self, $task) = @_;
     foreach (@supported_tasks) {
 	  if( $task eq $_ ) {
 		return 1;
