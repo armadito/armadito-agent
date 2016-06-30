@@ -9,9 +9,13 @@ use Getopt::Long;
 use Pod::Usage;
 
 use Armadito::Agent;
+use Armadito::Agent::Task;
 use Armadito::Agent::Task::State;
+use Armadito::Agent::Task::State::Armadito;
 use Armadito::Agent::Task::PullRequest;
+use Armadito::Agent::Task::PullRequest::Armadito;
 use Armadito::Agent::Task::Enrolment;
+use Armadito::Agent::Task::Enrolment::Armadito;
 
 my $options = {};
 
