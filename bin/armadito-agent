@@ -59,10 +59,10 @@ if ($options->{'list-avs'}) {
 
 ## default
 $options->{antivirus} = "Armadito" unless(defined($options->{antivirus}));
-$options->{server} = "http://armadito-glpi/glpi" unless(defined($options->{server}));
+$options->{server} = "http://armadito-glpi/glpi/plugins/armadito/index.php" unless(defined($options->{server}));
 
 my $config = {
-    plugin_server_url => $options->{server}."/plugins/armadito/index.php",
+    plugin_server_url => $options->{server},
     av_server_url => "http://localhost/armaditoAV:8081"
 };
 
@@ -100,8 +100,17 @@ armadito-agent --server <server> --task <task>
 
   Options:
     --help                 this menu
-    --server server        Armadito GLPI Plugin server URL
-    --task task            Armadito task to be executed
+
+  Target definition options:
+    --server server        Armadito Plugin for GLPI server URL
+
+  Task selection options:
+    --task task            Task to be executed
+	--list-tasks           List supported tasks
+
+  Antivirus selection options:
+    --antivirus antivirus  Antivirus to be managed
+	--list-avs             List supported antiviruses
 
 =head1 EXAMPLES
 
@@ -111,5 +120,56 @@ armadito-agent --server <server> --task <task>
 
 =head1 DESCRIPTION
 
-F<armadito-agent> is a command line interface for Armadito Agent.
+F<armadito-agent> is the command line interface for Armadito Agent.
+
+=head1 OPTIONS
+
+Some options are available in a I<short> form and a I<long> form.  For
+example, the two lines below are all equivalent:
+
+    % armadito-agent -s localhost
+    % armadito-agent --server localhost
+
+=head2 Target definition options
+
+=over
+
+=item B<-s>, B<--server>=I<URI>
+
+Send the results of tasks execution to given server.
+
+In general, Armadito plugin URLs are like the following:
+    http://servername/glpi/plugins/armadito/index.php
+
+=back
+
+=head2 Task selection options
+
+=over
+
+=item B<--list-tasks>
+
+List all available tasks and exit
+
+=item B<--task>=I<TASK>
+
+Run given task immediately.
+
+See option I<--list-tasks> for the list of available tasks.
+
+=back
+
+=head2 Antivirus selection options
+
+=over
+
+=item B<--list-avs>
+
+List all available antiviruses and exit
+
+=item B<--antivirus>=I<ANTIVIRUS>
+
+Mange the given Antivirus
+
+See option I<--list-avs> for the list of available antiviruses.
 
