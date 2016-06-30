@@ -20,7 +20,7 @@ our @EXPORT = qw(
 	
 );
 
-our $VERSION = "0.0.3_02";
+our $VERSION = "0.0.3_03";
 my @supported_antiviruses = ("Armadito");
 my @supported_tasks = ("State","Enrolment","PullRequest");
 
@@ -94,7 +94,7 @@ Armadito::Agent - Armadito Agent
 
 =head1 VERSION
 
-0.0.3_02
+0.0.3_03
 
 =head1 DESCRIPTION
 
