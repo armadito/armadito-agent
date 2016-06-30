@@ -21,6 +21,8 @@ our @EXPORT = qw(
 );
 
 our $VERSION = "0.0.3_02";
+my @supported_antiviruses = ("Armadito");
+my @supported_tasks = ("State","Enrolment","PullRequest");
 
 sub new {
     my ($class, %params) = @_;
@@ -48,6 +50,28 @@ sub init {
         options => $params{options},
     );
 }
+
+sub isAntivirusSupported {
+	my ($antivirus) = @_;
+    foreach (@supported_antiviruses) {
+	  if( $antivirus eq $_ ) {
+		return 1;
+	  }
+	}
+	return 0;
+}
+
+sub isTaskSupported {
+	my ($task) = @_;
+    foreach (@supported_tasks) {
+	  if( $task eq $_ ) {
+		return 1;
+	  }
+	}
+	return 0;
+}
+
+
 
 1;
 __END__

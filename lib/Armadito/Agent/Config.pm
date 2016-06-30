@@ -22,9 +22,6 @@ my $default = {
     'stdout'                  => undef
 };
 
-my @supported_antiviruses = ("Armadito");
-my @supported_tasks = ("State","Enrolment","PullRequest");
-
 sub new {
     my ($class, %params) = @_;
 
@@ -32,9 +29,6 @@ sub new {
     bless $self, $class;
 
 	$self->_loadDefaults();
-
-	_isAntivirusSupported($params{options}->{antivirus}) or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
-	_isTaskSupported($params{options}->{task}) or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
 
     return $self;
 }
@@ -45,26 +39,6 @@ sub _loadDefaults {
     foreach my $key (keys %$default) {
         $self->{$key} = $default->{$key};
     }
-}
-
-sub _isAntivirusSupported {
-	my ($antivirus) = @_;
-    foreach (@supported_antiviruses) {
-	  if( $antivirus eq $_ ) {
-		return 1;
-	  }
-	}
-	return 0;
-}
-
-sub _isTaskSupported {
-	my ($task) = @_;
-    foreach (@supported_tasks) {
-	  if( $task eq $_ ) {
-		return 1;
-	  }
-	}
-	return 0;
 }
 
 1;

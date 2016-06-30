@@ -50,13 +50,19 @@ my $config = {
     av_server_url => "http://localhost/armaditoAV:8081"
 };
 
+
 ## default
 $options->{antivirus} = "Armadito" unless(defined($options->{antivirus}));
+
 
 eval{
 
 	## new agent instance
 	my $agent = Armadito::Agent->new(%setup);
+
+	# validate args
+	$agent->isAntivirusSupported($params{options}->{antivirus}) or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
+	$agent->isTaskSupported($params{options}->{task}) or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
 
 	## init
 	$agent->init(options => $options);
