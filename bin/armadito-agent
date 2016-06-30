@@ -71,8 +71,8 @@ eval{
 	my $agent = Armadito::Agent->new(%setup);
 
 	# validate args
-	$agent->isAntivirusSupported($params{options}->{antivirus}) or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
-	$agent->isTaskSupported($params{options}->{task}) or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
+	$agent->isAntivirusSupported($options->{antivirus}) or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
+	$agent->isTaskSupported($options->{task}) or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
 
 	## init
 	$agent->init(options => $options);
