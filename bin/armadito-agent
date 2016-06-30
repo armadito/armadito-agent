@@ -21,13 +21,13 @@ my $options = {};
 
 GetOptions(
     $options,
-    'server=s',
-    'task=s',
-    'antivirus=s',
+    'server|s=s',
+    'task|t=s',
+    'antivirus|av=s',
     'list-tasks',
     'list-avs',
-    'help',
-    'version',
+    'help|h',
+    'version|v',
 ) or pod2usage(-verbose => 0);
 
 pod2usage(-verbose => 0, -exitstatus => 0) if $options->{help};
