@@ -36,7 +36,7 @@ sub run {
 
     $self->{logger}->info("Running Armadito module, plugin_server_url= ".$self->{config}->{plugin_server_url});
  
-    $self->{client} = FusionInventory::Agent::HTTP::Client::Armadito->new();
+    $self->{client} = Armadito::Agent::HTTP::Client::Armadito->new();
     die "Error when creating client!" unless $self->{client};
 
     return $self;
