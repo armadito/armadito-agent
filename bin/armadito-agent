@@ -68,7 +68,7 @@ my $config = {
 
 eval{
 	# validate args
-	$agent->isAntivirusSupported($options->{antivirus}) or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
+	$agent->isAVSupported($options->{antivirus}) or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
 	$agent->isTaskSupported($options->{task}) or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
 
 	## init

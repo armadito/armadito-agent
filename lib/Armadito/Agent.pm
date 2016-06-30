@@ -51,7 +51,7 @@ sub init {
     );
 }
 
-sub isAntivirusSupported {
+sub isAVSupported {
 	my ($self, $antivirus) = @_;
     foreach (@supported_antiviruses) {
 	  if( $antivirus eq $_ ) {
