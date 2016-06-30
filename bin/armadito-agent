@@ -47,8 +47,7 @@ my %setup = (
 
 my $config = {
     plugin_server_url => $options->{server}."/plugins/armadito/index.php",
-    av_server_url => "http://localhost/armaditoAV:8081",
-    task => $options->{task}
+    av_server_url => "http://localhost/armaditoAV:8081"
 };
 
 ## default
