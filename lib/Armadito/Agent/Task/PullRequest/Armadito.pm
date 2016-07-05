@@ -58,10 +58,10 @@ sub run {
     my $response = $self->{client}->send(
         "url" => $self->{config}->{plugin_server_url},
         args  => { 
-            action    => "pullrequest",
+            action  => "pullrequest",
             agentid => $self->{agentid}
         },
-	method => "GET"
+		method => "GET"
     );
 
     if($response->is_success()){

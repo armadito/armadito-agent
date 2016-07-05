@@ -83,7 +83,7 @@ sub run {
             action    => "pullrequest",
             agentid => $self->{agentid}
         },
-	method => "GET"
+		method => "GET"
     );
 
     if($response->is_success()){
