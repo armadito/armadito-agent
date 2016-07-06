@@ -115,7 +115,7 @@ sub run {
     my $plugin_request = $self->_encapsulate($av_response);
 
     my $response = $self->{client}->send(
-		"url" => $self->{config}->{plugin_server_url},
+		"url" => $self->{config}->{plugin_server_url}."/api/states",
 		message => $plugin_request,
 		method => "POST"
     );
