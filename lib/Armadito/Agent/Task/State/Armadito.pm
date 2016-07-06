@@ -115,9 +115,9 @@ sub run {
     my $plugin_request = $self->_encapsulate($av_response);
 
     my $response = $self->{client}->send(
-        "url" => $self->{config}->{plugin_server_url},
-        message => $plugin_request,
-	method => "POST"
+		"url" => $self->{config}->{plugin_server_url},
+		message => $plugin_request,
+		method => "POST"
     );
 
     if($response->is_success()){
