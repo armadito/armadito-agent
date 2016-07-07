@@ -55,9 +55,13 @@ sub run {
 
     my $enrollment_msg = '{}'; #TODO
 
+	$self->{jobj}->{task}->{msg} = $enrollment_msg;
+
+	my $json_text = to_json($self->{jobj});
+
     my $response = $self->{client}->send(
         "url" => $self->{config}->{plugin_server_url}."/api/enrollment",
-		message => $enrollment_msg,
+		message => $json_text,
 		method => "POST"
     );
 
