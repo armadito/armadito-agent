@@ -62,25 +62,6 @@ sub run {
 
     $self = $self->SUPER::run(%params);
 
-    my $enrolment_msg = '{}';
-    my $response = $self->{client}->send(
-        "url" => $self->{config}->{plugin_server_url},
-        args  => { 
-            action    => "enrollment"
-        },
-	method => "GET"
-    );
-
-    if($response->is_success()){
-         $self->_handleResponse($response);
-         $self->{logger}->info("Enrollment successful...");
-    }
-    else{
-         $self->_handleError($response);
-         $self->{logger}->info("Enrollment failed...");
-    }
-   
-
     return $self;
 }
 
