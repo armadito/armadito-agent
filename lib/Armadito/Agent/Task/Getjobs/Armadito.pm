@@ -21,9 +21,9 @@ sub new {
     my $self = $class->SUPER::new(%params);
 
 	my $antivirus = {
-		name => "Armadito",		
+		name => "Armadito",
 		version => ""
-	};	
+	};
 
 	$self->{jobj}->{task}->{antivirus} = $antivirus;
 
@@ -55,7 +55,7 @@ sub run {
 
     my $response = $self->{client}->send(
         "url" => $self->{config}->{plugin_server_url},
-        args  => { 
+        args  => {
             action  => "pullrequest",
             agentid => $self->{agentid}
         },
@@ -70,7 +70,7 @@ sub run {
          $self->_handleError($response);
          $self->{logger}->info("Getjobs failed...");
     }
-    
+
     return $self;
 }
 

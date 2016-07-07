@@ -21,9 +21,9 @@ sub new {
     my $self = $class->SUPER::new(%params);
 
 	my $antivirus = {
-		name => "Armadito",		
+		name => "Armadito",
 		version => ""
-	};	
+	};
 
 	$self->{jobj}->{task}->{antivirus} = $antivirus;
 
