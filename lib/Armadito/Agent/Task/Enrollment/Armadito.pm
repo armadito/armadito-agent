@@ -1,8 +1,8 @@
-package Armadito::Agent::Task::Enrolment::Armadito;
+package Armadito::Agent::Task::Enrollment::Armadito;
 
 use strict;
 use warnings;
-use base 'Armadito::Agent::Task::Enrolment';
+use base 'Armadito::Agent::Task::Enrollment';
 
 use FusionInventory::Agent::Config;
 use FusionInventory::Agent::Logger;
@@ -50,18 +50,18 @@ sub run {
     my $response = $self->{client}->send(
         "url" => $self->{config}->{plugin_server_url},
         args  => { 
-            action    => "enrolment"
+            action    => "enrollment"
         },
 	method => "GET"
     );
 
     if($response->is_success()){
          $self->_handleResponse($response);
-         $self->{logger}->info("Enrolment successful...");
+         $self->{logger}->info("Enrollment successful...");
     }
     else{
          $self->_handleError($response);
-         $self->{logger}->info("Enrolment failed...");
+         $self->{logger}->info("Enrollment failed...");
     }
    
 
@@ -74,11 +74,11 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task::Enrolment::Armadito - Enrolment task for Armadito Antivirus.
+Armadito::Agent::Task::Enrollment::Armadito - Enrollment task for Armadito Antivirus.
 
 =head1 DESCRIPTION
 
-This task inherits from L<Armadito::Agent::Task::Enrolment>. Enroll the device in Armadito plugin for GLPI server.
+This task inherits from L<Armadito::Agent::Task::Enrollment>. Enroll the device in Armadito plugin for GLPI server.
 
 =head1 FUNCTIONS
 

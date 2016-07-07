@@ -1,4 +1,4 @@
-package Armadito::Agent::Task::Enrolment;
+package Armadito::Agent::Task::Enrollment;
 
 use strict;
 use warnings;
@@ -66,18 +66,18 @@ sub run {
     my $response = $self->{client}->send(
         "url" => $self->{config}->{plugin_server_url},
         args  => { 
-            action    => "enrolment"
+            action    => "enrollment"
         },
 	method => "GET"
     );
 
     if($response->is_success()){
          $self->_handleResponse($response);
-         $self->{logger}->info("Enrolment successful...");
+         $self->{logger}->info("Enrollment successful...");
     }
     else{
          $self->_handleError($response);
-         $self->{logger}->info("Enrolment failed...");
+         $self->{logger}->info("Enrollment failed...");
     }
    
 
@@ -90,7 +90,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task::Enrolment - Enrolment task of Armadito Agent.
+Armadito::Agent::Task::Enrollment - Enrollment task of Armadito Agent.
 
 =head1 DESCRIPTION
 

@@ -22,7 +22,7 @@ our @EXPORT = qw(
 
 our $VERSION = "0.0.3_03";
 my @supported_antiviruses = ("Armadito");
-my @supported_tasks = ("State","Enrolment","Getjobs");
+my @supported_tasks = ("State","Enrollment","Getjobs");
 
 sub new {
     my ($class, %params) = @_;

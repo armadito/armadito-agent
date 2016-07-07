@@ -14,8 +14,8 @@ use Armadito::Agent::Task::State;
 use Armadito::Agent::Task::State::Armadito;
 use Armadito::Agent::Task::Getjobs;
 use Armadito::Agent::Task::Getjobs::Armadito;
-use Armadito::Agent::Task::Enrolment;
-use Armadito::Agent::Task::Enrolment::Armadito;
+use Armadito::Agent::Task::Enrollment;
+use Armadito::Agent::Task::Enrollment::Armadito;
 
 my $options = {};
 
@@ -114,7 +114,7 @@ armadito-agent --server <server> --task <task>
 
 =head1 EXAMPLES
 
-    % armadito-agent --server http://armadito-glpi/glpi/ --task "Enrolment"
+    % armadito-agent --server http://armadito-glpi/glpi/ --task "Enrollment"
     % armadito-agent --server http://armadito-glpi/glpi/ --task "State"
     % armadito-agent --server http://armadito-glpi/glpi/ --task "Getjobs"
 
