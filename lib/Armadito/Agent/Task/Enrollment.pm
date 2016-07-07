@@ -24,6 +24,13 @@ sub new {
         $self->{debug} = 1;
     }
 
+	my $task = {
+		name => "Enrollment",
+		antivirus => ""
+	};	
+
+	$self->{jobj}->{task} = $task;
+
     return $self;
 }
 
