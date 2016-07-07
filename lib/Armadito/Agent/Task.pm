@@ -16,21 +16,6 @@ sub isEnabled {
     return 1;
 }
 
-sub _encapsulate {
-   my ( $self, $msg ) = @_;
-
-   $self->{logger}->info("Task Encapsulation...");
-
-   my $header = '{ "agentVersion": "'.$FusionInventory::Agent::VERSION.'",
-		   "deviceid": "'.$self->{agentid}.'",
-                   "task":';
-   my $footer = '}';
-
-   $msg = $header.$msg.$footer;
-
-   return $msg;
-}
-
 sub run {
     my ( $self, %params ) = @_;
 
@@ -46,9 +31,14 @@ sub new {
     my ( $class, %params ) = @_;
 
     my $self = { config => $params{config}};
-
     $self->{logger} = FusionInventory::Agent::Logger->new(backends => ['Syslog', 'Stderr']);
     $self->{agentid} = 0;
+
+	$self->{jobj} = {
+		agent_id => $self->{agentid},
+		agent_version => $FusionInventory::Agent::VERSION,
+		task => ""
+	};
 
     bless $self, $class;
     return $self;

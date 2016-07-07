@@ -20,16 +20,14 @@ sub new {
 
     my $self = $class->SUPER::new(%params);
 
+	my $antivirus = {
+		name => "Armadito",		
+		version => ""
+	};	
+
+	$self->{jobj}->{task}->{antivirus} = $antivirus;
+
     return $self;
-}
-
-sub _encapsulate {
-
-   my ( $self, $msg ) = @_;
-
-   $msg = $self->SUPER::_encapsulate($msg);
-
-   return $msg;
 }
 
 sub _handleResponse {
@@ -112,11 +110,16 @@ sub run {
   }
 }';
 
-    my $plugin_request = $self->_encapsulate($av_response);
+
+	$self->{jobj}->{task}->{msg} = $av_response;
+
+	my $json_text = to_json($self->{jobj});
+
+	print "JSON formatted str : \n".$json_text."\n";	
 
     my $response = $self->{client}->send(
 		"url" => $self->{config}->{plugin_server_url}."/api/states",
-		message => $plugin_request,
+		message => $json_text,
 		method => "POST"
     );
 

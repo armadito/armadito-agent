@@ -27,20 +27,6 @@ sub new {
     return $self;
 }
 
-sub _encapsulate {
-
-   my ( $self, $msg ) = @_;
-
-   $self->{logger}->info("PullRequest Task Encapsulation...");
-
-   # add Task info here
-   $msg = '{ "taskname": "pullrequest", "msg": '.$msg."}"; 
-
-   $msg = $self->SUPER::_encapsulate($msg);
-
-   return $msg;
-}
-
 sub _handleResponse {
 
     my ($self, $response) = @_;

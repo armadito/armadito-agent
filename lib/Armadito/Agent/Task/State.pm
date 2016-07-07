@@ -24,21 +24,14 @@ sub new {
         $self->{debug} = 1;
     }
 
+	my $task = {
+		name => "State",
+		antivirus => ""
+	};	
+
+	$self->{jobj}->{task} = $task;
+
     return $self;
-}
-
-sub _encapsulate {
-
-   my ( $self, $msg ) = @_;
-
-   $self->{logger}->info("State Task Encapsulation...");
-
-   # add State Task info here
-   $msg = '{ "taskname": "State", "msg": '.$msg."}"; 
-
-   $msg = $self->SUPER::_encapsulate($msg);
-
-   return $msg;
 }
 
 sub _handleResponse {

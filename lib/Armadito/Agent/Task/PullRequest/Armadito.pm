@@ -23,15 +23,6 @@ sub new {
     return $self;
 }
 
-sub _encapsulate {
-
-   my ( $self, $msg ) = @_;
-
-   $msg = $self->SUPER::_encapsulate($msg);
-
-   return $msg;
-}
-
 sub _handleResponse {
 
     my ($self, $response) = @_;
