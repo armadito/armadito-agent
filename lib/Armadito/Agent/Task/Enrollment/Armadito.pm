@@ -46,13 +46,12 @@ sub run {
 
     $self = $self->SUPER::run(%params);
 
-    my $enrolment_msg = '{}';
+    my $enrollment_msg = '{}'; #TODO
+
     my $response = $self->{client}->send(
-        "url" => $self->{config}->{plugin_server_url},
-        args  => { 
-            action    => "enrollment"
-        },
-	method => "GET"
+        "url" => $self->{config}->{plugin_server_url}."/api/enrollment",
+		message => $enrollment_msg,
+		method => "POST"
     );
 
     if($response->is_success()){
