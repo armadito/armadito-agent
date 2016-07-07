@@ -78,8 +78,8 @@ sub send {
     );
 
     my $request = HTTP::Request->new(
-            $params{method} => $url,
-	    $headers
+			$params{method} => $url,
+			$headers
     );
    
     if($params{message} && $params{method} eq 'POST'){
