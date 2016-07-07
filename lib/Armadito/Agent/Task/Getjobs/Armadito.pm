@@ -54,10 +54,10 @@ sub run {
     $self = $self->SUPER::run(%params);
 
     my $response = $self->{client}->send(
-        "url" => $self->{config}->{plugin_server_url},
+        "url" => $self->{config}->{plugin_server_url}."/api/jobs",
         args  => {
-            action  => "pullrequest",
-            agentid => $self->{agentid}
+            antivirus  => $self->{jobj}->{task}->{antivirus}->{name},
+            agent_id => $self->{agentid}
         },
 		method => "GET"
     );
