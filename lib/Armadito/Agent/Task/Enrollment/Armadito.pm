@@ -62,7 +62,6 @@ sub run {
          $self->_handleError($response);
          $self->{logger}->info("Enrollment failed...");
     }
-   
 
     return $self;
 }
