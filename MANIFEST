@@ -18,8 +18,8 @@ lib/Armadito/Agent/HTTP/Client/Armadito.pm
 lib/Armadito/Agent/Task.pm
 lib/Armadito/Agent/Task/Enrolment.pm
 lib/Armadito/Agent/Task/Enrolment/Armadito.pm
-lib/Armadito/Agent/Task/PullRequest.pm
-lib/Armadito/Agent/Task/PullRequest/Armadito.pm
+lib/Armadito/Agent/Task/Getjobs.pm
+lib/Armadito/Agent/Task/Getjobs/Armadito.pm
 lib/Armadito/Agent/Task/State.pm
 lib/Armadito/Agent/Task/State/Armadito.pm
 LICENSE

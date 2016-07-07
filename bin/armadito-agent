@@ -12,8 +12,8 @@ use Armadito::Agent;
 use Armadito::Agent::Task;
 use Armadito::Agent::Task::State;
 use Armadito::Agent::Task::State::Armadito;
-use Armadito::Agent::Task::PullRequest;
-use Armadito::Agent::Task::PullRequest::Armadito;
+use Armadito::Agent::Task::Getjobs;
+use Armadito::Agent::Task::Getjobs::Armadito;
 use Armadito::Agent::Task::Enrolment;
 use Armadito::Agent::Task::Enrolment::Armadito;
 
@@ -116,7 +116,7 @@ armadito-agent --server <server> --task <task>
 
     % armadito-agent --server http://armadito-glpi/glpi/ --task "Enrolment"
     % armadito-agent --server http://armadito-glpi/glpi/ --task "State"
-    % armadito-agent --server http://armadito-glpi/glpi/ --task "PullRequest"
+    % armadito-agent --server http://armadito-glpi/glpi/ --task "Getjobs"
 
 =head1 DESCRIPTION
 
