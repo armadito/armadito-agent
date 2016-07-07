@@ -53,13 +53,9 @@ sub run {
 
     $self = $self->SUPER::run(%params);
 
-    print "Client :\n";
-    print Dumper($self->{client})."\n";
-
 # 1 : Send GET request to AV, asking for AV state
 # 2 : Handle AV response
 # 3 : If successful, encapsulate AV state in a POST request to Armadito Plugin for GLPI 
-
 
     # TODO: 
     # 1 : Send GET request to AV, asking for AV state
