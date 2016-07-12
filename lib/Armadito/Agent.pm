@@ -12,13 +12,13 @@ use Armadito::Agent::Storage;
 our @ISA = qw(Exporter);
 
 our %EXPORT_TAGS = ( 'all' => [ qw(
-	
+
 ) ] );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw(
-	
+
 );
 
 our $VERSION = "0.0.3_03";
@@ -62,10 +62,10 @@ sub init {
 }
 
 sub _getFusionVarDir {
-	
+
 	my $vardir = "";
 
-	# TOFIX 
+	# TOFIX
 	if(-d "/var/lib/fusioninventory-agent/"){
 		return "/var/lib/fusioninventory-agent/";
 	}
