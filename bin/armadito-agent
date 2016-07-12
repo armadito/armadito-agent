@@ -7,6 +7,7 @@ use lib './lib';
 use English qw(-no_match_vars) ;
 use Getopt::Long;
 use Pod::Usage;
+#use Data::Dumper;
 
 use Armadito::Agent;
 use Armadito::Agent::Task;
@@ -81,6 +82,7 @@ eval{
 	$agent->init(options => $options);
 
 	print "Fusion Device Id : ".$agent->{fusionid}.".\n";
+	#print Dumper($agent->{config})."\n";
 
 	## new task instance
 	my $task = "Armadito::Agent::Task::$options->{task}::$options->{antivirus}"->new(config => $config, agent => $agent);
