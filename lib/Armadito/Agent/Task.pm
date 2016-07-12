@@ -34,6 +34,8 @@ sub new {
     $self->{logger} = FusionInventory::Agent::Logger->new(backends => ['Syslog', 'Stderr']);
     $self->{agentid} = 0;
 
+	$self->{agent} = $params{agent};
+
 	$self->{jobj} = {
 		agent_id => $self->{agentid},
 		agent_version => $FusionInventory::Agent::VERSION,
