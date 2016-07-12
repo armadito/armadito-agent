@@ -58,7 +58,7 @@ sub init {
         directory => _getFusionVarDir()
     );
 
-	$self->_loadState();
+	$self->_getFusionId();
 }
 
 sub _getFusionVarDir {
@@ -73,12 +73,12 @@ sub _getFusionVarDir {
 	return $vardir;
 }
 
-sub _loadState {
+sub _getFusionId {
     my ($self) = @_;
 
     my $data = $self->{storage}->restore(name => 'FusionInventory-Agent');
 
-    $self->{deviceid} = $data->{deviceid} if $data->{deviceid};
+    $self->{fusionid} = $data->{deviceid} if $data->{deviceid};
 }
 
 sub isAVSupported {

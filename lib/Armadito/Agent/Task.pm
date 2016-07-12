@@ -40,6 +40,8 @@ sub new {
 		task => ""
 	};
 
+	print "Fusion Device Id : ".$self->{agent}->{fusionid}.".\n";
+
     bless $self, $class;
     return $self;
 }
