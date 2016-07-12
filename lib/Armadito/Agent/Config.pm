@@ -166,7 +166,7 @@ sub _loadFromRegistry { # TOBETESTED
         	if (exists $default_fusion->{$key}) {
             	$self->{fusion}->{$key} = $val;
 			}
-		} 
+		}
 		elsif($agent_type eq "Armadito-Agent"){
 			if (exists $default_armadito->{$key}) {
 				$self->{armadito}->{$key} = $val;
@@ -210,7 +210,7 @@ sub _loadFromFile {
 		    	if (exists $default_fusion->{$key}) {
 		        	$self->{fusion}->{$key} = $val;
 				}
-			} 
+			}
 			elsif($agent_type eq "Armadito-Agent"){
 				if (exists $default_armadito->{$key}) {
 					$self->{armadito}->{$key} = $val;
