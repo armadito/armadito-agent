@@ -23,13 +23,17 @@ pod2usage(-verbose => 0, -exitstatus => 0) unless $ARGV[0];
 
 GetOptions(
     $options,
-    'server|s=s',
-    'task|t=s',
-    'antivirus|av=s',
-    'list-tasks',
-    'list-avs',
-    'help|h',
-    'version|v',
+	'server|s=s',
+	'task|t=s',
+	'antivirus|av=s',
+	'conf-fusion|cf=s',
+	'conf-armadito|ca=s',
+	'conf-fusion-file|cff=s',
+	'conf-armadito-file|caf=s',
+	'list-tasks',
+	'list-avs',
+	'help|h',
+	'version|v',
 ) or pod2usage(-verbose => 0);
 
 pod2usage(-verbose => 0, -exitstatus => 0) if $options->{help};
