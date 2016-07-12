@@ -7,6 +7,7 @@ use warnings;
 require Exporter;
 
 use Armadito::Agent::Config;
+use Armadito::Agent::Storage;
 
 our @ISA = qw(Exporter);
 
@@ -49,6 +50,35 @@ sub init {
         confdir => $self->{confdir},
         options => $params{options},
     );
+
+	$self->{logger} = FusionInventory::Agent::Logger->new(backends => ['Syslog', 'Stderr']);
+
+	$self->{storage} = Armadito::Agent::Storage->new(
+        logger    => $self->{logger},
+        directory => _getFusionVarDir()
+    );
+
+	$self->_loadState();
+}
+
+sub _getFusionVarDir {
+	
+	my $vardir = "";
+
+	# TOFIX 
+	if(-d "/var/lib/fusioninventory-agent/"){
+		return "/var/lib/fusioninventory-agent/";
+	}
+
+	return $vardir;
+}
+
+sub _loadState {
+    my ($self) = @_;
+
+    my $data = $self->{storage}->restore(name => 'FusionInventory-Agent');
+
+    $self->{deviceid} = $data->{deviceid} if $data->{deviceid};
 }
 
 sub isAVSupported {
