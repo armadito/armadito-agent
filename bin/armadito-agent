@@ -51,11 +51,11 @@ my %setup = (
     vardir  => './var',
 );
 
-if((!defined($options->{'conf-fusion-file'}) 
- && defined($options->{'conf-fusion'}) 
- && $options->{'conf-fusion'} ne 'file' 
- && $options->{'conf-fusion'} ne 'registry') 
-  || (!defined($options->{'conf-fusion'}) 
+if((!defined($options->{'conf-fusion-file'})
+ && defined($options->{'conf-fusion'})
+ && $options->{'conf-fusion'} ne 'file'
+ && $options->{'conf-fusion'} ne 'registry')
+  || (!defined($options->{'conf-fusion'})
    && !defined($options->{'conf-fusion-file'}))
  ){
 	print "Please install Fusion Inventory and provide --conf-fusion mode (registry or file) or --conf-fusion-file file.\n";
@@ -64,8 +64,8 @@ if((!defined($options->{'conf-fusion-file'})
 	pod2usage(-verbose => 0, -exitstatus => 1);
 }
 
-if(defined($options->{'conf-fusion'})	
- && $options->{'conf-fusion'} eq 'file' 
+if(defined($options->{'conf-fusion'})
+ && $options->{'conf-fusion'} eq 'file'
  && !$options->{'conf-fusion-file'}){
 	print "Argument --conf-fusion-file|cff <FILE> is mandatory if you use --conf-fusion|cf file.\n";
 	print "See usage for more information. \n\n";
