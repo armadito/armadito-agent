@@ -45,32 +45,46 @@ sub new {
 
 sub init {
     my ($self, %params) = @_;
+	
+	$self->_getFusionSetup();
 
     $self->{config} = Armadito::Agent::Config->new(
-        confdir => $self->{confdir},
-        options => $params{options},
+		armadito_confdir => $self->{confdir},
+		fusion_confdir => $self->{fusion_confdir},
+		options => $params{options}
     );
 
 	$self->{logger} = FusionInventory::Agent::Logger->new(backends => ['Syslog', 'Stderr']);
 
 	$self->{storage} = Armadito::Agent::Storage->new(
         logger    => $self->{logger},
-        directory => _getFusionVarDir()
+        directory => $self->{fusion_vardir}
     );
 
 	$self->_getFusionId();
 }
 
-sub _getFusionVarDir {
+sub _getFusionSetupDir {
+	my ($res, $dirlabel) = @_;
 
-	my $vardir = "";
-
-	# TOFIX
-	if(-d "/var/lib/fusioninventory-agent/"){
-		return "/var/lib/fusioninventory-agent/";
+	if($res =~ /$dirlabel: (\S+)/ms){
+		return $1;
 	}
 
-	return $vardir;
+	die "$dirlabel not found when parsing fusioninventory-agent --setup.";
+}
+
+sub _getFusionSetup {
+	my ($self) = @_;
+
+	my $res = `fusioninventory-agent --setup 2>&1`; 
+	my $exitvalue = `echo -n $?`;
+	die "Unable to get fusioninventory-agent setup. Please, be sure you have correctly installed fusioninventory agent.\n" if($exitvalue != 0);
+	
+	$self->{fusion_datadir} = _getFusionSetupDir($res, "datadir");
+	$self->{fusion_vardir} = _getFusionSetupDir($res, "vardir");
+	$self->{fusion_confdir} = _getFusionSetupDir($res, "confdir");
+	$self->{fusion_libdir} = _getFusionSetupDir($res, "libdir");
 }
 
 sub _getFusionId {

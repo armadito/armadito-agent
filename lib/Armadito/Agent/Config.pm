@@ -8,6 +8,8 @@ use File::Spec;
 use Getopt::Long;
 use UNIVERSAL::require;
 
+require FusionInventory::Agent::Tools;
+
 my $default_armadito = {
     'ca-cert-dir'             => undef,
     'ca-cert-file'            => undef,
@@ -24,7 +26,7 @@ my $default_armadito = {
     'no-ssl-check'            => undef,
     'proxy'                   => undef,
     'server'                  => undef,
-    'stdout'                  => undef
+    'stdout'                  => undef,
 };
 
 my $default_fusion = {
@@ -65,6 +67,14 @@ my $default_fusion = {
     'stdout'                  => undef,
 };
 
+my $deprecated = {
+    'stdout' => {
+        message => 'use --local - option instead',
+        new     => { 'local' => '-' }
+    },
+};
+
+my $confReloadIntervalMinValue = 60;
 
 sub new {
     my ($class, %params) = @_;
@@ -77,11 +87,14 @@ sub new {
 
 	# Load fusioninventory configuration
 	$self->_loadDefaults("FusionInventory-Agent");
-	$self->_loadFromBackend($params{options}->{'conf-fusion-file'}, $params{options}->{'conf-fusion'}, "", "FusionInventory-Agent");
+	$self->_loadFromBackend($params{options}->{'conf-fusion-file'}, $params{options}->{'conf-fusion'}, $params{fusion_confdir}, "FusionInventory-Agent");
 
 	# Load armadito agent configuration
 	$self->_loadDefaults("Armadito-Agent");
-	$self->_loadFromBackend($params{options}->{'conf-armadito-file'}, $params{options}->{'conf-armadito'}, $params{confdir}, "Armadito-Agent");
+	$self->_loadFromBackend($params{options}->{'conf-armadito-file'}, $params{options}->{'conf-armadito'}, $params{armadito_confdir}, "Armadito-Agent");
+
+	_checkContent($self->{fusion});
+	_checkContent($self->{armadito});
 
     return $self;
 }
@@ -109,8 +122,6 @@ sub _loadFromBackend {
         $config              ? $config     :
         $OSNAME eq 'MSWin32' ? 'registry'  :
                                'file';
-
-	print "BACKEND : $backend\n";
 
     SWITCH: {
         if ($backend eq 'registry') {
@@ -221,6 +232,106 @@ sub _loadFromFile {
         }
     }
     close $handle;
+}
+
+sub _checkContent {
+    my ($self) = @_;
+
+    # check for deprecated options
+    foreach my $old (keys %$deprecated) {
+        next unless defined $self->{$old};
+
+        next if $old =~ /^no-/ and !$self->{$old};
+
+        my $handler = $deprecated->{$old};
+
+        # notify user of deprecation
+        warn "the '$old' option is deprecated, $handler->{message}\n";
+
+        # transfer the value to the new option, if possible
+        if ($handler->{new}) {
+            if (ref $handler->{new} eq 'HASH') {
+                # old boolean option replaced by new non-boolean options
+                foreach my $key (keys %{$handler->{new}}) {
+                    my $value = $handler->{new}->{$key};
+                    if ($value =~ /^\+(\S+)/) {
+                        # multiple values: add it to exiting one
+                        $self->{$key} = $self->{$key} ?
+                            $self->{$key} . ',' . $1 : $1;
+                    } else {
+                        # unique value: replace exiting value
+                        $self->{$key} = $value;
+                    }
+                }
+            } elsif (ref $handler->{new} eq 'ARRAY') {
+                # old boolean option replaced by new boolean options
+                foreach my $new (@{$handler->{new}}) {
+                    $self->{$new} = $self->{$old};
+                }
+            } else {
+                # old non-boolean option replaced by new option
+                $self->{$handler->{new}} = $self->{$old};
+            }
+        }
+
+        # avoid cluttering configuration
+        delete $self->{$old};
+    }
+
+    # a logfile options implies a file logger backend
+    if ($self->{logfile}) {
+        $self->{logger} .= ',File';
+    }
+
+    # ca-cert-file and ca-cert-dir are antagonists
+    if ($self->{'ca-cert-file'} && $self->{'ca-cert-dir'}) {
+        die "use either 'ca-cert-file' or 'ca-cert-dir' option, not both\n";
+    }
+
+    # logger backend without a logfile isn't enoguh
+    if ($self->{'logger'} =~ /file/i && ! $self->{'logfile'}) {
+        die "usage of 'file' logger backend makes 'logfile' option mandatory\n";
+    }
+
+    # multi-values options, the default separator is a ','
+    foreach my $option (qw/
+            logger
+            local
+            server
+            httpd-trust
+            no-task
+            no-category
+            tasks
+            /) {
+
+        # Check if defined AND SCALAR
+        # to avoid split a ARRAY ref or HASH ref...
+        if ($self->{$option} && ref($self->{$option}) eq '') {
+            $self->{$option} = [split(/,/, $self->{$option})];
+        } else {
+            $self->{$option} = [];
+        }
+    }
+
+    # files location
+    $self->{'ca-cert-file'} =
+        File::Spec->rel2abs($self->{'ca-cert-file'}) if $self->{'ca-cert-file'};
+    $self->{'ca-cert-dir'} =
+        File::Spec->rel2abs($self->{'ca-cert-dir'}) if $self->{'ca-cert-dir'};
+    $self->{'logfile'} =
+        File::Spec->rel2abs($self->{'logfile'}) if $self->{'logfile'};
+
+    # conf-reload-interval option
+    # If value is less than the required minimum, we force it to that
+    # minimum because it's useless to reload the config so often and,
+    # furthermore, it can cause a loss of performance
+    if ($self->{'conf-reload-interval'} != 0) {
+        if ($self->{'conf-reload-interval'} < 0) {
+            $self->{'conf-reload-interval'} = 0;
+        } elsif ($self->{'conf-reload-interval'} < $confReloadIntervalMinValue) {
+            $self->{'conf-reload-interval'} = $confReloadIntervalMinValue;
+        }
+    }
 }
 
 1;
