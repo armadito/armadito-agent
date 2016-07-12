@@ -147,6 +147,9 @@ armadito-agent --server <server> --task <task>
 	--conf-fusion=mode               fusion inventory configuration mode (registry or file)
 	--conf-fusion-file=FILE          fusion inventory configuration file path
 	--conf-armadito-file=FILE        armadito configuration file path
+	--conf-reload-interval=<SECONDS> number of seconds between two
+                                         configuration reloadings
+
 
 =head1 EXAMPLES
 
@@ -263,10 +266,15 @@ none: don't read any configuration.
 
 Use I<FILE> as fusion inventory configuration file (implies file configuration mode).
 
-=back
-
 =item B<--conf-file-armadito>=I<FILE>
 
 Use I<FILE> as armadito configuration file (implies file configuration mode).
+
+=item B<--conf-reload-interval>=I<SECONDS>
+
+SECONDS is the number of seconds between two configuration reloadings.
+Default value is 0, which means that configuration is never reloaded.
+Minimum value is 60. If given value is less than this minimum, it is set to
+this minimum. If given value is less than 0, it is set to 0.
 
 =back
