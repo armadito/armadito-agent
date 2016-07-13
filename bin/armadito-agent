@@ -30,6 +30,7 @@ GetOptions(
 	'conf-file=s',
 	'conf-reload-interval=i',
 	'config=s',
+	'setup',
 	'list-tasks',
 	'list-avs',
 	'help|h',
@@ -49,6 +50,13 @@ my %setup = (
     libdir  => './lib',
     vardir  => './var',
 );
+
+if ($options->{setup}) {
+    foreach my $key (keys %setup) {
+        print "$key: $setup{$key}\n";
+    }
+    exit 0;
+}
 
 if ($options->{'conf-file'}) {
     if ($options->{config}) {
