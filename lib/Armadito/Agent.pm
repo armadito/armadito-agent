@@ -46,16 +46,20 @@ sub new {
 sub init {
     my ($self, %params) = @_;
 
+	# Get FusionInventory setup directories
 	$self->_getFusionSetup();
 
+	# Load configuration
     $self->{config} = Armadito::Agent::Config->new(
 		armadito_confdir => $self->{confdir},
 		fusion_confdir => $self->{fusion_confdir},
 		options => $params{options}
     );
 
+	# Create logger
 	$self->{logger} = FusionInventory::Agent::Logger->new(backends => ['Syslog', 'Stderr']);
 
+	# Init storages
 	$self->{storage} = Armadito::Agent::Storage->new(
         logger    => $self->{logger},
         directory => $self->{fusion_vardir}
@@ -63,6 +67,7 @@ sub init {
 
 	$self->_getFusionId();
 
+	# Read persistent data from storages
 	$self->{agent_id} = 0;
 }
 
