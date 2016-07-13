@@ -148,7 +148,10 @@ armadito-agent --server <server> --task <task>
 
 =head1 EXAMPLES
 
-	% armadito-agent --task "Enrollment" --config file
+	% armadito-agent --task "Enrollment"
+	% armadito-agent -s http://armadito-glpi --task "State"
+	% armadito-agent --server http://armadito-glpi --task "Getjobs"
+	% armadito-agent --task "Enrollment" --conf-file /etc/myarmaditoconf.cfg
 
 =head1 DESCRIPTION
 
