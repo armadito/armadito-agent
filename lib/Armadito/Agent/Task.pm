@@ -31,13 +31,13 @@ sub new {
     my ( $class, %params ) = @_;
 
     my $self = { config => $params{config}};
-    $self->{logger} = FusionInventory::Agent::Logger->new(backends => ['Syslog', 'Stderr']);
-    $self->{agentid} = 0;
 
 	$self->{agent} = $params{agent};
+	$self->{logger} = $self->{agent}->{logger};
+	$self->{agent_id} = 0;
 
 	$self->{jobj} = {
-		agent_id => $self->{agentid},
+		agent_id => $self->{agent_id},
 		agent_version => $FusionInventory::Agent::VERSION,
 		task => ""
 	};
