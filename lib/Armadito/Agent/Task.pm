@@ -42,7 +42,7 @@ sub new {
 		task => ""
 	};
 
-	print "Fusion Device Id : ".$self->{agent}->{fusionid}.".\n";
+	$self->{logger}->info("Fusion Device Id : ".$self->{agent}->{fusionid});
 
     bless $self, $class;
     return $self;

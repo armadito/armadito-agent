@@ -99,9 +99,6 @@ eval{
 	## init
 	$agent->init(options => $options);
 
-	print "Fusion Device Id : ".$agent->{fusionid}.".\n";
-	#print Dumper($agent->{config})."\n";
-
 	## new task instance
 	my $task = "Armadito::Agent::Task::$options->{task}::$options->{antivirus}"->new(config => $config, agent => $agent);
 
