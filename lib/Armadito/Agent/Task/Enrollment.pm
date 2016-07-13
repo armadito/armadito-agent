@@ -30,6 +30,7 @@ sub new {
 	};
 
 	$self->{jobj}->{task} = $task;
+	$self->{jobj}->{fusion_id} = $self->{agent}->{fusionid};
 
     return $self;
 }
@@ -47,6 +48,7 @@ sub _handleResponse {
 	# Update armadito agent_id
 	if(defined($obj->{agent_id}) && $obj->{agent_id} > 0){
 		$self->{agent}->{agent_id} = $obj->{agent_id};
+		$self->{agent}->_storeArmaditoId();
 	}
 
     print Dumper($obj);

@@ -65,10 +65,16 @@ sub init {
         directory => $self->{fusion_vardir}
     );
 
-	$self->_getFusionId();
+	$self->{armadito_storage} = Armadito::Agent::Storage->new(
+        logger    => $self->{logger},
+        directory => $self->{vardir}
+    );
 
 	# Read persistent data from storages
 	$self->{agent_id} = 0;
+	$self->_getFusionId();
+	$self->_getArmaditoId();
+
 }
 
 sub _getFusionSetupDir {
@@ -97,9 +103,28 @@ sub _getFusionSetup {
 sub _getFusionId {
     my ($self) = @_;
 
-    my $data = $self->{storage}->restore(name => 'FusionInventory-Agent');
+    my $data = $self->{fusion_storage}->restore(name => 'FusionInventory-Agent');
 
     $self->{fusionid} = $data->{deviceid} if $data->{deviceid};
+}
+
+sub _getArmaditoId {
+    my ($self) = @_;
+
+    my $data = $self->{armadito_storage}->restore(name => 'Armadito-Agent');
+
+    $self->{agent_id} = $data->{agent_id} if $data->{agent_id};
+}
+
+sub _storeArmaditoId {
+    my ($self) = @_;
+
+    $self->{armadito_storage}->save(
+        name => 'Armadito-Agent',
+        data => {
+            agent_id => $self->{agent_id},
+        }
+    );
 }
 
 sub isAVSupported {
