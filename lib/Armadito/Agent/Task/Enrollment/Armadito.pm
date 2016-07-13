@@ -65,14 +65,16 @@ sub run {
 		method => "POST"
     );
 
-    if($response->is_success()){
-         $self->_handleResponse($response);
-         $self->{logger}->info("Enrollment successful...");
+    if($response->is_success() && $response =~ /^\s+\{/){
+        $self->_handleResponse($response);
+		$self->{logger}->info("Enrollment successful...");
     }
     else{
-         $self->_handleError($response);
-         $self->{logger}->info("Enrollment failed...");
-    }
+		if( $response =~ /^\s+\{/) {
+			$self->_handleError($response);
+		}
+		$self->{logger}->info("Enrollment failed...");
+	}
 
     return $self;
 }
