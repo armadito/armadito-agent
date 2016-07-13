@@ -44,6 +44,11 @@ sub _handleResponse {
 
     my $obj =  from_json($response->content(), { utf8  => 1 });
 
+	# Update armadito agent_id
+	if(defined($obj->{agent_id}) && $obj->{agent_id} > 0){
+		$self->{agent}->{agent_id} = $obj->{agent_id};
+	}
+
     print Dumper($obj);
 
     return $self;

@@ -62,6 +62,8 @@ sub init {
     );
 
 	$self->_getFusionId();
+
+	$self->{agent_id} = 0;
 }
 
 sub _getFusionSetupDir {

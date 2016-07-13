@@ -34,10 +34,9 @@ sub new {
 
 	$self->{agent} = $params{agent};
 	$self->{logger} = $self->{agent}->{logger};
-	$self->{agent_id} = 0;
 
 	$self->{jobj} = {
-		agent_id => $self->{agent_id},
+		agent_id => $self->{agent}->{agent_id},
 		agent_version => $FusionInventory::Agent::VERSION,
 		task => ""
 	};
