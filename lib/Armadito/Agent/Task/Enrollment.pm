@@ -39,20 +39,16 @@ sub _handleResponse {
 
     my ($self, $response) = @_;
 
-    # Parse response
-    # print Dumper($response);
+	$self->{logger}->info($response->content());
 
-    print "Successful Response : ".$response->content()."\n";
-
-    my $obj =  from_json($response->content(), { utf8  => 1 });
+    my $obj = from_json($response->content(), { utf8  => 1 });
 
 	# Update armadito agent_id
 	if(defined($obj->{agent_id}) && $obj->{agent_id} > 0){
 		$self->{agent}->{agent_id} = $obj->{agent_id};
 		$self->{agent}->_storeArmaditoId();
+		$self->{logger}->info("Agent successfully enrolled with id ".$obj->{agent_id});
 	}
-
-    print Dumper($obj);
 
     return $self;
 }
@@ -61,13 +57,12 @@ sub _handleError {
 
     my ($self, $response) = @_;
 
-    # Parse response
-    # print Dumper($response);
-    print "Error Response : ".$response->content()."\n";
+    $self->{logger}->error("Error Response : ".$response->content()."\n");
 
-    my $obj =  from_json($response->content(), { utf8  => 1 });
-
-    print Dumper($obj);
+	if( $response->content() =~ /^\s*\{/) {
+		my $obj = from_json($response->content(), { utf8  => 1 });
+		$self->{logger}->error($obj->{message}."[plugin_version:".$obj->{plugin_version}."]");
+	}
 
     return $self;
 }
