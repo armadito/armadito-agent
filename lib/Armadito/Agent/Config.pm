@@ -87,11 +87,14 @@ sub new {
 
 	# Load fusioninventory configuration
 	$self->_loadDefaults("FusionInventory-Agent");
-	$self->_loadFromBackend($params{options}->{'conf-fusion-file'}, $params{options}->{'conf-fusion'}, $params{fusion_confdir}, "FusionInventory-Agent");
+	$self->_loadFromBackend("", $params{options}->{'config-fusion'}, $params{fusion_confdir}, "FusionInventory-Agent");
+
+	# TODO test on Win32
+	# $self->_loadFromBackend("", "", $params{fusion_confdir}, "FusionInventory-Agent");
 
 	# Load armadito agent configuration
 	$self->_loadDefaults("Armadito-Agent");
-	$self->_loadFromBackend($params{options}->{'conf-armadito-file'}, $params{options}->{'conf-armadito'}, $params{armadito_confdir}, "Armadito-Agent");
+	$self->_loadFromBackend($params{options}->{'conf-file'}, $params{options}->{'config'}, $params{armadito_confdir}, "Armadito-Agent");
 
 	_checkContent($self->{fusion});
 	_checkContent($self->{armadito});

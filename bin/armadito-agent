@@ -27,10 +27,9 @@ GetOptions(
 	'server|s=s',
 	'task|t=s',
 	'antivirus|av=s',
-	'conf-fusion|cf=s',
-	'conf-armadito|ca=s',
-	'conf-fusion-file|cff=s',
-	'conf-armadito-file|caf=s',
+	'conf-file=s',
+	'conf-reload-interval=i',
+	'config=s',
 	'list-tasks',
 	'list-avs',
 	'help|h',
@@ -51,25 +50,16 @@ my %setup = (
     vardir  => './var',
 );
 
-if((!defined($options->{'conf-fusion-file'})
- && defined($options->{'conf-fusion'})
- && $options->{'conf-fusion'} ne 'file'
- && $options->{'conf-fusion'} ne 'registry')
-  || (!defined($options->{'conf-fusion'})
-   && !defined($options->{'conf-fusion-file'}))
- ){
-	print "Please install Fusion Inventory and provide --conf-fusion mode (registry or file) or --conf-fusion-file file.\n";
-	print "Armadito Agent needs Fusion Inventory configuration to work correctly.\n";
-	print "See usage : \n\n";
-	pod2usage(-verbose => 0, -exitstatus => 1);
-}
-
-if(defined($options->{'conf-fusion'})
- && $options->{'conf-fusion'} eq 'file'
- && !$options->{'conf-fusion-file'}){
-	print "Argument --conf-fusion-file|cff <FILE> is mandatory if you use --conf-fusion|cf file.\n";
-	print "See usage for more information. \n\n";
-	pod2usage(-verbose => 0, -exitstatus => 1);
+if ($options->{'conf-file'}) {
+    if ($options->{config}) {
+        if ($options->{config} ne 'file') {
+            print STDERR
+                "don't use --conf-file with $options->{config} backend";
+            exit 1;
+        }
+    } else {
+        $options->{config} = 'file';
+    }
 }
 
 my $agent = Armadito::Agent->new(%setup);
@@ -143,21 +133,14 @@ armadito-agent --server <server> --task <task>
 	--list-avs             List supported antiviruses
 
   Configuration options:
-	--conf-armadito=mode             armadito configuration mode (registry or file)
-	--conf-fusion=mode               fusion inventory configuration mode (registry or file)
-	--conf-fusion-file=FILE          fusion inventory configuration file path
-	--conf-armadito-file=FILE        armadito configuration file path
-	--conf-reload-interval=<SECONDS> number of seconds between two
+    --config=BACKEND                   configuration backend
+    --conf-file=FILE                   configuration file
+    --conf-reload-interval=<SECONDS>   number of seconds between two
                                          configuration reloadings
-
 
 =head1 EXAMPLES
 
-	% armadito-agent --task "Enrollment" --conf-fusion file --conf-fusion-file /etc/fusioninventory/agent.cfg
-		eq
-	% armadito-agent -t "Enrollment" -cf file -cff /etc/fusioninventory/agent.cfg
-		eq
-	% armadito-agent -t "Enrollment" -cff /etc/fusioninventory/agent.cfg
+	% armadito-agent --task "Enrollment" --config file
 
 =head1 DESCRIPTION
 
@@ -214,37 +197,18 @@ Mange the given Antivirus
 
 See option I<--list-avs> for the list of available antiviruses.
 
+=back
+
 =head2 Configuration options
 
 =over
 
-=item B<--conf-fusion>=I<MODE>
 
-Configuration mode used by already installed fusion inventory.
+=item B<--config>=I<BACKEND>
 
-The available modes are:
+Configuration backend to use.
 
-=over 4
-
-=item
-
-file: read configuration from a file (default anywhere else as Windows).
-
-=item
-
-registry: read configuration from the registry (default on Windows).
-
-=item
-
-none: don't read any configuration.
-
-=back
-
-=item B<--conf-armadito>=I<MODE>
-
-Configuration mode to use for armadito agent.
-
-The available modes are:
+The available backends are:
 
 =over 4
 
@@ -262,13 +226,9 @@ none: don't read any configuration.
 
 =back
 
-=item B<--conf-file-fusion>=I<FILE>
+=item B<--conf-file>=I<FILE>
 
-Use I<FILE> as fusion inventory configuration file (implies file configuration mode).
-
-=item B<--conf-file-armadito>=I<FILE>
-
-Use I<FILE> as armadito configuration file (implies file configuration mode).
+Use I<FILE> as configuration file (implies file configuration backend).
 
 =item B<--conf-reload-interval>=I<SECONDS>
 
