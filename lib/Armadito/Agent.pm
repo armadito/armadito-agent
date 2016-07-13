@@ -45,7 +45,7 @@ sub new {
 
 sub init {
     my ($self, %params) = @_;
-	
+
 	$self->_getFusionSetup();
 
     $self->{config} = Armadito::Agent::Config->new(
@@ -77,10 +77,10 @@ sub _getFusionSetupDir {
 sub _getFusionSetup {
 	my ($self) = @_;
 
-	my $res = `fusioninventory-agent --setup 2>&1`; 
+	my $res = `fusioninventory-agent --setup 2>&1`;
 	my $exitvalue = `echo -n $?`;
 	die "Unable to get fusioninventory-agent setup. Please, be sure you have correctly installed fusioninventory agent.\n" if($exitvalue != 0);
-	
+
 	$self->{fusion_datadir} = _getFusionSetupDir($res, "datadir");
 	$self->{fusion_vardir} = _getFusionSetupDir($res, "vardir");
 	$self->{fusion_confdir} = _getFusionSetupDir($res, "confdir");
