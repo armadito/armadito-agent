@@ -21,9 +21,9 @@ sub new {
     my $self = $class->SUPER::new(%params);
 
 	my $antivirus = {
-		name => "Armadito",		
+		name => "Armadito",
 		version => ""
-	};	
+	};
 
 	$self->{jobj}->{task}->{antivirus} = $antivirus;
 
@@ -53,20 +53,20 @@ sub run {
 
     $self = $self->SUPER::run(%params);
 
-    # TODO: 
+    # TODO:
     # 1 : Send GET request to AV, asking for an on-demand scan
     # my $req = $self->{client}->send(
     #    "url" => $self->{config}->{av_server_url},
     #    method => "GET"
-    #    args  => { 
+    #    args  => {
     #        action    => "getState"
     #    }
     #);
 
     my $av_response = '
-{ "av_response":"state", 
-  "id":123, 
-  "status":0, 
+{ "av_response":"state",
+  "id":123,
+  "status":0,
   "scan": "OK"
 }';
 	my $state_jobj =  from_json($av_response, { utf8  => 1 });
@@ -75,7 +75,7 @@ sub run {
 
 	my $json_text = to_json($self->{jobj});
 
-	print "JSON formatted str : \n".$json_text."\n";	
+	print "JSON formatted str : \n".$json_text."\n";
 
     my $response = $self->{client}->send(
 		"url" => $self->{config}->{plugin_server_url}."/api/scans",
@@ -105,7 +105,7 @@ Armadito::Agent::Task::Scan::Armadito - Scan Task for Armadito Antivirus.
 
 =head1 DESCRIPTION
 
-This task inherits from L<Armadito::Agent::Task:Scan>. Launch an Armadito Antivirus on-demand scan using AV's API REST protocol and then send a brief report in a json formatted POST request to Armadito plugin for GLPI. 
+This task inherits from L<Armadito::Agent::Task:Scan>. Launch an Armadito Antivirus on-demand scan using AV's API REST protocol and then send a brief report in a json formatted POST request to Armadito plugin for GLPI.
 
 =head1 FUNCTIONS
 

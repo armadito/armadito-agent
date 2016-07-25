@@ -27,7 +27,7 @@ sub new {
 	my $task = {
 		name => "Scan",
 		antivirus => ""
-	};	
+	};
 
 	$self->{jobj}->{task} = $task;
 
