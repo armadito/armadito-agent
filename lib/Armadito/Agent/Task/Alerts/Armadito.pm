@@ -77,11 +77,11 @@ sub run {
 
     if($response->is_success()){
          $self->_handleResponse($response);
-         $self->{logger}->info("Scan successful...");
+         $self->{logger}->info("Alerts successful...");
     }
     else{
          $self->_handleError($response);
-         $self->{logger}->info("Scan failed...");
+         $self->{logger}->info("Alerts failed...");
     }
 
     return $self;
