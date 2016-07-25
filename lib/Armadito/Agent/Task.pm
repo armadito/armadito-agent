@@ -41,7 +41,9 @@ sub new {
 		task => ""
 	};
 
-	$self->{logger}->info("Fusion Device Id : ".$self->{agent}->{fusionid});
+	if(defined($self->{agent}->{fusionid})){
+		$self->{logger}->info("Fusion Device Id : ".$self->{agent}->{fusionid});
+	}
 
     bless $self, $class;
     return $self;
