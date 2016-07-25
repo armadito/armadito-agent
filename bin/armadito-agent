@@ -11,6 +11,8 @@ use Pod::Usage;
 
 use Armadito::Agent;
 use Armadito::Agent::Task;
+use Armadito::Agent::Task::Scan;
+use Armadito::Agent::Task::Scan::Armadito;
 use Armadito::Agent::Task::State;
 use Armadito::Agent::Task::State::Armadito;
 use Armadito::Agent::Task::Getjobs;
