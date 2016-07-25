@@ -53,21 +53,13 @@ sub run {
 
     $self = $self->SUPER::run(%params);
 
-    # TODO:
-    # 1 : Send GET request to AV, asking for an on-demand scan
-    # my $req = $self->{client}->send(
-    #    "url" => $self->{config}->{av_server_url},
-    #    method => "GET"
-    #    args  => {
-    #        action    => "getState"
-    #    }
-    #);
+	# TODO: get alerts
 
     my $av_response = '
-{ "av_response":"state",
+{ "av_response":"alerts",
   "id":123,
   "status":0,
-  "scan": "OK"
+  "alert": "OK"
 }';
 	my $state_jobj =  from_json($av_response, { utf8  => 1 });
 
@@ -78,7 +70,7 @@ sub run {
 	print "JSON formatted str : \n".$json_text."\n";
 
     my $response = $self->{client}->send(
-		"url" => $self->{config}->{plugin_server_url}."/api/scans",
+		"url" => $self->{config}->{plugin_server_url}."/api/alerts",
 		message => $json_text,
 		method => "POST"
     );
