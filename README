@@ -21,7 +21,14 @@ Minimum perl version: 5.8
 
 This module requires these other modules and libraries:
 
-  FusionInventory::Agent 2.3.18
+  FusionInventory::Agent > 2.3.18
+
+On ubuntu :
+
+  sudo apt-get install fusioninventory-agent
+  sudo apt-get install libmodule-install-perl
+
+PERL5LIB="/usr/share/fusioninventory/lib${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
 
 ## Author(s)
 
