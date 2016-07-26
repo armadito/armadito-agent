@@ -57,10 +57,10 @@ sub _getSystemInfos {
 	my $base_info    = $infos->{2}->[0];
 
 	$infos = "";
-	$infos .= " ".$system_info->{'UUID'} if(defined($system_info->{'UUID'});
-	$infos .= " ".$system_info->{'SKU Number'} if(defined($system_info->{'SKU Number'});
-	$infos .= " ".$system_info->{'Serial Number'} if(defined($system_info->{'Serial Number'});
-	$infos .= " ".$base_info->{'Serial Number'} if(defined($base_info->{'Serial Number'});
+	$infos .= " ".$system_info->{'UUID'} if(defined($system_info->{'UUID'}));
+	$infos .= " ".$system_info->{'SKU Number'} if(defined($system_info->{'SKU Number'}));
+	$infos .= " ".$system_info->{'Serial Number'} if(defined($system_info->{'Serial Number'}));
+	$infos .= " ".$base_info->{'Serial Number'} if(defined($base_info->{'Serial Number'}));
 
 	return $infos;
 }
