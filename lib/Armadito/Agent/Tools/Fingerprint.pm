@@ -74,7 +74,7 @@ FusionInventory::Agent::Tools::Fingerprint - OS-independent fingerprint computin
 
 =head1 DESCRIPTION
 
-This module provides a generic function to retrieve a fingerprint for this computer. It is basically based on hostname.
+This module provides a generic function to retrieve a fingerprint for this computer.
 
 =head1 FUNCTIONS
 
