@@ -9,6 +9,16 @@ use Getopt::Long;
 use Pod::Usage;
 #use Data::Dumper;
 
+BEGIN {
+	my $setup = `fusioninventory-agent --setup`;
+	if($setup =~ /libdir: (.*?)\n/ms){
+		my $libdir = $1;
+		if( -f $libdir."/FusionInventory/Agent.pm"){
+			push(@INC, $libdir."/FusionInventory/Agent.pm");
+		}
+	}
+}
+
 use Armadito::Agent;
 use Armadito::Agent::Task;
 use Armadito::Agent::Task::Scan;
