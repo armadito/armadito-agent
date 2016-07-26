@@ -114,6 +114,11 @@ eval{
 	## init
 	$agent->init(options => $options);
 
+	if($options->{task} eq "Enrollment" && $< != 0 ) {
+		print "Enrollment Task must be run as root.\n";
+		exit (1);
+	}
+
 	## new task instance
 	my $task = "Armadito::Agent::Task::$options->{task}::$options->{antivirus}"->new(config => $config, agent => $agent);
 
