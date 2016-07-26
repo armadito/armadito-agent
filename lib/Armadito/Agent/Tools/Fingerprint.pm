@@ -29,7 +29,7 @@ sub getFingerprint {
 }
 
 sub _getFingerprintUnix {
-	my $fingerprint = getHostname();
+	my $fingerprint = FusionInventory::Agent::Tools::Hostname::getHostname();
 
 	if(canRun('dmidecode')){
 		$fingerprint .= _getSystemInfos();
@@ -40,7 +40,7 @@ sub _getFingerprintUnix {
 
 ## To be tested
 sub _getFingerprintWindows {
-	my $fingerprint = getHostname();
+	my $fingerprint = FusionInventory::Agent::Tools::Hostname::getHostname();
 
 	if(canRun('dmidecode')){
 		$fingerprint .= _getSystemInfos();
