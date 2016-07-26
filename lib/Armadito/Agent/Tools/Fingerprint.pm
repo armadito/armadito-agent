@@ -7,8 +7,12 @@ use base 'Exporter';
 use UNIVERSAL::require();
 use Encode;
 use English qw(-no_match_vars);
+use Digest::SHA qw(sha256_hex);
 
+use FusionInventory::Agent::Task::Inventory::Generic::Dmidecode;
 use FusionInventory::Agent::Tools::Hostname;
+use FusionInventory::Agent::Tools::Generic;
+use FusionInventory::Agent::Tools;
 
 our @EXPORT = qw(
     getFingerprint
@@ -21,21 +25,44 @@ sub getFingerprint {
         _getFingerprintWindows() :
         _getFingerprintUnix()    ;
 
-    return $fingerprint;
+    return sha256_hex($fingerprint);
 }
 
 sub _getFingerprintUnix {
-	my $fingerprint = "";
-	my $hostname = getHostname();
+	my $fingerprint = getHostname();
 
-    return $fingerprint.$hostname;
+	if(canRun('dmidecode')){
+		$fingerprint .= _getSystemInfos();
+	}
+
+    return $fingerprint;
 }
 
+## To be tested
 sub _getFingerprintWindows {
-	my $fingerprint = "";
-	my $hostname = getHostname();
+	my $fingerprint = getHostname();
 
-    return $fingerprint.$hostname;
+	if(canRun('dmidecode')){
+		$fingerprint .= _getSystemInfos();
+	}
+
+    return $fingerprint;
+}
+
+# Add kind of uniqueness
+sub _getSystemInfos {
+	my $infos = getDmidecodeInfos(@_);
+	my $bios_info    = $infos->{0}->[0];
+	my $system_info  = $infos->{1}->[0];
+	my $base_info    = $infos->{2}->[0];
+
+	$infos = "";
+	$infos .= " ".$system_info->{'UUID'};
+	$infos .= " ".$system_info->{'SKU Number'};
+	$infos .= " ".$system_info->{'Serial Number'};
+	$infos .= " ".$base_info->{'Serial Number'};
+
+	return $infos;
 }
 
 1;
