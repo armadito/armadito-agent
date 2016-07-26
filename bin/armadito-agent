@@ -12,15 +12,12 @@ BEGIN {
 
 	# Set up fusioninventory agent libdir
 	my $setup = `fusioninventory-agent --setup`;
-	goto EXIT if($setup =~ /libdir: (.*?)\n/ms);
+	die "fusioninventory-agent --setup not available. Please, install fusioninventory-agent (2.3.18+) before retrying." if($setup !~ /libdir: (.*?)\n/ms);
 	my $libdir = $1;
 
 	# If ok, we add libdir to @INC
-	goto EXIT if( -f $libdir."/FusionInventory/Agent.pm");
+	die "FusionInventoryAgent libs not found. Please, install fusioninventory-agent (2.3.18+) before retrying." if(! -f $libdir."/FusionInventory/Agent.pm");
 	push(@INC, $libdir);
-
-	:EXIT
-	die "FusionInventoryAgent libs not found. Please, install fusioninventory-agent (2.3.18+) before retrying.";
 }
 
 use Armadito::Agent;
