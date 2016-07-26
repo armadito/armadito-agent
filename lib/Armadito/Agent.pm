@@ -8,6 +8,7 @@ require Exporter;
 
 use Armadito::Agent::Config;
 use Armadito::Agent::Storage;
+use Armadito::Agent::Tools::Fingerprint;
 
 our $VERSION = "0.0.3_03";
 my @supported_antiviruses = ("Armadito");
@@ -63,6 +64,7 @@ sub init {
 	$self->_getFusionId();
 	$self->_getArmaditoId();
 
+	$self->{fingerprint} = getFingerprint();
 }
 
 sub _getFusionSetupDir {
