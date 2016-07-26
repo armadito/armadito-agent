@@ -28,8 +28,6 @@ On ubuntu :
   sudo apt-get install fusioninventory-agent
   sudo apt-get install libmodule-install-perl
 
-PERL5LIB="/usr/share/fusioninventory/lib${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-
 ## Author(s)
 
 * Valentin Hamon <vhamon@teclib.com>
