@@ -8,6 +8,8 @@ use UNIVERSAL::require();
 use Encode;
 use English qw(-no_match_vars);
 
+use FusionInventory::Agent::Tools::Hostname;
+
 our @EXPORT = qw(
     getFingerprint
 );
@@ -23,15 +25,17 @@ sub getFingerprint {
 }
 
 sub _getFingerprintUnix {
-    my $fingerprint = "";
+	my $fingerprint = "";
+	my $hostname = getHostname();
 
-    return $fingerprint;
+    return $fingerprint.$hostname;
 }
 
 sub _getFingerprintWindows {
-    my $fingerprint = "";
-	
-    return $fingerprint;
+	my $fingerprint = "";
+	my $hostname = getHostname();
+
+    return $fingerprint.$hostname;
 }
 
 1;
