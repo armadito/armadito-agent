@@ -31,6 +31,7 @@ sub new {
 
 	$self->{jobj}->{task} = $task;
 	$self->{jobj}->{fusion_id} = $self->{agent}->{fusionid};
+	$self->{jobj}->{fingerprint} = $self->{agent}->{fingerprint};
 
     return $self;
 }
