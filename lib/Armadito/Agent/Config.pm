@@ -130,7 +130,7 @@ sub _loadFromBackend {
         if ($backend eq 'registry') {
             die "Unavailable configuration backend\n"
                 unless $OSNAME eq 'MSWin32';
-            $self->_loadFromRegistry();
+            $self->_loadFromRegistry($agent_type);
             last SWITCH;
         }
 
