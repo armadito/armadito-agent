@@ -7,16 +7,49 @@ use lib './lib';
 use English qw(-no_match_vars) ;
 use Getopt::Long;
 use Pod::Usage;
+use Win32::TieRegistry (
+    Delimiter   => '/',
+    ArrayValues => 0,
+    qw/KEY_READ/
+);
 
 BEGIN {
 
-	# Set up fusioninventory agent libdir
-	my $setup = `fusioninventory-agent --setup`;
-	die "fusioninventory-agent --setup not available. Please, install fusioninventory-agent (2.3.18+) before retrying." if($setup !~ /libdir: (.*?)\n/ms);
-	my $libdir = $1;
+	my $libdir = "";
+	if ($OSNAME eq 'MSWin32'){
+
+		# Get InstallLocation from registry
+		my $Registry;
+		Win32::TieRegistry->import(
+			Delimiter   => '/',
+			ArrayValues => 0,
+			TiedRef     => \$Registry
+		);
+
+		my $machKey = $Registry->Open('LMachine', {
+			Access => Win32::TieRegistry::KEY_READ()
+		}) or die "Can't open HKEY_LOCAL_MACHINE key: $EXTENDED_OS_ERROR";
+
+		my $uninstallValues =
+			$machKey->{'SOFTWARE/Microsoft/Windows/CurrentVersion/Uninstall/FusionInventory-Agent'};
+		die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)" unless $uninstallValues;
+
+		my $installLocation = $uninstallValues->{'/InstallLocation'};
+		die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)"  unless $installLocation;
+
+		$libdir = $installLocation."\\perl\\agent\\";
+
+
+	}
+	else{
+		# Set up fusioninventory agent libdir
+		my $setup = `fusioninventory-agent --setup`;
+		die "fusioninventory-agent --setup not available. Please, install fusioninventory-agent (2.3.5+) before retrying." if($setup !~ /libdir: (.*?)\n/ms);
+		$libdir = $1;
+	}
 
 	# If ok, we add libdir to @INC
-	die "FusionInventoryAgent libs not found. Please, install fusioninventory-agent (2.3.18+) before retrying." if(! -f $libdir."/FusionInventory/Agent.pm");
+	die "FusionInventoryAgent libs not found. Please, install fusioninventory-agent before retrying." if(! -f $libdir."/FusionInventory/Agent.pm");
 	push(@INC, $libdir);
 }
 
