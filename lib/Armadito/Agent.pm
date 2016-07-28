@@ -3,6 +3,12 @@ package Armadito::Agent;
 use 5.008000;
 use strict;
 use warnings;
+use English qw(-no_match_vars) ;
+use Win32::TieRegistry (
+    Delimiter   => '/',
+    ArrayValues => 0,
+    qw/KEY_READ/
+);
 
 require Exporter;
 
@@ -67,27 +73,55 @@ sub init {
 	$self->{fingerprint} = getFingerprint();
 }
 
-sub _getFusionSetupDir {
+sub _getLinuxFusionSetupDir {
 	my ($res, $dirlabel) = @_;
 
 	if($res =~ /$dirlabel: (\S+)/ms){
 		return $1;
 	}
-
 	die "$dirlabel not found when parsing fusioninventory-agent --setup.";
+}
+
+sub _getWindowsFusionSetupDir {
+	my $Registry;
+	Win32::TieRegistry->import(
+		Delimiter   => '/',
+		ArrayValues => 0,
+		TiedRef     => \$Registry
+	);
+
+	my $machKey = $Registry->Open('LMachine', {
+		Access => Win32::TieRegistry::KEY_READ()
+	}) or die "Can't open HKEY_LOCAL_MACHINE key: $EXTENDED_OS_ERROR";
+
+	my $uninstallValues =
+		$machKey->{'SOFTWARE/Microsoft/Windows/CurrentVersion/Uninstall/FusionInventory-Agent'};
+	die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)" unless $uninstallValues;
+
+	my $installLocation = $uninstallValues->{'/InstallLocation'};
+	die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)"  unless $installLocation;
+
+	return $installLocation;
 }
 
 sub _getFusionSetup {
 	my ($self) = @_;
-
-	my $res = `fusioninventory-agent --setup 2>&1`;
-	my $exitvalue = `echo -n $?`;
-	die "Unable to get fusioninventory-agent setup. Please, be sure you have correctly installed fusioninventory agent.\n" if($exitvalue != 0);
-
-	$self->{fusion_datadir} = _getFusionSetupDir($res, "datadir");
-	$self->{fusion_vardir} = _getFusionSetupDir($res, "vardir");
-	$self->{fusion_confdir} = _getFusionSetupDir($res, "confdir");
-	$self->{fusion_libdir} = _getFusionSetupDir($res, "libdir");
+	if($OSNAME ne "MSWin32") {
+		my $res = `fusioninventory-agent --setup 2>&1`;
+		my $exitvalue = `echo -n $?`;
+		die "Unable to get fusioninventory-agent setup. Please, be sure you have correctly installed fusioninventory agent.\n" if($exitvalue != 0);
+		$self->{fusion_datadir} = _getLinuxFusionSetupDir($res, "datadir");
+		$self->{fusion_vardir} = _getLinuxFusionSetupDir($res, "vardir");
+		$self->{fusion_confdir} = _getLinuxFusionSetupDir($res, "confdir");
+		$self->{fusion_libdir} = _getLinuxFusionSetupDir($res, "libdir");
+	}
+	else{
+		my $fusion_setupdir = _getWindowsFusionSetupDir();
+		$self->{fusion_datadir} = $fusion_setupdir."\\share";
+		$self->{fusion_vardir} = $fusion_setupdir."\\var";
+		$self->{fusion_libdir} = $fusion_setupdir."\\perl\\agent";
+		$self->{fusion_confdir} = $fusion_setupdir."\\etc";
+	}
 }
 
 sub _getFusionId {
