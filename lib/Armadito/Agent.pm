@@ -52,7 +52,7 @@ sub init {
     );
 
 	# Create logger
-	$self->{logger} = FusionInventory::Agent::Logger->new(backends => ['Syslog', 'Stderr']);
+	$self->{logger} = FusionInventory::Agent::Logger->new(backends => ['Stderr']);
 
 	# Init storages
 	$self->{fusion_storage} = Armadito::Agent::Storage->new(
