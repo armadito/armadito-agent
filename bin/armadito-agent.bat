@@ -9,10 +9,8 @@ if defined FusionPath (
 	) else (
 		"%FusionPath%\\perl\\bin\\perl.exe" armadito-agent
 		exit /b
-	) 
+	)
 ) else (
     echo FusionInventory Agent installLocation not found.
 	exit /b
 )
-
-REM "C:\\Program Files\\FusionInventory-Agent\\perl\\bin\\perl.exe" armadito-agent
