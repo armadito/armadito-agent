@@ -38,8 +38,7 @@ BEGIN {
 		die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)"  unless $installLocation;
 
 		$libdir = $installLocation."\\perl\\agent\\";
-
-
+		use lib "../share/armadito-agent/lib";
 	}
 	else{
 		# Set up fusioninventory agent libdir
