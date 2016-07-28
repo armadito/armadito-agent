@@ -7,7 +7,7 @@ if defined FusionPath (
 		echo FusionInventory Agent embedded perl not found.
 		exit /b
 	) else (
-		"%FusionPath%\\perl\\bin\\perl.exe" armadito-agent
+		"%FusionPath%\\perl\\bin\\perl.exe" armadito-agent %*
 		exit /b
 	)
 ) else (
