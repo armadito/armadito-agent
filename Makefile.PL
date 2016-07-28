@@ -76,25 +76,48 @@ our %variables;
 sub constants {
     my ($self) = @_;
 
-    # for some reason, initialising variables from the global scope doesn't work
-    %variables = (
-        PREFIX               => '/usr/local',
-        INSTALLSCRIPT        => '$(PREFIX)/bin',
-        INSTALLSITESCRIPT    => '$(PREFIX)/bin',
-        INSTALLVENDORSCRIPT  => '$(PREFIX)/bin',
-        INSTALLLIB           => '$(DATADIR)/lib',
-        INSTALLSITELIB       => '$(DATADIR)/lib',
-        INSTALLVENDORLIB     => '$(DATADIR)/lib',
-        INSTALLMAN1DIR       => '$(PREFIX)/share/man/man1',
-        INSTALLSITEMAN1DIR   => '$(PREFIX)/share/man/man1',
-        INSTALLVENDORMAN1DIR => '$(PREFIX)/share/man/man1',
-        INSTALLMAN3DIR       => '$(PREFIX)/share/man/man3',
-        INSTALLSITEMAN3DIR   => '$(PREFIX)/share/man/man3',
-        INSTALLVENDORMAN3DIR => '$(PREFIX)/share/man/man3',
-        SYSCONFDIR           => '$(PREFIX)/etc/armadito-agent',
-        DATADIR              => '$(PREFIX)/share/armadito-agent',
-        LOCALSTATEDIR        => '$(PREFIX)/var/armadito-agent',
-    );
+	if($OSNAME eq "MSWin32"){
+		%variables = (
+			PREFIX               => 'C:\\Program Files\\Armadito-Agent',
+			INSTALLSCRIPT        => '$(PREFIX)\\bin',
+			INSTALLSITESCRIPT    => '$(PREFIX)\\bin',
+			INSTALLVENDORSCRIPT  => '$(PREFIX)\\bin',
+			INSTALLLIB           => '$(DATADIR)\\lib',
+			INSTALLSITELIB       => '$(DATADIR)\\lib',
+			INSTALLVENDORLIB     => '$(DATADIR)\\lib',
+			INSTALLMAN1DIR       => '$(PREFIX)\\share\\man\\man1',
+			INSTALLSITEMAN1DIR   => '$(PREFIX)\\share\\man\\man1',
+			INSTALLVENDORMAN1DIR => '$(PREFIX)\\share\\man\\man1',
+			INSTALLMAN3DIR       => '$(PREFIX)\\share\\man\\man3',
+			INSTALLSITEMAN3DIR   => '$(PREFIX)\\share\\man\\man3',
+			INSTALLVENDORMAN3DIR => '$(PREFIX)\\share\\man\\man3',
+			SYSCONFDIR           => '$(PREFIX)\\etc\\armadito-agent',
+			DATADIR              => '$(PREFIX)\\share\\armadito-agent',
+			LOCALSTATEDIR        => '$(PREFIX)\\var\\armadito-agent',
+		);
+	}
+	else{
+	    # for some reason, initialising variables from the global scope doesn't work
+		%variables = (
+			PREFIX               => '/usr/local',
+			INSTALLSCRIPT        => '$(PREFIX)/bin',
+			INSTALLSITESCRIPT    => '$(PREFIX)/bin',
+			INSTALLVENDORSCRIPT  => '$(PREFIX)/bin',
+			INSTALLLIB           => '$(DATADIR)/lib',
+			INSTALLSITELIB       => '$(DATADIR)/lib',
+			INSTALLVENDORLIB     => '$(DATADIR)/lib',
+			INSTALLMAN1DIR       => '$(PREFIX)/share/man/man1',
+			INSTALLSITEMAN1DIR   => '$(PREFIX)/share/man/man1',
+			INSTALLVENDORMAN1DIR => '$(PREFIX)/share/man/man1',
+			INSTALLMAN3DIR       => '$(PREFIX)/share/man/man3',
+			INSTALLSITEMAN3DIR   => '$(PREFIX)/share/man/man3',
+			INSTALLVENDORMAN3DIR => '$(PREFIX)/share/man/man3',
+			SYSCONFDIR           => '$(PREFIX)/etc/armadito-agent',
+			DATADIR              => '$(PREFIX)/share/armadito-agent',
+			LOCALSTATEDIR        => '$(PREFIX)/var/armadito-agent',
+		);
+	}
+
 
     # allow variables defined on command line to override defaults
     foreach my $name (keys %variables) {
@@ -137,6 +160,8 @@ sub install {
     $install =~ s/.*\.packlist \\\n//g;
 
     # add data and configuration installation targets
+
+	if( $OSNAME ne "MSWin32") {
     $install .= <<'EOF';
 
 config_install :
@@ -150,6 +175,23 @@ config_install :
 data_install :
 	install -d -m 755 $(DESTDIR)$(DATADIR)
 EOF
+	}
+	else {
+	$install .= <<'EOF';
+
+config_install :
+	if not exist "$(DESTDIR)$(SYSCONFDIR)" mkdir "$(DESTDIR)$(SYSCONFDIR)"
+	if exist "$(DESTDIR)/$(SYSCONFDIR)\\agent.cfg" ( \
+	    copy "etc\\agent.cfg" "$(DESTDIR)$(SYSCONFDIR)\\agent.cfg.new"; \
+	) else ( \
+	    copy "etc\\agent.cfg" "$(DESTDIR)$(SYSCONFDIR)\\agent.cfg"; \
+	)
+
+data_install :
+	if not exist "$(DESTDIR)$(DATADIR)" mkdir "$(DESTDIR)$(DATADIR)"
+EOF
+	}
+
     return $install;
 }
 
