@@ -7,11 +7,7 @@ use lib './lib';
 use English qw(-no_match_vars) ;
 use Getopt::Long;
 use Pod::Usage;
-use Win32::TieRegistry (
-    Delimiter   => '/',
-    ArrayValues => 0,
-    qw/KEY_READ/
-);
+use UNIVERSAL::require;
 
 BEGIN {
 
@@ -20,6 +16,7 @@ BEGIN {
 
 		# Get InstallLocation from registry
 		my $Registry;
+		Win32::TieRegistry->require();
 		Win32::TieRegistry->import(
 			Delimiter   => '/',
 			ArrayValues => 0,

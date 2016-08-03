@@ -4,11 +4,7 @@ use 5.008000;
 use strict;
 use warnings;
 use English qw(-no_match_vars) ;
-use Win32::TieRegistry (
-    Delimiter   => '/',
-    ArrayValues => 0,
-    qw/KEY_READ/
-);
+use UNIVERSAL::require;
 
 require Exporter;
 
@@ -84,6 +80,7 @@ sub _getLinuxFusionSetupDir {
 
 sub _getWindowsFusionSetupDir {
 	my $Registry;
+	Win32::TieRegistry->require();
 	Win32::TieRegistry->import(
 		Delimiter   => '/',
 		ArrayValues => 0,
