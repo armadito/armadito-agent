@@ -70,24 +70,6 @@ sub run {
 
     $self = $self->SUPER::run(%params);
 
-    my $response = $self->{client}->send(
-        "url" => $self->{config}->{plugin_server_url},
-        args  => {
-            action    => "pullrequest",
-            agentid => $self->{agentid}
-        },
-		method => "GET"
-    );
-
-    if($response->is_success()){
-         $self->_handleResponse($response);
-         $self->{logger}->info("Getjobs successful...");
-    }
-    else{
-         $self->_handleError($response);
-         $self->{logger}->info("Getjobs failed...");
-    }
-
     return $self;
 }
 
