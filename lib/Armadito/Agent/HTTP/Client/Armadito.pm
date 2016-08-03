@@ -43,7 +43,7 @@ sub _prepareURL {
 
     if ($params{method} eq 'GET'){
 
-       my $urlparams = 'action='.uri_escape($params{args}->{action});
+       my $urlparams = 'agent_id='.uri_escape($params{args}->{agent_id});
 
        foreach my $k (keys %{$params{args}}) {
 	 if (ref($params{args}->{$k}) eq 'ARRAY') {
