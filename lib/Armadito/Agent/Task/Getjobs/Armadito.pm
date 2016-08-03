@@ -57,7 +57,7 @@ sub run {
         "url" => $self->{config}->{plugin_server_url}."/api/jobs",
         args  => {
             antivirus  => $self->{jobj}->{task}->{antivirus}->{name},
-            agent_id => $self->{agentid}
+            agent_id => $self->{jobj}->{agent_id}
         },
 		method => "GET"
     );
