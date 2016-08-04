@@ -45,6 +45,8 @@ sub new {
 		$self->{logger}->info("Fusion Device Id : ".$self->{agent}->{fusionid});
 	}
 
+	$self->{logger}->info("Armadito agent Id : ".$self->{agent}->{agent_id});
+
     bless $self, $class;
     return $self;
 }
