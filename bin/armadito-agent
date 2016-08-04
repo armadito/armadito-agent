@@ -48,6 +48,19 @@ BEGIN {
 }
 
 use Armadito::Agent;
+use Armadito::Agent::Task;
+use Armadito::Agent::Task::Scan;
+use Armadito::Agent::Task::Scan::Armadito;
+use Armadito::Agent::Task::State;
+use Armadito::Agent::Task::State::Armadito;
+use Armadito::Agent::Task::Alerts;
+use Armadito::Agent::Task::Alerts::Armadito;
+use Armadito::Agent::Task::Getjobs;
+use Armadito::Agent::Task::Getjobs::Armadito;
+use Armadito::Agent::Task::Runjobs;
+use Armadito::Agent::Task::Runjobs::Armadito;
+use Armadito::Agent::Task::Enrollment;
+use Armadito::Agent::Task::Enrollment::Armadito;
 
 my $options = {};
 
@@ -132,9 +145,9 @@ eval{
 		exit (1);
 	}
 
-	"Armadito::Agent::Task::$options->{task}::$options->{antivirus}"->require();
-	my $task = "Armadito::Agent::Task::$options->{task}::$options->{antivirus}"->new(config => $config, agent => $agent);
-
+	my $class = "Armadito::Agent::Task::$options->{task}::$options->{antivirus}";
+	$class->require();
+	my $task = $class->new(config => $config, agent => $agent);
 	$task->run();
 };
 
