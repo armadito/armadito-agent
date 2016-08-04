@@ -14,7 +14,7 @@ use Armadito::Agent::Tools::Fingerprint;
 
 our $VERSION = "0.0.3_03";
 my @supported_antiviruses = ("Armadito");
-my @supported_tasks = ("State","Enrollment","Getjobs", "Alerts", "Scan");
+my @supported_tasks = ("State","Enrollment","Getjobs","Runjobs","Alerts", "Scan");
 
 sub new {
     my ($class, %params) = @_;

@@ -59,6 +59,8 @@ use Armadito::Agent::Task::Alerts;
 use Armadito::Agent::Task::Alerts::Armadito;
 use Armadito::Agent::Task::Getjobs;
 use Armadito::Agent::Task::Getjobs::Armadito;
+use Armadito::Agent::Task::Runjobs;
+use Armadito::Agent::Task::Runjobs::Armadito;
 use Armadito::Agent::Task::Enrollment;
 use Armadito::Agent::Task::Enrollment::Armadito;
 
