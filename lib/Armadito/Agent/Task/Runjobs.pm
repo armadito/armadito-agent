@@ -49,6 +49,14 @@ sub _getStoredJobs {
 	return $self;
 }
 
+sub _sortJobsByPriority {
+	my ($self) = @_;
+
+	@{$self->{jobs}} = sort { $a->{job_priority} <=> $b->{job_priority} } @{$self->{jobs}};
+
+	return $self;
+}
+
 sub _handleResponse {
     my ($self, $response) = @_;
 
@@ -75,6 +83,7 @@ sub run {
 
     $self = $self->SUPER::run(%params);
 	$self = $self->_getStoredJobs();
+	$self = $self->_sortJobsByPriority();
 
     return $self;
 }
