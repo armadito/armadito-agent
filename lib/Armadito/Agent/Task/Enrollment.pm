@@ -37,11 +37,9 @@ sub new {
 }
 
 sub _handleResponse {
-
     my ($self, $response) = @_;
 
 	$self->{logger}->info($response->content());
-
     my $obj = from_json($response->content(), { utf8  => 1 });
 
 	# Update armadito agent_id
@@ -50,21 +48,17 @@ sub _handleResponse {
 		$self->{agent}->_storeArmaditoId();
 		$self->{logger}->info("Agent successfully enrolled with id ".$obj->{agent_id});
 	}
-
     return $self;
 }
 
 sub _handleError {
-
     my ($self, $response) = @_;
 
     $self->{logger}->error("Error Response : ".$response->content()."\n");
-
 	if( $response->content() =~ /^\s*\{/) {
 		my $obj = from_json($response->content(), { utf8  => 1 });
 		$self->{logger}->error($obj->{message}."[plugin_version:".$obj->{plugin_version}."]");
 	}
-
     return $self;
 }
 

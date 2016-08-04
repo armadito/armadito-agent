@@ -50,31 +50,21 @@ sub _getStoredJobs {
 }
 
 sub _handleResponse {
-
     my ($self, $response) = @_;
 
-    # Parse response
-    # print Dumper($response);
-    print "Successful Response : ".$response->content()."\n";
-
+    $self->{logger}->info("Successful Response : ".$response->content());
     my $obj =  from_json($response->content(), { utf8  => 1 });
-
-    print Dumper($obj);
+    $self->{logger}->info(Dumper($obj));
 
     return $self;
 }
 
 sub _handleError {
-
     my ($self, $response) = @_;
 
-    # Parse response
-    # print Dumper($response);
-    print "Error Response : ".$response->content()."\n";
-
+    $self->{logger}->info("Error Response : ".$response->content());
     my $obj =  from_json($response->content(), { utf8  => 1 });
-
-    print Dumper($obj);
+    $self->{logger}->error(Dumper($obj));
 
     return $self;
 }
