@@ -32,7 +32,7 @@ sub new {
 
 sub _getJobs {
 	  my ($self, $job) = @_;
-	  
+
 }
 
 sub _handleResponse {
@@ -57,7 +57,7 @@ sub run {
     my ( $self, %params ) = @_;
 
     $self = $self->SUPER::run(%params);
-		
+
 
     return $self;
 }

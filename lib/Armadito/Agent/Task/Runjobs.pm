@@ -45,7 +45,7 @@ sub _getJob {
 
 sub _getJobs {
 	  my ($self, $job) = @_;
-	  
+
 }
 
 sub _handleResponse {
