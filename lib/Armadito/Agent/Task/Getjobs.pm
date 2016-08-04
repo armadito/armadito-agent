@@ -36,11 +36,11 @@ sub new {
 }
 
 sub _storeJob {
-	  my ($self, $job) = @_;
-	    $self->{agent}->{armadito_storage}->save(
-			name => 'Armadito-Agent',
-			data => $job
-		);
+	my ($self, $job) = @_;
+	$self->{agent}->{armadito_storage}->save(
+		name => 'Armadito-Agent',
+		data => $job
+	);
 }
 
 sub _handleResponse {
