@@ -6,6 +6,7 @@ use base 'Armadito::Agent::Task';
 
 use FusionInventory::Agent::Config;
 use FusionInventory::Agent::Logger;
+use Armadito::Agent::Storage;
 use Data::Dumper;
 use JSON;
 
@@ -34,6 +35,14 @@ sub new {
     return $self;
 }
 
+sub _storeJob {
+	  my ($self, $job) = @_;
+	    $self->{agent}->{armadito_storage}->save(
+			name => 'Armadito-Agent',
+			data => $job
+		);
+}
+
 sub _handleResponse {
 
     my ($self, $response) = @_;
@@ -43,6 +52,12 @@ sub _handleResponse {
     print "Successful Response : ".$response->content()."\n";
 
     my $obj =  from_json($response->content(), { utf8  => 1 });
+
+	if(defined($obj->{jobs}) && ref($obj->{jobs) eq "ARRAY"){
+		foreach(@$jobs->{jobs}){
+			$self->_storeJob($_);
+		}
+	}
 
     print Dumper($obj);
 
