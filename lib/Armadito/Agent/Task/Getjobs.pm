@@ -53,8 +53,8 @@ sub _handleResponse {
 
     my $obj =  from_json($response->content(), { utf8  => 1 });
 
-	if(defined($obj->{jobs}) && ref($obj->{jobs) eq "ARRAY"){
-		foreach(@$jobs->{jobs}){
+	if(defined($obj->{jobs}) && ref($obj->{jobs}) eq "ARRAY"){
+		foreach(@{$obj->{jobs}}){
 			$self->_storeJob($_);
 		}
 	}
