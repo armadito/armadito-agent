@@ -13,8 +13,6 @@ BEGIN {
 
 	my $libdir = "";
 	if ($OSNAME eq 'MSWin32'){
-
-		# Get InstallLocation from registry
 		my $Registry;
 		Win32::TieRegistry->require();
 		Win32::TieRegistry->import(
@@ -125,11 +123,8 @@ my $config = {
 };
 
 eval{
-	# validate args
 	$agent->isAVSupported($options->{antivirus}) or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
 	$agent->isTaskSupported($options->{task}) or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
-
-	## init
 	$agent->init(options => $options);
 
 	if($options->{task} eq "Enrollment" && $< != 0 ) {
@@ -137,11 +132,9 @@ eval{
 		exit (1);
 	}
 
-	## new task instance
 	"Armadito::Agent::Task::$options->{task}::$options->{antivirus}"->require();
 	my $task = "Armadito::Agent::Task::$options->{task}::$options->{antivirus}"->new(config => $config, agent => $agent);
 
-	## run task
 	$task->run();
 };
 
