@@ -30,9 +30,37 @@ sub new {
     return $self;
 }
 
-sub _getJobs {
-	  my ($self, $job) = @_;
+sub _runJob {
+	my ($self, $job) = @_;
 
+	my $config = ();
+	my $class = "Armadito::Agent::Task::$job->{job_type}::$self->{jobj}->{task}->{antivirus}->{name}";
+
+	eval {
+		$class->require();
+		die "Job Class is not enabled." if(!$class->isEnabled());
+		my $task = $class->new(config => $config, agent => $self->{agent});
+		$task->run();
+	};
+
+	if ($@) {
+		 $self->{logger}->error($@);
+		 # TODO: Send error with POST /api/jobs
+	}
+
+	return $self;
+}
+
+sub _runJobs {
+	my ($self) = @_;
+
+	foreach my $job (@{$self->{jobs}}){
+		if($job->{antivirus_name} eq "Armadito"){
+			$self->_runJob($job);
+		}
+	}
+
+	return $self;
 }
 
 sub _handleResponse {
@@ -57,11 +85,10 @@ sub run {
     my ( $self, %params ) = @_;
 
     $self = $self->SUPER::run(%params);
-
+	$self = $self->_runJobs();
 
     return $self;
 }
-
 1;
 
 __END__
