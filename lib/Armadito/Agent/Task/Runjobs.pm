@@ -35,17 +35,15 @@ sub new {
     return $self;
 }
 
-sub _getJob {
-	  my ($self, $job) = @_;
-	    #$self->{agent}->{armadito_storage}->save(
-		#	name => 'Armadito-Agent',
-		#	data => $job
-		#);
-}
+sub _getStoredJobs {
+	my ($self, $job) = @_;
 
-sub _getJobs {
-	  my ($self, $job) = @_;
-
+	my $data = $self->{agent}->{armadito_storage}->restore(name => 'Armadito-Agent-Jobs');
+	if(defined($data->{jobs})){
+		foreach my $job (@{$data->{jobs}}){
+			print "Job ".$job->{job_id}." - ".$job->{job_priority}."\n";
+		}
+	}
 }
 
 sub _handleResponse {
@@ -83,6 +81,8 @@ sub run {
     my ( $self, %params ) = @_;
 
     $self = $self->SUPER::run(%params);
+
+	$self->_getStoredJobs();
 
     return $self;
 }

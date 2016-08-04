@@ -35,11 +35,22 @@ sub new {
     return $self;
 }
 
-sub _storeJob {
-	my ($self, $job) = @_;
+sub _storeJobs {
+	my ($self, $jobs) = @_;
+
+	# We merge stored jobs with new ones
+	my $data = $self->{agent}->{armadito_storage}->restore(name => 'Armadito-Agent-Jobs');
+	if(defined($data->{jobs})){
+		foreach(@{$data->{jobs}}){
+			push(@$jobs, $_);
+		}
+	}
+
 	$self->{agent}->{armadito_storage}->save(
-		name => 'Armadito-Agent',
-		data => $job
+		name => 'Armadito-Agent-Jobs',
+		data => {
+            jobs => $jobs
+        }
 	);
 }
 
@@ -54,12 +65,10 @@ sub _handleResponse {
     my $obj =  from_json($response->content(), { utf8  => 1 });
 
 	if(defined($obj->{jobs}) && ref($obj->{jobs}) eq "ARRAY"){
-		foreach(@{$obj->{jobs}}){
-			$self->_storeJob($_);
-		}
+		$self->_storeJobs($obj->{jobs});
 	}
 
-    print Dumper($obj);
+    print "all Jobs : ".Dumper($obj);
 
     return $self;
 }
