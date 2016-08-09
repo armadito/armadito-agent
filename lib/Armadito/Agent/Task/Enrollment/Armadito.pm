@@ -53,9 +53,9 @@ sub run {
 
     $self = $self->SUPER::run(%params);
 
-    my $enrollment_msg = '{}'; #TODO
+    my $enrollment_obj = '{}'; #TODO
 
-	$self->{jobj}->{task}->{msg} = $enrollment_msg;
+	$self->{jobj}->{task}->{obj} = $enrollment_obj;
 
 	my $json_text = to_json($self->{jobj});
 

@@ -107,7 +107,7 @@ sub run {
 }';
 	my $state_jobj =  from_json($av_response, { utf8  => 1 });
 
-	$self->{jobj}->{task}->{msg} = $state_jobj;
+	$self->{jobj}->{task}->{obj} = $state_jobj;
 
 	my $json_text = to_json($self->{jobj});
 
