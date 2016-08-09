@@ -40,20 +40,20 @@ sub _runJob {
 	eval {
 		$class->require();
 	};
-	goto ERROR; if ($@);
+	goto ERROR if ($@);
 
 	$error_code = 2;
 	eval {
 		die "Job Class is not enabled." if(!$class->isEnabled());
 	};
-	goto ERROR; if ($@);
+	goto ERROR if ($@);
 
 	$error_code = 3;
 	eval {
 		my $task = $class->new(config => $config, agent => $self->{agent});
 		$task->run();
 	};
-	goto ERROR; if ($@);
+	goto ERROR if ($@);
 
 	$self->{jobj}->{task}->{obj} = {
 		code => 0,
@@ -113,7 +113,7 @@ sub _sendStatus {
 
 	my $response = $self->{client}->send(
         "url" => $self->{config}->{plugin_server_url}."/api/jobs",
-        message => $json_text
+        message => $json_text,
 		method => "POST"
     );
 
