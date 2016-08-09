@@ -36,17 +36,34 @@ sub _runJob {
 	my $config = ();
 	my $class = "Armadito::Agent::Task::$job->{job_type}::$self->{jobj}->{task}->{antivirus}->{name}";
 
+	my $error_code = 1;
 	eval {
 		$class->require();
+	};
+	goto ERROR; if ($@);
+
+	$error_code = 2;
+	eval {
 		die "Job Class is not enabled." if(!$class->isEnabled());
+	};
+	goto ERROR; if ($@);
+
+	$error_code = 3;
+	eval {
 		my $task = $class->new(config => $config, agent => $self->{agent});
 		$task->run();
 	};
+	goto ERROR; if ($@);
 
-	if ($@) {
-		 $self->{logger}->error($@);
-		 # TODO: Send error with POST /api/jobs
-	}
+	return $self;
+
+ERROR:
+
+	$self->{logger}->error($@);
+	$self->{error} = {
+		code => 1,
+		message => "runJob error"
+	};
 
 	return $self;
 }
