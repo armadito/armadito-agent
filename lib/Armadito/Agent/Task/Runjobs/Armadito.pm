@@ -55,14 +55,21 @@ sub _runJob {
 	};
 	goto ERROR; if ($@);
 
+	$self->{jobj}->{task}->{obj} = {
+		code => 0,
+		message => "runJob successful",
+		job_id => $job->{job_id}
+	};
+
 	return $self;
 
 ERROR:
 
 	$self->{logger}->error($@);
-	$self->{error} = {
-		code => 1,
-		message => "runJob error"
+	$self->{jobj}->{task}->{obj} = {
+		code => $error_code,
+		message => "runJob error",
+		job_id => $job->{job_id}
 	};
 
 	return $self;
@@ -74,6 +81,7 @@ sub _runJobs {
 	foreach my $job (@{$self->{jobs}}){
 		if($job->{antivirus_name} eq "Armadito"){
 			$self->_runJob($job);
+			$self->_sendStatus();
 		}
 	}
 
@@ -96,6 +104,27 @@ sub _handleError {
 	$self = $self->SUPER::_handleError($response);
 
     return $self;
+}
+
+sub _sendStatus {
+	my ($self) = @_;
+
+	my $json_text = to_json($self->{jobj});
+
+	my $response = $self->{client}->send(
+        "url" => $self->{config}->{plugin_server_url}."/api/jobs",
+        message => $json_text
+		method => "POST"
+    );
+
+    if($response->is_success()){
+         $self->_handleResponse($response);
+         $self->{logger}->info("Runjobs sendStatus successful...");
+    }
+    else{
+         $self->_handleError($response);
+         $self->{logger}->info("Runjobs sendStatus failed...");
+    }
 }
 
 sub run {
