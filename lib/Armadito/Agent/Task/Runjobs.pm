@@ -49,6 +49,25 @@ sub _getStoredJobs {
 	return $self;
 }
 
+sub _rmJobFromStorage {
+	my ($self, $job_id) = @_;
+
+	my $jobs = ();
+	my $data = $self->{agent}->{armadito_storage}->restore(name => 'Armadito-Agent-Jobs');
+	if(defined($data->{jobs})){
+		foreach(@{$data->{jobs}}){
+			push(@$jobs, $_) if $_->{job_id} ne $job_id;
+		}
+	}
+
+	$self->{agent}->{armadito_storage}->save(
+		name => 'Armadito-Agent-Jobs',
+		data => {
+            jobs => $jobs
+        }
+	);
+}
+
 sub _sortJobsByPriority {
 	my ($self) = @_;
 

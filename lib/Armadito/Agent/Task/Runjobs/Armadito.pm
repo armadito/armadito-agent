@@ -82,6 +82,7 @@ sub _runJobs {
 		if($job->{antivirus_name} eq "Armadito"){
 			$self->_runJob($job);
 			$self->_sendStatus();
+			$self->_rmJobFromStorage($job->{job_id});
 		}
 	}
 
