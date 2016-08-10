@@ -1,4 +1,5 @@
 bin/armadito-agent
+bin/armadito-agent.bat
 Changes
 etc/agent.cfg
 inc/Module/AutoInstall.pm
@@ -15,13 +16,21 @@ inc/Module/Install/WriteAll.pm
 lib/Armadito/Agent.pm
 lib/Armadito/Agent/Config.pm
 lib/Armadito/Agent/HTTP/Client/Armadito.pm
+lib/Armadito/Agent/Storage.pm
 lib/Armadito/Agent/Task.pm
+lib/Armadito/Agent/Task/Alerts.pm
+lib/Armadito/Agent/Task/Alerts/Armadito.pm
 lib/Armadito/Agent/Task/Enrollment.pm
 lib/Armadito/Agent/Task/Enrollment/Armadito.pm
 lib/Armadito/Agent/Task/Getjobs.pm
 lib/Armadito/Agent/Task/Getjobs/Armadito.pm
+lib/Armadito/Agent/Task/Runjobs.pm
+lib/Armadito/Agent/Task/Runjobs/Armadito.pm
+lib/Armadito/Agent/Task/Scan.pm
+lib/Armadito/Agent/Task/Scan/Armadito.pm
 lib/Armadito/Agent/Task/State.pm
 lib/Armadito/Agent/Task/State/Armadito.pm
+lib/Armadito/Agent/Tools/Fingerprint.pm
 LICENSE
 Makefile.PL
 MANIFEST

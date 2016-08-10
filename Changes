@@ -1,5 +1,19 @@
 Revision history for Perl extension Armadito::Agent.
 
+0.1.0_01 10/08/2016
+	- Add RESTful API client-side implementation
+	- Add Getjobs task
+	- Add Runjobs task
+	- Enrollment with fingerprint
+	- Build and Install from sources on Win32
+	- Retrieve fusion deviceid from fusion storage
+	- Add --setup option
+	- Add empty Scan and Alert tasks
+	- Fix compatibility with fusioninventory agent 2.3.5.1
+	- Tested on Win7 64bit (VM)
+	- Use Fusion minimal Strawberry Perl distribution on Win32
+	- Refactor dynamic class loading
+
 0.0.3_03 30/06/2016
 	- reorganize tasks with more inheritance, allowing possibilties to implements tasks for other antiviruses in the future
 	- refactor armadito-agent cli script

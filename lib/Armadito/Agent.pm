@@ -12,7 +12,7 @@ use Armadito::Agent::Config;
 use Armadito::Agent::Storage;
 use Armadito::Agent::Tools::Fingerprint;
 
-our $VERSION = "0.0.3_03";
+our $VERSION = "0.1.0_01";
 my @supported_antiviruses = ("Armadito");
 my @supported_tasks = ("State","Enrollment","Getjobs","Runjobs","Alerts", "Scan");
 
@@ -191,7 +191,7 @@ Armadito::Agent - Armadito Agent
 
 =head1 VERSION
 
-0.0.3_03
+0.1.0_01
 
 =head1 DESCRIPTION
 
