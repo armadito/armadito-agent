@@ -65,11 +65,11 @@ sub _prepareURL {
      return $url;
 }
 
-sub send { 
+sub send {
     my ($self, %params) = @_;
 
     my $url = $self->_prepareURL(%params);
-   
+
     $self->{logger}->debug2($url) if $self->{logger};
 
     my $headers = HTTP::Headers->new(
@@ -81,7 +81,7 @@ sub send {
 			$params{method} => $url,
 			$headers
     );
-   
+
     if($params{message} && $params{method} eq 'POST'){
         # json utf-8 encoded
         $request->content(encode('UTF-8',$params{message}));
@@ -106,7 +106,7 @@ This is the class used by Armadito agent to communicate with armadito plugin in 
 
 =head2 $task->send(%params)
 
-Send a request according to params given. If this is a GET request, params are formatted into URL with _prepareURL method. If this is a POST request, a message must be given in params. This should be a valid JSON message. 
+Send a request according to params given. If this is a GET request, params are formatted into URL with _prepareURL method. If this is a POST request, a message must be given in params. This should be a valid JSON message.
 
 The following parameters are allowed, as keys of the %params hash :
 
