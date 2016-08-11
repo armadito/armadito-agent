@@ -1,4 +1,4 @@
-package Armadito::Agent::HTTP::Client::Armadito;
+package Armadito::Agent::HTTP::Client::ArmaditoGLPI;
 
 use strict;
 use warnings;
@@ -96,11 +96,11 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::HTTP::Client::Armadito - Armadito HTTP Client class.
+Armadito::Agent::HTTP::Client::ArmaditoGLPI - HTTP Client for armadito plugin for GLPI.
 
 =head1 DESCRIPTION
 
-This is the class used by Armadito agent to communicate with armadito plugin in GLPI or with Armadito Antivirus.
+This is the class used by Armadito agent to communicate with armadito plugin in GLPI.
 
 =head1 METHODS
 

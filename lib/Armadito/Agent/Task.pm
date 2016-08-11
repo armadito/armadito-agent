@@ -7,7 +7,7 @@ use base 'FusionInventory::Agent::Task';
 use FusionInventory::Agent;
 use FusionInventory::Agent::Config;
 use FusionInventory::Agent::Logger;
-use Armadito::Agent::HTTP::Client::Armadito;
+use Armadito::Agent::HTTP::Client::ArmaditoGLPI;
 use Data::Dumper;
 
 sub isEnabled {
@@ -19,8 +19,8 @@ sub isEnabled {
 sub run {
     my ( $self, %params ) = @_;
  
-    $self->{client} = Armadito::Agent::HTTP::Client::Armadito->new();
-    die "Error when creating client!" unless $self->{client};
+    $self->{glpi_client} = Armadito::Agent::HTTP::Client::ArmaditoGLPI->new();
+    die "Error when creating ArmaditoGLPI client!" unless $self->{glpi_client};
 
     return $self;
 }

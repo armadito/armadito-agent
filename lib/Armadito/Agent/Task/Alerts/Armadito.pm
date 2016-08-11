@@ -69,7 +69,7 @@ sub run {
 
 	print "JSON formatted str : \n".$json_text."\n";
 
-    my $response = $self->{client}->send(
+    my $response = $self->{glpi_client}->send(
 		"url" => $self->{config}->{plugin_server_url}."/api/alerts",
 		message => $json_text,
 		method => "POST"
