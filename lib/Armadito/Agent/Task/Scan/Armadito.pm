@@ -4,10 +4,10 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Task::Scan';
 
-use FusionInventory::Agent::Config;
-use FusionInventory::Agent::Logger;
 use Data::Dumper;
 use JSON;
+use Armadito::Agent::HTTP::Client::ArmaditoAV;
+
 
 sub isEnabled {
     my ($self) = @_;
@@ -53,6 +53,11 @@ sub run {
 
     $self = $self->SUPER::run(%params);
 	$self->{logger}->info("Armadito Scan launched.");
+
+    $self->{av_client} = Armadito::Agent::HTTP::Client::ArmaditoAV->new();
+    $self->{av_client}->register();
+
+    $self->{logger}->info("Armadito AV api register with token :".$self->{av_client}->{token});
 
     return $self;
 }
