@@ -105,7 +105,11 @@ This is the class used by Armadito agent to communicate with armadito antivirus 
 
 =head1 METHODS
 
-=head2 $task->send(%params)
+=head2 $client->register()
+
+Register to Armadito Antivirus API And set token after parsing AV json response.
+
+=head2 $client->send(%params)
 
 Send a request according to params given. If this is a GET request, params are formatted into URL with _prepareURL method. If this is a POST request, a message must be given in params. This should be a valid JSON message.
 
