@@ -12,14 +12,15 @@ use URI;
 use Encode;
 use Data::Dumper;
 use URI::Escape;
-
+use JSON;
 use FusionInventory::Agent::Tools;
 
 sub new {
    my ($class, %params) = @_;
    my $self = $class->SUPER::new(%params);
 
-   $self->{server_url} = $params{server};
+   # default options
+   $self->{server_url} = "http://localhost:8888";
 
    return $self;
 }
@@ -58,17 +59,37 @@ sub send {
     return $self->request($request);
 }
 
+sub _handleRegisterResponse()
+{
+	my ($self, $response) = @_;
+
+	$self->{logger}->info($response->content());
+	my $obj = from_json($response->content(), { utf8  => 1 });
+
+	# Update armadito agent_id
+	if(defined($obj->{token})){
+		$self->{token} = $obj->{token};
+		$self->{logger}->info("ArmaditAV Registration successful, session token : ".$obj->{token});
+	}
+	else{
+		$self->{logger}->error("Invalid token from ArmaditAV registration.");
+	}
+}
+
 sub register {
 	my ($self) = @_;
 
-	$token = "";
-
 	my $response = $self->send(
-        "url" => $self->{server_url}."/api/register",
+		"url" => $self->{server_url}."/api/register",
 		method => "GET"
-    );
+	);
 
-	return $token;
+	if($response->is_success() && $response->content() =~ /^\s*\{/ms){
+		$self->_handleRegisterResponse($response);
+	}
+	else{
+		$self->{logger}->info("ArmaditAV Registration failed...");
+	}
 }
 
 1;
