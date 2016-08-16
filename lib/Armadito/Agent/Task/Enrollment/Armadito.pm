@@ -60,7 +60,7 @@ sub run {
 	my $json_text = to_json($self->{jobj});
 
     my $response = $self->{glpi_client}->send(
-        "url" => $self->{config}->{plugin_server_url}."/api/enrollment",
+        "url" => $self->{agent}->{config}->{armadito}->{server}."/api/enrollment",
 		message => $json_text,
 		method => "POST"
     );

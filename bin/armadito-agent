@@ -130,10 +130,7 @@ if ($options->{'list-avs'}) {
 $options->{antivirus} = "Armadito" unless(defined($options->{antivirus}));
 $options->{server} = "http://armadito-glpi/glpi/plugins/armadito/" unless(defined($options->{server}));
 
-my $config = {
-    plugin_server_url => $options->{server},
-    av_server_url => "http://localhost/armaditoAV:8081"
-};
+my $config = {};
 
 eval{
 	$agent->isAVSupported($options->{antivirus}) or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";

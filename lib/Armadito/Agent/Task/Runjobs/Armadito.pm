@@ -113,7 +113,7 @@ sub _sendStatus {
 	my $json_text = to_json($self->{jobj});
 
 	my $response = $self->{glpi_client}->send(
-        "url" => $self->{config}->{plugin_server_url}."/api/jobs",
+        "url" => $self->{agent}->{config}->{armadito}->{server}."/api/jobs",
         message => $json_text,
 		method => "POST"
     );

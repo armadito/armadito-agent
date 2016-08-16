@@ -114,7 +114,7 @@ sub run {
 	print "JSON formatted str : \n".$json_text."\n";	
 
     my $response = $self->{glpi_client}->send(
-		"url" => $self->{config}->{plugin_server_url}."/api/states",
+		"url" => $self->{agent}->{config}->{armadito}->{server}."/api/states",
 		message => $json_text,
 		method => "POST"
     );

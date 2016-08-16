@@ -47,6 +47,8 @@ sub init {
 		options => $params{options}
     );
 
+	$self->{config}->{armadito}->{server} = $params{options}->{server} unless @{$self->{config}->{armadito}->{server}};
+
 	# Create logger
 	$self->{logger} = FusionInventory::Agent::Logger->new(backends => ['Stderr']);
 
