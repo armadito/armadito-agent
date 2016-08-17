@@ -42,9 +42,12 @@ sub send {
     $self->{logger}->debug2($url) if $self->{logger};
 
     my $headers = HTTP::Headers->new(
-#            'Content-Type' => 'application/json',
-            'Referer'      => $url
+			'User-Agent' => 'armadito-agent',
+            'Referer'    => $url
     );
+
+	$headers->header('Content-Type' => 'application/json') if($params{method} eq 'POST');
+	$headers->header('X-Armadito-Token' => $self->{token}) if(defined($self->{token}));
 
     my $request = HTTP::Request->new(
 			$params{method} => $url,
