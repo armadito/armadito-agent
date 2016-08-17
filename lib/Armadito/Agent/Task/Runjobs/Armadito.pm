@@ -72,6 +72,9 @@ ERROR:
 		job_id => $job->{job_id}
 	};
 
+	# We send eval_error if it's safe
+	$self->{jobj}->{task}->{obj}->{message} .= ": ".$@ if($@ =~ /^[A-Za-z. ]+$/ms);
+
 	return $self;
 }
 
