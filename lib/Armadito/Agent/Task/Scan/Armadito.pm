@@ -40,7 +40,6 @@ sub _handleScanResponse {
 }
 
 sub _handleError {
-
     my ($self, $response) = @_;
 
 	$self = $self->SUPER::_handleError($response);
