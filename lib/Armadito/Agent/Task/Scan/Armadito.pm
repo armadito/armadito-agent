@@ -9,9 +9,10 @@ use JSON;
 use Armadito::Agent::HTTP::Client::ArmaditoAV;
 
 
+my @supported_scantypes = ("fast","complete","custom");
+
 sub isEnabled {
     my ($self) = @_;
-
     return 1;
 }
 
@@ -30,8 +31,7 @@ sub new {
     return $self;
 }
 
-sub _handleResponse {
-
+sub _handleScanResponse {
     my ($self, $response) = @_;
 
     $self = $self->SUPER::_handleResponse($response);
@@ -48,16 +48,54 @@ sub _handleError {
     return $self;
 }
 
+sub _isValidScanType {
+	my ($scan_type) = @_;
+    foreach (@supported_scantypes) {
+	  if( $scan_type eq $_ ) {
+		return 1;
+	  }
+	}
+	return 0;
+}
+
+sub _validateScanParams {
+	my ( $self, %params ) = @_;
+
+	die "undefined scan_type." if(!defined($params{obj}->{scan_type}));
+	die "invalid scan_type." if(!_isValidScanType($params{obj}->{scan_type}));
+
+	$params{obj}->{scan_path} = "/home/vhamon/armadito-glpi";
+
+	#die "Empty scan_path." if($params->{obj}->{scan_path} eq "");
+	# TODO: validate scan_path
+
+	return $self->setJsonScanMessage(%params);
+}
+
+sub setJsonScanMessage {
+	my ( $self, %params ) = @_;
+
+	$self->{json_message} = "{ 'path' : '".$params{obj}->{scan_path}."' }";
+}
+
 sub run {
     my ( $self, %params ) = @_;
 
     $self = $self->SUPER::run(%params);
-	$self->{logger}->info("Armadito Scan launched.");
+	$self->_validateScanParams(%params);
 
+	$self->{logger}->info("Armadito Scan launched.");
     $self->{av_client} = Armadito::Agent::HTTP::Client::ArmaditoAV->new();
     $self->{av_client}->register();
 
-    $self->{logger}->info("Armadito AV api register with token :".$self->{av_client}->{token});
+	my $response = $self->{av_client}->send(
+		"url" => $self->{av_client}->{server_url}."/api/scan",
+		message => $self->{json_message},
+		method => "POST"
+	);
+
+	die "ArmaditoAV Scan request failed." if(!$response->is_success() || !$response->content() =~ /^\s*\{/ms);
+	$self->_handleScanResponse($response);
 
     return $self;
 }
