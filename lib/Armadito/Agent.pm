@@ -250,9 +250,9 @@ Display all currently supported Antiviruses to stdout.
 
 =over 4
 
-=item * L<http://armadito-av.readthedocs.io/en/latest/>
+=item * L<http://armadito-glpi.readthedocs.io/en/dev/>
 
-Armadito online documentation.
+Armadito for GLPI online documentation.
 
 =item * L<https://github.com/armadito>
 
