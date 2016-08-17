@@ -87,12 +87,9 @@ sub register {
 		method => "GET"
 	);
 
-	if($response->is_success() && $response->content() =~ /^\s*\{/ms){
-		$self->_handleRegisterResponse($response);
-	}
-	else{
-		$self->{logger}->info("ArmaditAV Registration failed...");
-	}
+	die "Unable to register to ArmaditoAV api." if(!$response->is_success() || !$response->content() =~ /^\s*\{/ms);
+	$self->_handleRegisterResponse($response);
+
 }
 
 1;
