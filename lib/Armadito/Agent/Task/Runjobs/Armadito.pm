@@ -7,6 +7,7 @@ use base 'Armadito::Agent::Task::Runjobs';
 use FusionInventory::Agent::Config;
 use FusionInventory::Agent::Logger;
 use Data::Dumper;
+use MIME::Base64;
 use JSON;
 
 sub isEnabled {
@@ -65,15 +66,13 @@ sub _runJob {
 
 ERROR:
 
+	# We send error as base64
 	$self->{logger}->error($@);
 	$self->{jobj}->{task}->{obj} = {
 		code => $error_code,
-		message => "runJob error",
+		message => encode_base64($@),
 		job_id => $job->{job_id}
 	};
-
-	# We send eval_error if it's safe
-	$self->{jobj}->{task}->{obj}->{message} .= ": ".$@ if($@ =~ /^[A-Za-z. ]+$/ms);
 
 	return $self;
 }
