@@ -8,9 +8,6 @@ use Data::Dumper;
 use JSON;
 use Armadito::Agent::HTTP::Client::ArmaditoAV;
 
-
-my @supported_scantypes = ("fast","complete","custom");
-
 sub isEnabled {
     my ($self) = @_;
     return 1;
@@ -47,27 +44,14 @@ sub _handleError {
     return $self;
 }
 
-sub _isValidScanType {
-	my ($scan_type) = @_;
-    foreach (@supported_scantypes) {
-	  if( $scan_type eq $_ ) {
-		return 1;
-	  }
-	}
-	return 0;
-}
-
 sub _validateScanParams {
 	my ( $self, %params ) = @_;
 
-	die "undefined scan_type." if(!defined($params{obj}->{scan_type}));
-	die "invalid scan_type." if(!_isValidScanType($params{obj}->{scan_type}));
+	die "undefined scan_type." if(!defined($params{obj}->{scan_name}));
+	die "undefined scan_path." if(!defined($params{obj}->{scan_path}));
+	die "Empty scan_path." if($params{obj}->{scan_path} eq "");
 
-	$params{obj}->{scan_path} = "/home/vhamon/armadito-glpi";
-
-	#die "Empty scan_path." if($params->{obj}->{scan_path} eq "");
-	# TODO: validate scan_path
-
+	# TODO: validate scan_paths, etc.
 	return $self->setJsonScanMessage(%params);
 }
 
