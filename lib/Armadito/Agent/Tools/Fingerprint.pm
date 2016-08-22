@@ -52,7 +52,7 @@ sub _getFingerprintWindows {
 
 # Add kind of uniqueness
 sub _getSystemInfos {
-	my $infos       = getDmidecodeInfos(@_);
+	my $infos       = getDmidecodeInfos();
 	my $bios_info   = $infos->{0}->[0];
 	my $system_info = $infos->{1}->[0];
 	my $base_info   = $infos->{2}->[0];

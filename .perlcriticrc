@@ -9,7 +9,7 @@ verbose = %f: [%p] %m at line %l, column %c.\n
 # [-Modules::RequireEndWithOne]
 [-Modules::RequireExplicitPackage]
 # [-Subroutines::ProhibitBuiltinHomonyms]
-[-Subroutines::RequireArgUnpacking]
+# [-Subroutines::RequireArgUnpacking]
 [-Subroutines::RequireFinalReturn]
 [-TestingAndDebugging::RequireUseWarnings]
 [-ValuesAndExpressions::ProhibitCommaSeparatedStatements]
