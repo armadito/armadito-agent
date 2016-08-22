@@ -1,5 +1,17 @@
 # please alpha sort config items as you add them
 
-severity = 5
+severity = 4
 theme = core
-verbose = 11
+verbose = %f: [%p] %m at line %l, column %c.\n
+
+[-InputOutput::RequireBriefOpen]
+[-Modules::ProhibitMultiplePackages]
+[-Modules::RequireEndWithOne]
+[-Modules::RequireExplicitPackage]
+[-Subroutines::ProhibitBuiltinHomonyms]
+[-Subroutines::RequireArgUnpacking]
+[-Subroutines::RequireFinalReturn]
+[-TestingAndDebugging::RequireUseWarnings]
+[-ValuesAndExpressions::ProhibitCommaSeparatedStatements]
+[-ValuesAndExpressions::ProhibitConstantPragma]
+[-Variables::RequireLocalizedPunctuationVars]
