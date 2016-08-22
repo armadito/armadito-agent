@@ -59,7 +59,7 @@ sub run {
 
 	my $json_text = to_json( $self->{jobj} );
 
-	my $response = $self->{glpi_client}->send(
+	my $response = $self->{glpi_client}->sendRequest(
 		"url"   => $self->{agent}->{config}->{armadito}->{server} . "/api/enrollment",
 		message => $json_text,
 		method  => "POST"

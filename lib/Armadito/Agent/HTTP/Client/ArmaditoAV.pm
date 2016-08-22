@@ -33,7 +33,7 @@ sub _prepareURL {
 	return $url;
 }
 
-sub send {
+sub sendRequest {
 	my ( $self, %params ) = @_;
 
 	my $url = $self->_prepareURL(%params);
@@ -79,7 +79,7 @@ sub _handleRegisterResponse() {
 sub register {
 	my ($self) = @_;
 
-	my $response = $self->send(
+	my $response = $self->sendRequest(
 		"url"  => $self->{server_url} . "/api/register",
 		method => "GET"
 	);
@@ -106,7 +106,7 @@ This is the class used by Armadito agent to communicate with armadito antivirus 
 
 Register to Armadito Antivirus API And set token after parsing AV json response.
 
-=head2 $client->send(%params)
+=head2 $client->sendRequest(%params)
 
 Send a request according to params given. If this is a GET request, params are formatted into URL with _prepareURL method. If this is a POST request, a message must be given in params. This should be a valid JSON message.
 

@@ -59,7 +59,7 @@ sub run {
 
 	# TODO:
 	# 1 : Send GET request to AV, asking for AV state
-	# my $req = $self->{armaditoAV_client}->send(
+	# my $req = $self->{armaditoAV_client}->sendRequest(
 	#    "url" => $self->{config}->{av_server_url},
 	#    method => "GET"
 	#    args  => {
@@ -113,7 +113,7 @@ sub run {
 
 	print "JSON formatted str : \n" . $json_text . "\n";
 
-	my $response = $self->{glpi_client}->send(
+	my $response = $self->{glpi_client}->sendRequest(
 		"url"   => $self->{agent}->{config}->{armadito}->{server} . "/api/states",
 		message => $json_text,
 		method  => "POST"

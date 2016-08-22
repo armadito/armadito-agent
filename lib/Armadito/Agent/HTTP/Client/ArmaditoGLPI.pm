@@ -66,7 +66,7 @@ sub _prepareURL {
 	return $url;
 }
 
-sub send {
+sub sendRequest {
 	my ( $self, %params ) = @_;
 
 	my $url = $self->_prepareURL(%params);
@@ -105,7 +105,7 @@ This is the class used by Armadito agent to communicate with armadito plugin in 
 
 =head1 METHODS
 
-=head2 $task->send(%params)
+=head2 $task->sendRequest(%params)
 
 Send a request according to params given. If this is a GET request, params are formatted into URL with _prepareURL method. If this is a POST request, a message must be given in params. This should be a valid JSON message.
 

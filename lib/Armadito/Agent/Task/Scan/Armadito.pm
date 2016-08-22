@@ -71,7 +71,7 @@ sub run {
 	$self->{av_client} = Armadito::Agent::HTTP::Client::ArmaditoAV->new();
 	$self->{av_client}->register();
 
-	my $response = $self->{av_client}->send(
+	my $response = $self->{av_client}->sendRequest(
 		"url"   => $self->{av_client}->{server_url} . "/api/scan",
 		message => $self->{json_message},
 		method  => "POST"
