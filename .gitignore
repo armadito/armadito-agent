@@ -5,6 +5,7 @@
 .tidyall.d/
 /.build/
 /Armadito-Agent*.tar.gz
+Armadito-Agent-*
 /MANIFEST.bak
 /META.json
 /META.yml
