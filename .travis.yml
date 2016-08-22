@@ -1,7 +1,7 @@
 sudo: false
 language: perl
 before_script:
-  - apt-get update
-  - apt-get install fusioninventory-agent
+  - sudo apt-get update
+  - sudo apt-get install fusioninventory-agent
 perl:
   - "5.20"
