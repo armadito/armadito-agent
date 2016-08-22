@@ -14,7 +14,7 @@ use FusionInventory::Agent::Tools::Hostname;
 use FusionInventory::Agent::Tools::Generic;
 use FusionInventory::Agent::Tools;
 
-our @EXPORT = qw(
+our @EXPORT_OK = qw(
 	getFingerprint
 );
 
