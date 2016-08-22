@@ -260,7 +260,7 @@ sub _checkContent {
 	foreach my $old ( keys %$deprecated ) {
 		next unless defined $self->{$old};
 
-		next if $old =~ /^no-/ and !$self->{$old};
+		next if $old =~ /^no-/ && !$self->{$old};
 
 		my $handler = $deprecated->{$old};
 
