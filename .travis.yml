@@ -1,8 +1,14 @@
 language: perl
 sudo: required
 dist: trusty
+
+before_install:
+  - cpanm --notest Perl::Tidy
+  - cpanm --notest Test::Code::TidyAll 
+ 
 before_script:
   - sudo apt-get update
   - sudo apt-get install fusioninventory-agent
+
 perl:
   - "5.20"
