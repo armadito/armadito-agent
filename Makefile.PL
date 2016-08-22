@@ -1,3 +1,5 @@
+use strict;
+use warnings;
 use inc::Module::Install;
 use English qw(-no_match_vars);
 
