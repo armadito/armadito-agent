@@ -11,42 +11,42 @@ use Armadito::Agent::HTTP::Client::ArmaditoGLPI;
 use Data::Dumper;
 
 sub isEnabled {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    return 1;
+	return 1;
 }
 
 sub run {
-    my ( $self, %params ) = @_;
- 
-    $self->{glpi_client} = Armadito::Agent::HTTP::Client::ArmaditoGLPI->new();
-    die "Error when creating ArmaditoGLPI client!" unless $self->{glpi_client};
+	my ( $self, %params ) = @_;
 
-    return $self;
+	$self->{glpi_client} = Armadito::Agent::HTTP::Client::ArmaditoGLPI->new();
+	die "Error when creating ArmaditoGLPI client!" unless $self->{glpi_client};
+
+	return $self;
 }
 
 sub new {
-    my ( $class, %params ) = @_;
+	my ( $class, %params ) = @_;
 
-    my $self = { config => $params{config}};
+	my $self = { config => $params{config} };
 
-	$self->{agent} = $params{agent};
+	$self->{agent}  = $params{agent};
 	$self->{logger} = $self->{agent}->{logger};
 
 	$self->{jobj} = {
-		agent_id => $self->{agent}->{agent_id},
+		agent_id      => $self->{agent}->{agent_id},
 		agent_version => $FusionInventory::Agent::VERSION,
-		task => ""
+		task          => ""
 	};
 
-	if(defined($self->{agent}->{fusionid})){
-		$self->{logger}->info("Fusion Device Id : ".$self->{agent}->{fusionid});
+	if ( defined( $self->{agent}->{fusionid} ) ) {
+		$self->{logger}->info( "Fusion Device Id : " . $self->{agent}->{fusionid} );
 	}
 
-	$self->{logger}->info("Armadito agent Id : ".$self->{agent}->{agent_id});
+	$self->{logger}->info( "Armadito agent Id : " . $self->{agent}->{agent_id} );
 
-    bless $self, $class;
-    return $self;
+	bless $self, $class;
+	return $self;
 }
 
 1;

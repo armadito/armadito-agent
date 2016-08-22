@@ -11,85 +11,81 @@ use Storable;
 use FusionInventory::Agent::Logger;
 
 sub new {
-    my ($class, %params) = @_;
+	my ( $class, %params ) = @_;
 
-    die "no directory parameter" unless $params{directory};
-    if (!-d $params{directory}) {
-        # {error => \my $err} is not supported on RHEL 5,
-        # we let mkpath call die() itself
-        # http://forge.fusioninventory.org/issues/1817
-        eval {
-            mkpath($params{directory});
-        };
-        die "Can't create $params{directory}: $EVAL_ERROR" if $EVAL_ERROR;
-    }
+	die "no directory parameter" unless $params{directory};
+	if ( !-d $params{directory} ) {
 
-    my $self = {
-        logger    => $params{logger} ||
-                     FusionInventory::Agent::Logger->new(),
-        directory => $params{directory}
-    };
+		# {error => \my $err} is not supported on RHEL 5,
+		# we let mkpath call die() itself
+		# http://forge.fusioninventory.org/issues/1817
+		eval { mkpath( $params{directory} ); };
+		die "Can't create $params{directory}: $EVAL_ERROR" if $EVAL_ERROR;
+	}
 
-    bless $self, $class;
+	my $self = {
+		logger => $params{logger} || FusionInventory::Agent::Logger->new(),
+		directory => $params{directory}
+	};
 
-    return $self;
+	bless $self, $class;
+
+	return $self;
 }
 
 sub getDirectory {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    return $self->{directory};
+	return $self->{directory};
 }
 
 sub _getFilePath {
-    my ($self, %params) = @_;
+	my ( $self, %params ) = @_;
 
-    die "no name parameter given" unless $params{name};
+	die "no name parameter given" unless $params{name};
 
-    return $self->{directory} . '/' . $params{name} . '.dump';
+	return $self->{directory} . '/' . $params{name} . '.dump';
 }
 
 sub has {
-    my ($self, %params) = @_;
+	my ( $self, %params ) = @_;
 
-    my $file = $self->_getFilePath(%params);
+	my $file = $self->_getFilePath(%params);
 
-    return -f $file;
+	return -f $file;
 }
 
 sub save {
-    my ($self, %params) = @_;
+	my ( $self, %params ) = @_;
 
-    my $file = $self->_getFilePath(%params);
+	my $file = $self->_getFilePath(%params);
 
-    store($params{data}, $file) or warn;
+	store( $params{data}, $file ) or warn;
 }
 
 sub restore {
-    my ($self, %params) = @_;
+	my ( $self, %params ) = @_;
 
-    my $file = $self->_getFilePath(%params);
+	my $file = $self->_getFilePath(%params);
 
-    return unless -f $file;
+	return unless -f $file;
 
-    my $result;
-    eval {
-        $result = retrieve($file);
-    };
-    if ($EVAL_ERROR) {
-        $self->{logger}->error("Can't read corrupted $file, removing it");
-        unlink $file;
-    }
+	my $result;
+	eval { $result = retrieve($file); };
+	if ($EVAL_ERROR) {
+		$self->{logger}->error("Can't read corrupted $file, removing it");
+		unlink $file;
+	}
 
-    return $result;
+	return $result;
 }
 
 sub remove {
-    my ($self, %params) = @_;
+	my ( $self, %params ) = @_;
 
-    my $file = $self->_getFilePath(%params);
+	my $file = $self->_getFilePath(%params);
 
-    unlink $file or $self->{logger}->error("can't unlink $file");
+	unlink $file or $self->{logger}->error("can't unlink $file");
 }
 
 1;

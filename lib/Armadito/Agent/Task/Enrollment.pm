@@ -10,64 +10,64 @@ use Data::Dumper;
 use JSON;
 
 sub isEnabled {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    return 1;
+	return 1;
 }
 
 sub new {
-    my ($class, %params) = @_;
+	my ( $class, %params ) = @_;
 
-    my $self = $class->SUPER::new(%params);
+	my $self = $class->SUPER::new(%params);
 
-    if ($params{debug}) {
-        $self->{debug} = 1;
-    }
+	if ( $params{debug} ) {
+		$self->{debug} = 1;
+	}
 
 	my $task = {
-		name => "Enrollment",
+		name      => "Enrollment",
 		antivirus => ""
 	};
 
-	$self->{jobj}->{task} = $task;
-	$self->{jobj}->{fusion_id} = $self->{agent}->{fusionid};
+	$self->{jobj}->{task}        = $task;
+	$self->{jobj}->{fusion_id}   = $self->{agent}->{fusionid};
 	$self->{jobj}->{fingerprint} = $self->{agent}->{fingerprint};
 
-    return $self;
+	return $self;
 }
 
 sub _handleResponse {
-    my ($self, $response) = @_;
+	my ( $self, $response ) = @_;
 
-	$self->{logger}->info($response->content());
-    my $obj = from_json($response->content(), { utf8  => 1 });
+	$self->{logger}->info( $response->content() );
+	my $obj = from_json( $response->content(), { utf8 => 1 } );
 
 	# Update armadito agent_id
-	if(defined($obj->{agent_id}) && $obj->{agent_id} > 0){
+	if ( defined( $obj->{agent_id} ) && $obj->{agent_id} > 0 ) {
 		$self->{agent}->{agent_id} = $obj->{agent_id};
 		$self->{agent}->_storeArmaditoId();
-		$self->{logger}->info("Agent successfully enrolled with id ".$obj->{agent_id});
+		$self->{logger}->info( "Agent successfully enrolled with id " . $obj->{agent_id} );
 	}
-    return $self;
+	return $self;
 }
 
 sub _handleError {
-    my ($self, $response) = @_;
+	my ( $self, $response ) = @_;
 
-    $self->{logger}->error("Error Response : ".$response->content()."\n");
-	if( $response->content() =~ /^\s*\{/) {
-		my $obj = from_json($response->content(), { utf8  => 1 });
-		$self->{logger}->error($obj->{message}."[plugin_version:".$obj->{plugin_version}."]");
+	$self->{logger}->error( "Error Response : " . $response->content() . "\n" );
+	if ( $response->content() =~ /^\s*\{/ ) {
+		my $obj = from_json( $response->content(), { utf8 => 1 } );
+		$self->{logger}->error( $obj->{message} . "[plugin_version:" . $obj->{plugin_version} . "]" );
 	}
-    return $self;
+	return $self;
 }
 
 sub run {
-    my ( $self, %params ) = @_;
+	my ( $self, %params ) = @_;
 
-    $self = $self->SUPER::run(%params);
+	$self = $self->SUPER::run(%params);
 
-    return $self;
+	return $self;
 }
 
 1;

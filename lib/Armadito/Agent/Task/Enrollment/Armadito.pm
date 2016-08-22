@@ -10,71 +10,71 @@ use Data::Dumper;
 use JSON;
 
 sub isEnabled {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    return 1;
+	return 1;
 }
 
 sub new {
-    my ($class, %params) = @_;
+	my ( $class, %params ) = @_;
 
-    my $self = $class->SUPER::new(%params);
+	my $self = $class->SUPER::new(%params);
 
 	my $antivirus = {
-		name => "Armadito",
+		name    => "Armadito",
 		version => ""
 	};
 
 	$self->{jobj}->{task}->{antivirus} = $antivirus;
 
-    return $self;
+	return $self;
 }
 
 sub _handleResponse {
 
-    my ($self, $response) = @_;
+	my ( $self, $response ) = @_;
 
-    $self = $self->SUPER::_handleResponse($response);
+	$self = $self->SUPER::_handleResponse($response);
 
-    return $self;
+	return $self;
 }
 
 sub _handleError {
 
-    my ($self, $response) = @_;
+	my ( $self, $response ) = @_;
 
 	$self = $self->SUPER::_handleError($response);
 
-    return $self;
+	return $self;
 }
 
 sub run {
-    my ( $self, %params ) = @_;
+	my ( $self, %params ) = @_;
 
-    $self = $self->SUPER::run(%params);
+	$self = $self->SUPER::run(%params);
 
-    my $enrollment_obj = '{}'; #TODO
+	my $enrollment_obj = '{}';    #TODO
 
 	$self->{jobj}->{task}->{obj} = $enrollment_obj;
 
-	my $json_text = to_json($self->{jobj});
+	my $json_text = to_json( $self->{jobj} );
 
-    my $response = $self->{glpi_client}->send(
-        "url" => $self->{agent}->{config}->{armadito}->{server}."/api/enrollment",
+	my $response = $self->{glpi_client}->send(
+		"url"   => $self->{agent}->{config}->{armadito}->{server} . "/api/enrollment",
 		message => $json_text,
-		method => "POST"
-    );
+		method  => "POST"
+	);
 
-    if($response->is_success() && $response->content() =~ /^\s*\{/ms){
-        $self->_handleResponse($response);
+	if ( $response->is_success() && $response->content() =~ /^\s*\{/ms ) {
+		$self->_handleResponse($response);
 		$self->{logger}->info("Enrollment successful...");
-    }
-    else{
+	}
+	else {
 		$self->_handleError($response);
 		$self->{logger}->info("Enrollment failed...");
 	}
 
-    return $self;
+	return $self;
 }
 
 1;

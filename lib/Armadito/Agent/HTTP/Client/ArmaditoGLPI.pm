@@ -16,80 +16,81 @@ use URI::Escape;
 use FusionInventory::Agent::Tools;
 
 sub new {
-   my ($class, %params) = @_;
-   my $self = $class->SUPER::new(%params);
+	my ( $class, %params ) = @_;
+	my $self = $class->SUPER::new(%params);
 
-   return $self;
+	return $self;
 }
 
 sub _prepareVal {
-    my ($self, $val) = @_;
+	my ( $self, $val ) = @_;
 
-    return '' unless length($val);
+	return '' unless length($val);
 
-    # forbid too long argument.
-    while (length(URI::Escape::uri_escape_utf8($val)) > 1500) {
-        $val =~ s/^.{5}/…/;
-    }
+	# forbid too long argument.
+	while ( length( URI::Escape::uri_escape_utf8($val) ) > 1500 ) {
+		$val =~ s/^.{5}/…/;
+	}
 
-    return URI::Escape::uri_escape_utf8($val);
+	return URI::Escape::uri_escape_utf8($val);
 }
 
 sub _prepareURL {
-    my ($self, %params) = @_;
+	my ( $self, %params ) = @_;
 
-    my $url = ref $params{url} eq 'URI' ?
-        $params{url} : URI->new($params{url});
+	my $url = ref $params{url} eq 'URI' ? $params{url} : URI->new( $params{url} );
 
-    if ($params{method} eq 'GET'){
+	if ( $params{method} eq 'GET' ) {
 
-       my $urlparams = 'agent_id='.uri_escape($params{args}->{agent_id});
+		my $urlparams = 'agent_id=' . uri_escape( $params{args}->{agent_id} );
 
-       foreach my $k (keys %{$params{args}}) {
-	 if (ref($params{args}->{$k}) eq 'ARRAY') {
-	    foreach (@{$params{args}->{$k}}) {
-	        $urlparams .= '&'.$k.'[]='.$self->_prepareVal($_ || '');
-	    }
-	} elsif (ref($params{args}->{$k}) eq 'HASH') {
-	    foreach (keys %{$params{args}->{$k}}) {
-	        $urlparams .= '&'.$k.'['.$_.']='.$self->_prepareVal($params{args}->{$k}{$_});
-	    }
-	} elsif ($k ne 'action' && length($params{args}->{$k})) {
-	    $urlparams .= '&'.$k.'='.$self->_prepareVal($params{args}->{$k});
+		foreach my $k ( keys %{ $params{args} } ) {
+			if ( ref( $params{args}->{$k} ) eq 'ARRAY' ) {
+				foreach ( @{ $params{args}->{$k} } ) {
+					$urlparams .= '&' . $k . '[]=' . $self->_prepareVal( $_ || '' );
+				}
+			}
+			elsif ( ref( $params{args}->{$k} ) eq 'HASH' ) {
+				foreach ( keys %{ $params{args}->{$k} } ) {
+					$urlparams .= '&' . $k . '[' . $_ . ']=' . $self->_prepareVal( $params{args}->{$k}{$_} );
+				}
+			}
+			elsif ( $k ne 'action' && length( $params{args}->{$k} ) ) {
+				$urlparams .= '&' . $k . '=' . $self->_prepareVal( $params{args}->{$k} );
+			}
+		}
+
+		$url .= '?' . $urlparams;
 	}
-       }
 
-       $url .= '?'.$urlparams;
-     }
-
-     return $url;
+	return $url;
 }
 
 sub send {
-    my ($self, %params) = @_;
+	my ( $self, %params ) = @_;
 
-    my $url = $self->_prepareURL(%params);
+	my $url = $self->_prepareURL(%params);
 
-    $self->{logger}->debug2($url) if $self->{logger};
+	$self->{logger}->debug2($url) if $self->{logger};
 
-    my $headers = HTTP::Headers->new(
-            'Content-Type' => 'application/json',
-            'Referer'      => $url
-    );
+	my $headers = HTTP::Headers->new(
+		'Content-Type' => 'application/json',
+		'Referer'      => $url
+	);
 
-    my $request = HTTP::Request->new(
-			$params{method} => $url,
-			$headers
-    );
+	my $request = HTTP::Request->new(
+		$params{method} => $url,
+		$headers
+	);
 
-    if($params{message} && $params{method} eq 'POST'){
-        # json utf-8 encoded
-        $request->content(encode('UTF-8',$params{message}));
-    }
+	if ( $params{message} && $params{method} eq 'POST' ) {
 
-    return $self->request($request);
+		# json utf-8 encoded
+		$request->content( encode( 'UTF-8', $params{message} ) );
+	}
+
+	return $self->request($request);
 }
-
 
 1;
 __END__

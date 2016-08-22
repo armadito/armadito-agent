@@ -10,64 +10,64 @@ use Data::Dumper;
 use JSON;
 
 sub isEnabled {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    return 1;
+	return 1;
 }
 
 sub new {
-    my ($class, %params) = @_;
+	my ( $class, %params ) = @_;
 
-    my $self = $class->SUPER::new(%params);
+	my $self = $class->SUPER::new(%params);
 
 	my $antivirus = {
-		name => "Armadito",		
+		name    => "Armadito",
 		version => ""
-	};	
+	};
 
 	$self->{jobj}->{task}->{antivirus} = $antivirus;
 
-    return $self;
+	return $self;
 }
 
 sub _handleResponse {
 
-    my ($self, $response) = @_;
+	my ( $self, $response ) = @_;
 
-    $self = $self->SUPER::_handleResponse($response);
+	$self = $self->SUPER::_handleResponse($response);
 
-    return $self;
+	return $self;
 }
 
 sub _handleError {
 
-    my ($self, $response) = @_;
+	my ( $self, $response ) = @_;
 
 	$self = $self->SUPER::_handleError($response);
 
-    return $self;
+	return $self;
 }
 
 sub run {
-    my ( $self, %params ) = @_;
+	my ( $self, %params ) = @_;
 
-    $self = $self->SUPER::run(%params);
+	$self = $self->SUPER::run(%params);
 
-# 1 : Send GET request to AV, asking for AV state
-# 2 : Handle AV response
-# 3 : If successful, encapsulate AV state in a POST request to Armadito Plugin for GLPI 
+	# 1 : Send GET request to AV, asking for AV state
+	# 2 : Handle AV response
+	# 3 : If successful, encapsulate AV state in a POST request to Armadito Plugin for GLPI
 
-    # TODO: 
-    # 1 : Send GET request to AV, asking for AV state
-    # my $req = $self->{armaditoAV_client}->send(
-    #    "url" => $self->{config}->{av_server_url},
-    #    method => "GET"
-    #    args  => { 
-    #        action    => "getState"
-    #    }
-    #);
+	# TODO:
+	# 1 : Send GET request to AV, asking for AV state
+	# my $req = $self->{armaditoAV_client}->send(
+	#    "url" => $self->{config}->{av_server_url},
+	#    method => "GET"
+	#    args  => {
+	#        action    => "getState"
+	#    }
+	#);
 
-    my $av_response = '
+	my $av_response = '
 { "av_response":"state", 
   "id":123, 
   "status":0, 
@@ -105,30 +105,30 @@ sub run {
     ]
   }
 }';
-	my $state_jobj =  from_json($av_response, { utf8  => 1 });
+	my $state_jobj = from_json( $av_response, { utf8 => 1 } );
 
 	$self->{jobj}->{task}->{obj} = $state_jobj;
 
-	my $json_text = to_json($self->{jobj});
+	my $json_text = to_json( $self->{jobj} );
 
-	print "JSON formatted str : \n".$json_text."\n";	
+	print "JSON formatted str : \n" . $json_text . "\n";
 
-    my $response = $self->{glpi_client}->send(
-		"url" => $self->{agent}->{config}->{armadito}->{server}."/api/states",
+	my $response = $self->{glpi_client}->send(
+		"url"   => $self->{agent}->{config}->{armadito}->{server} . "/api/states",
 		message => $json_text,
-		method => "POST"
-    );
+		method  => "POST"
+	);
 
-    if($response->is_success()){
-         $self->_handleResponse($response);
-         $self->{logger}->info("State successful...");
-    }
-    else{
-         $self->_handleError($response);
-         $self->{logger}->info("State failed...");
-    }
+	if ( $response->is_success() ) {
+		$self->_handleResponse($response);
+		$self->{logger}->info("State successful...");
+	}
+	else {
+		$self->_handleError($response);
+		$self->{logger}->info("State failed...");
+	}
 
-    return $self;
+	return $self;
 }
 
 1;

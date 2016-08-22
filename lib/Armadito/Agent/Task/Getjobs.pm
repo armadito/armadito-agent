@@ -11,79 +11,79 @@ use Data::Dumper;
 use JSON;
 
 sub isEnabled {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    return 1;
+	return 1;
 }
 
 sub new {
-    my ($class, %params) = @_;
+	my ( $class, %params ) = @_;
 
-    my $self = $class->SUPER::new(%params);
+	my $self = $class->SUPER::new(%params);
 
-    if ($params{debug}) {
-        $self->{debug} = 1;
-    }
+	if ( $params{debug} ) {
+		$self->{debug} = 1;
+	}
 
 	my $task = {
-		name => "Getjobs",
+		name      => "Getjobs",
 		antivirus => ""
 	};
 
 	$self->{jobj}->{task} = $task;
 
-    return $self;
+	return $self;
 }
 
 sub _storeJobs {
-	my ($self, $jobs) = @_;
+	my ( $self, $jobs ) = @_;
 
 	# We merge stored jobs with new ones
-	my $data = $self->{agent}->{armadito_storage}->restore(name => 'Armadito-Agent-Jobs');
-	if(defined($data->{jobs})){
-		foreach(@{$data->{jobs}}){
-			push(@$jobs, $_);
+	my $data = $self->{agent}->{armadito_storage}->restore( name => 'Armadito-Agent-Jobs' );
+	if ( defined( $data->{jobs} ) ) {
+		foreach ( @{ $data->{jobs} } ) {
+			push( @$jobs, $_ );
 		}
 	}
 
 	$self->{agent}->{armadito_storage}->save(
 		name => 'Armadito-Agent-Jobs',
 		data => {
-            jobs => $jobs
-        }
+			jobs => $jobs
+		}
 	);
 }
 
 sub _handleResponse {
-    my ($self, $response) = @_;
+	my ( $self, $response ) = @_;
 
-    $self->{logger}->info("Successful Response : ".$response->content());
-    my $obj =  from_json($response->content(), { utf8  => 1 });
+	$self->{logger}->info( "Successful Response : " . $response->content() );
+	my $obj = from_json( $response->content(), { utf8 => 1 } );
 
-	if(defined($obj->{jobs}) && ref($obj->{jobs}) eq "ARRAY"){
-		$self->_storeJobs($obj->{jobs});
+	if ( defined( $obj->{jobs} ) && ref( $obj->{jobs} ) eq "ARRAY" ) {
+		$self->_storeJobs( $obj->{jobs} );
 	}
 
-    $self->{logger}->info("all Jobs : ".Dumper($obj));
-    return $self;
+	$self->{logger}->info( "all Jobs : " . Dumper($obj) );
+	return $self;
 }
 
 sub _handleError {
-    my ($self, $response) = @_;
+	my ( $self, $response ) = @_;
 
-    $self->{logger}->info("Error Response : ".$response->content());
-    my $obj =  from_json($response->content(), { utf8  => 1 });
-    $self->{logger}->error(Dumper($obj));
+	$self->{logger}->info( "Error Response : " . $response->content() );
+	my $obj = from_json( $response->content(), { utf8 => 1 } );
+	$self->{logger}->error( Dumper($obj) );
 
-    return $self;
+	return $self;
 }
 
 sub run {
-    my ( $self, %params ) = @_;
+	my ( $self, %params ) = @_;
 
-    $self = $self->SUPER::run(%params);
+	$self = $self->SUPER::run(%params);
 
-    return $self;
+	return $self;
 }
 
 1;

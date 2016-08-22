@@ -16,64 +16,62 @@ use JSON;
 use FusionInventory::Agent::Tools;
 
 sub new {
-   my ($class, %params) = @_;
-   my $self = $class->SUPER::new(%params);
+	my ( $class, %params ) = @_;
+	my $self = $class->SUPER::new(%params);
 
-   # default options
-   $self->{server_url} = "http://localhost:8888";
+	# default options
+	$self->{server_url} = "http://localhost:8888";
 
-   return $self;
+	return $self;
 }
 
 sub _prepareURL {
-    my ($self, %params) = @_;
+	my ( $self, %params ) = @_;
 
-    my $url = ref $params{url} eq 'URI' ?
-        $params{url} : URI->new($params{url});
+	my $url = ref $params{url} eq 'URI' ? $params{url} : URI->new( $params{url} );
 
-     return $url;
+	return $url;
 }
 
 sub send {
-    my ($self, %params) = @_;
+	my ( $self, %params ) = @_;
 
-    my $url = $self->_prepareURL(%params);
+	my $url = $self->_prepareURL(%params);
 
-    $self->{logger}->debug2($url) if $self->{logger};
+	$self->{logger}->debug2($url) if $self->{logger};
 
-    my $headers = HTTP::Headers->new(
-			'User-Agent' => 'armadito-agent',
-            'Referer'    => $url
-    );
+	my $headers = HTTP::Headers->new(
+		'User-Agent' => 'armadito-agent',
+		'Referer'    => $url
+	);
 
-	$headers->header('Content-Type' => 'application/json') if($params{method} eq 'POST');
-	$headers->header('X-Armadito-Token' => $self->{token}) if(defined($self->{token}));
+	$headers->header( 'Content-Type'     => 'application/json' ) if ( $params{method} eq 'POST' );
+	$headers->header( 'X-Armadito-Token' => $self->{token} )     if ( defined( $self->{token} ) );
 
-    my $request = HTTP::Request->new(
-			$params{method} => $url,
-			$headers
-    );
+	my $request = HTTP::Request->new(
+		$params{method} => $url,
+		$headers
+	);
 
-    if($params{message} && $params{method} eq 'POST'){
-        $request->content(encode('UTF-8',$params{message}));
-    }
+	if ( $params{message} && $params{method} eq 'POST' ) {
+		$request->content( encode( 'UTF-8', $params{message} ) );
+	}
 
-    return $self->request($request);
+	return $self->request($request);
 }
 
-sub _handleRegisterResponse()
-{
-	my ($self, $response) = @_;
+sub _handleRegisterResponse() {
+	my ( $self, $response ) = @_;
 
-	$self->{logger}->info($response->content());
-	my $obj = from_json($response->content(), { utf8  => 1 });
+	$self->{logger}->info( $response->content() );
+	my $obj = from_json( $response->content(), { utf8 => 1 } );
 
 	# Update armadito agent_id
-	if(defined($obj->{token})){
+	if ( defined( $obj->{token} ) ) {
 		$self->{token} = $obj->{token};
-		$self->{logger}->info("ArmaditAV Registration successful, session token : ".$obj->{token});
+		$self->{logger}->info( "ArmaditAV Registration successful, session token : " . $obj->{token} );
 	}
-	else{
+	else {
 		$self->{logger}->error("Invalid token from ArmaditAV registration.");
 	}
 }
@@ -82,11 +80,11 @@ sub register {
 	my ($self) = @_;
 
 	my $response = $self->send(
-		"url" => $self->{server_url}."/api/register",
+		"url"  => $self->{server_url} . "/api/register",
 		method => "GET"
 	);
 
-	die "Unable to register to ArmaditoAV api." if(!$response->is_success() || !$response->content() =~ /^\s*\{/ms);
+	die "Unable to register to ArmaditoAV api." if ( !$response->is_success() || !$response->content() =~ /^\s*\{/ms );
 	$self->_handleRegisterResponse($response);
 
 }

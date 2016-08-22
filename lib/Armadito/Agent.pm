@@ -3,7 +3,7 @@ package Armadito::Agent;
 use 5.008000;
 use strict;
 use warnings;
-use English qw(-no_match_vars) ;
+use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
 require Exporter;
@@ -14,54 +14,55 @@ use Armadito::Agent::Tools::Fingerprint;
 
 our $VERSION = "0.1.0_01";
 my @supported_antiviruses = ("Armadito");
-my @supported_tasks = ("State","Enrollment","Getjobs","Runjobs","Alerts", "Scan");
+my @supported_tasks = ( "State", "Enrollment", "Getjobs", "Runjobs", "Alerts", "Scan" );
 
 sub new {
-    my ($class, %params) = @_;
+	my ( $class, %params ) = @_;
 
-    my $self = {
-        status  => 'unknown',
-        confdir => $params{confdir},
-        datadir => $params{datadir},
-        libdir  => $params{libdir},
-        vardir  => $params{vardir},
-        sigterm => $params{sigterm},
-        targets => [],
-        tasks   => []
-    };
-    bless $self, $class;
+	my $self = {
+		status  => 'unknown',
+		confdir => $params{confdir},
+		datadir => $params{datadir},
+		libdir  => $params{libdir},
+		vardir  => $params{vardir},
+		sigterm => $params{sigterm},
+		targets => [],
+		tasks   => []
+	};
+	bless $self, $class;
 
-    return $self;
+	return $self;
 }
 
 sub init {
-    my ($self, %params) = @_;
+	my ( $self, %params ) = @_;
 
 	# Get FusionInventory setup directories
 	$self->_getFusionSetup();
 
 	# Load configuration
-    $self->{config} = Armadito::Agent::Config->new(
+	$self->{config} = Armadito::Agent::Config->new(
 		armadito_confdir => $self->{confdir},
-		fusion_confdir => $self->{fusion_confdir},
-		options => $params{options}
-    );
+		fusion_confdir   => $self->{fusion_confdir},
+		options          => $params{options}
+	);
 
-	$self->{config}->{armadito}->{server} = $params{options}->{server} unless @{$self->{config}->{armadito}->{server}};
+	$self->{config}->{armadito}->{server} = $params{options}->{server}
+		unless @{ $self->{config}->{armadito}->{server} };
 
 	# Create logger
-	$self->{logger} = FusionInventory::Agent::Logger->new(backends => ['Stderr']);
+	$self->{logger} = FusionInventory::Agent::Logger->new( backends => ['Stderr'] );
 
 	# Init storages
 	$self->{fusion_storage} = Armadito::Agent::Storage->new(
-        logger    => $self->{logger},
-        directory => $self->{fusion_vardir}
-    );
+		logger    => $self->{logger},
+		directory => $self->{fusion_vardir}
+	);
 
 	$self->{armadito_storage} = Armadito::Agent::Storage->new(
-        logger    => $self->{logger},
-        directory => $self->{vardir}
-    );
+		logger    => $self->{logger},
+		directory => $self->{vardir}
+	);
 
 	# Read persistent data from storages
 	$self->{agent_id} = 0;
@@ -72,9 +73,9 @@ sub init {
 }
 
 sub _getLinuxFusionSetupDir {
-	my ($res, $dirlabel) = @_;
+	my ( $res, $dirlabel ) = @_;
 
-	if($res =~ /$dirlabel: (\S+)/ms){
+	if ( $res =~ /$dirlabel: (\S+)/ms ) {
 		return $1;
 	}
 	die "$dirlabel not found when parsing fusioninventory-agent --setup.";
@@ -89,83 +90,89 @@ sub _getWindowsFusionSetupDir {
 		TiedRef     => \$Registry
 	);
 
-	my $machKey = $Registry->Open('LMachine', {
-		Access => Win32::TieRegistry::KEY_READ()
-	}) or die "Can't open HKEY_LOCAL_MACHINE key: $EXTENDED_OS_ERROR";
+	my $machKey = $Registry->Open(
+		'LMachine',
+		{
+			Access => Win32::TieRegistry::KEY_READ()
+		}
+	) or die "Can't open HKEY_LOCAL_MACHINE key: $EXTENDED_OS_ERROR";
 
-	my $uninstallValues =
-		$machKey->{'SOFTWARE/Microsoft/Windows/CurrentVersion/Uninstall/FusionInventory-Agent'};
-	die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)" unless $uninstallValues;
+	my $uninstallValues = $machKey->{'SOFTWARE/Microsoft/Windows/CurrentVersion/Uninstall/FusionInventory-Agent'};
+	die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)"
+		unless $uninstallValues;
 
 	my $installLocation = $uninstallValues->{'/InstallLocation'};
-	die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)"  unless $installLocation;
+	die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)"
+		unless $installLocation;
 
 	return $installLocation;
 }
 
 sub _getFusionSetup {
 	my ($self) = @_;
-	if($OSNAME ne "MSWin32") {
-		my $res = `fusioninventory-agent --setup 2>&1`;
+	if ( $OSNAME ne "MSWin32" ) {
+		my $res       = `fusioninventory-agent --setup 2>&1`;
 		my $exitvalue = `echo -n $?`;
-		die "Unable to get fusioninventory-agent setup. Please, be sure you have correctly installed fusioninventory agent.\n" if($exitvalue != 0);
-		$self->{fusion_datadir} = _getLinuxFusionSetupDir($res, "datadir");
-		$self->{fusion_vardir} = _getLinuxFusionSetupDir($res, "vardir");
-		$self->{fusion_confdir} = _getLinuxFusionSetupDir($res, "confdir");
-		$self->{fusion_libdir} = _getLinuxFusionSetupDir($res, "libdir");
+		die
+			"Unable to get fusioninventory-agent setup. Please, be sure you have correctly installed fusioninventory agent.\n"
+			if ( $exitvalue != 0 );
+		$self->{fusion_datadir} = _getLinuxFusionSetupDir( $res, "datadir" );
+		$self->{fusion_vardir}  = _getLinuxFusionSetupDir( $res, "vardir" );
+		$self->{fusion_confdir} = _getLinuxFusionSetupDir( $res, "confdir" );
+		$self->{fusion_libdir}  = _getLinuxFusionSetupDir( $res, "libdir" );
 	}
-	else{
+	else {
 		my $fusion_setupdir = _getWindowsFusionSetupDir();
-		$self->{fusion_datadir} = $fusion_setupdir."\\share";
-		$self->{fusion_vardir} = $fusion_setupdir."\\var";
-		$self->{fusion_libdir} = $fusion_setupdir."\\perl\\agent";
-		$self->{fusion_confdir} = $fusion_setupdir."\\etc";
+		$self->{fusion_datadir} = $fusion_setupdir . "\\share";
+		$self->{fusion_vardir}  = $fusion_setupdir . "\\var";
+		$self->{fusion_libdir}  = $fusion_setupdir . "\\perl\\agent";
+		$self->{fusion_confdir} = $fusion_setupdir . "\\etc";
 	}
 }
 
 sub _getFusionId {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    my $data = $self->{fusion_storage}->restore(name => 'FusionInventory-Agent');
+	my $data = $self->{fusion_storage}->restore( name => 'FusionInventory-Agent' );
 
-    $self->{fusionid} = $data->{deviceid} if $data->{deviceid};
+	$self->{fusionid} = $data->{deviceid} if $data->{deviceid};
 }
 
 sub _getArmaditoId {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    my $data = $self->{armadito_storage}->restore(name => 'Armadito-Agent');
+	my $data = $self->{armadito_storage}->restore( name => 'Armadito-Agent' );
 
-    $self->{agent_id} = $data->{agent_id} if $data->{agent_id};
+	$self->{agent_id} = $data->{agent_id} if $data->{agent_id};
 }
 
 sub _storeArmaditoId {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    $self->{armadito_storage}->save(
-        name => 'Armadito-Agent',
-        data => {
-            agent_id => $self->{agent_id},
-        }
-    );
+	$self->{armadito_storage}->save(
+		name => 'Armadito-Agent',
+		data => {
+			agent_id => $self->{agent_id},
+		}
+	);
 }
 
 sub isAVSupported {
-	my ($self, $antivirus) = @_;
-    foreach (@supported_antiviruses) {
-	  if( $antivirus eq $_ ) {
-		return 1;
-	  }
+	my ( $self, $antivirus ) = @_;
+	foreach (@supported_antiviruses) {
+		if ( $antivirus eq $_ ) {
+			return 1;
+		}
 	}
 	return 0;
 }
 
 sub isTaskSupported {
-	my ($self, $task) = @_;
-    foreach (@supported_tasks) {
-	  if( $task eq $_ ) {
-		return 1;
-	  }
+	my ( $self, $task ) = @_;
+	foreach (@supported_tasks) {
+		if ( $task eq $_ ) {
+			return 1;
+		}
 	}
 	return 0;
 }
@@ -173,16 +180,16 @@ sub isTaskSupported {
 sub displaySupportedTasks {
 	my ($self) = @_;
 	print "List of supported tasks :\n";
-	foreach(@supported_tasks) {
-		print $_."\n";
+	foreach (@supported_tasks) {
+		print $_. "\n";
 	}
 }
 
 sub displaySupportedAVs {
 	my ($self) = @_;
 	print "List of supported antiviruses :\n";
-	foreach(@supported_antiviruses) {
-		print $_."\n";
+	foreach (@supported_antiviruses) {
+		print $_. "\n";
 	}
 }
 1;

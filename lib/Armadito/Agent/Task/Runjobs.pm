@@ -11,37 +11,37 @@ use Data::Dumper;
 use JSON;
 
 sub isEnabled {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    return 1;
+	return 1;
 }
 
 sub new {
-    my ($class, %params) = @_;
+	my ( $class, %params ) = @_;
 
-    my $self = $class->SUPER::new(%params);
+	my $self = $class->SUPER::new(%params);
 
-    if ($params{debug}) {
-        $self->{debug} = 1;
-    }
+	if ( $params{debug} ) {
+		$self->{debug} = 1;
+	}
 
 	my $task = {
-		name => "Runjobs",
+		name      => "Runjobs",
 		antivirus => ""
 	};
 
 	$self->{jobj}->{task} = $task;
 
-    return $self;
+	return $self;
 }
 
 sub _getStoredJobs {
 	my ($self) = @_;
 
-	my $data = $self->{agent}->{armadito_storage}->restore(name => 'Armadito-Agent-Jobs');
-	if(defined($data->{jobs})){
-		foreach my $job (@{$data->{jobs}}){
-			$self->{logger}->info("Job ".$job->{job_id}." - ".$job->{job_priority});
+	my $data = $self->{agent}->{armadito_storage}->restore( name => 'Armadito-Agent-Jobs' );
+	if ( defined( $data->{jobs} ) ) {
+		foreach my $job ( @{ $data->{jobs} } ) {
+			$self->{logger}->info( "Job " . $job->{job_id} . " - " . $job->{job_priority} );
 		}
 		$self->{jobs} = $data->{jobs};
 	}
@@ -50,61 +50,60 @@ sub _getStoredJobs {
 }
 
 sub _rmJobFromStorage {
-	my ($self, $job_id) = @_;
+	my ( $self, $job_id ) = @_;
 
 	my $jobs = ();
-	my $data = $self->{agent}->{armadito_storage}->restore(name => 'Armadito-Agent-Jobs');
-	if(defined($data->{jobs})){
-		foreach(@{$data->{jobs}}){
-			push(@$jobs, $_) if $_->{job_id} ne $job_id;
+	my $data = $self->{agent}->{armadito_storage}->restore( name => 'Armadito-Agent-Jobs' );
+	if ( defined( $data->{jobs} ) ) {
+		foreach ( @{ $data->{jobs} } ) {
+			push( @$jobs, $_ ) if $_->{job_id} ne $job_id;
 		}
 	}
 
 	$self->{agent}->{armadito_storage}->save(
 		name => 'Armadito-Agent-Jobs',
 		data => {
-            jobs => $jobs
-        }
+			jobs => $jobs
+		}
 	);
 }
 
 sub _sortJobsByPriority {
 	my ($self) = @_;
 
-	@{$self->{jobs}} = sort { $a->{job_priority} <=> $b->{job_priority} } @{$self->{jobs}};
+	@{ $self->{jobs} } = sort { $a->{job_priority} <=> $b->{job_priority} } @{ $self->{jobs} };
 
 	return $self;
 }
 
 sub _handleResponse {
-    my ($self, $response) = @_;
+	my ( $self, $response ) = @_;
 
-    $self->{logger}->info("Successful Response : ".$response->content());
-    my $obj =  from_json($response->content(), { utf8  => 1 });
-    $self->{logger}->info(Dumper($obj));
+	$self->{logger}->info( "Successful Response : " . $response->content() );
+	my $obj = from_json( $response->content(), { utf8 => 1 } );
+	$self->{logger}->info( Dumper($obj) );
 
-    return $self;
+	return $self;
 }
 
 sub _handleError {
-    my ($self, $response) = @_;
+	my ( $self, $response ) = @_;
 
-    $self->{logger}->info("Error Response : ".$response->content());
-    my $obj =  from_json($response->content(), { utf8  => 1 });
-    $self->{logger}->error(Dumper($obj));
+	$self->{logger}->info( "Error Response : " . $response->content() );
+	my $obj = from_json( $response->content(), { utf8 => 1 } );
+	$self->{logger}->error( Dumper($obj) );
 
-    return $self;
+	return $self;
 }
 
-
 sub run {
-    my ( $self, %params ) = @_;
+	my ( $self, %params ) = @_;
 
-    $self = $self->SUPER::run(%params);
+	$self = $self->SUPER::run(%params);
 	$self = $self->_getStoredJobs();
 	$self = $self->_sortJobsByPriority();
 
-    return $self;
+	return $self;
 }
 
 1;

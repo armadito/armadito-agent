@@ -11,55 +11,51 @@ use MIME::Base64;
 use JSON;
 
 sub isEnabled {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    return 1;
+	return 1;
 }
 
 sub new {
-    my ($class, %params) = @_;
+	my ( $class, %params ) = @_;
 
-    my $self = $class->SUPER::new(%params);
+	my $self = $class->SUPER::new(%params);
 
 	my $antivirus = {
-		name => "Armadito",
+		name    => "Armadito",
 		version => ""
 	};
 
 	$self->{jobj}->{task}->{antivirus} = $antivirus;
 
-    return $self;
+	return $self;
 }
 
 sub _runJob {
-	my ($self, $job) = @_;
+	my ( $self, $job ) = @_;
 
 	my $config = ();
-	my $class = "Armadito::Agent::Task::$job->{job_type}::$self->{jobj}->{task}->{antivirus}->{name}";
+	my $class  = "Armadito::Agent::Task::$job->{job_type}::$self->{jobj}->{task}->{antivirus}->{name}";
 
 	my $error_code = 1;
-	eval {
-		$class->require();
-	};
+	eval { $class->require(); };
 	goto ERROR if ($@);
 
 	$error_code = 2;
-	eval {
-		die "Job Class is not enabled." if(!$class->isEnabled());
-	};
+	eval { die "Job Class is not enabled." if ( !$class->isEnabled() ); };
 	goto ERROR if ($@);
 
 	$error_code = 3;
 	eval {
-		my $task = $class->new(config => $config, agent => $self->{agent});
-		$task->run(obj => $job->{obj});
+		my $task = $class->new( config => $config, agent => $self->{agent} );
+		$task->run( obj => $job->{obj} );
 	};
 	goto ERROR if ($@);
 
 	$self->{jobj}->{task}->{obj} = {
-		code => 0,
+		code    => 0,
 		message => "runJob successful",
-		job_id => $job->{job_id}
+		job_id  => $job->{job_id}
 	};
 
 	return $self;
@@ -69,9 +65,9 @@ ERROR:
 	# We send error as base64
 	$self->{logger}->error($@);
 	$self->{jobj}->{task}->{obj} = {
-		code => $error_code,
+		code    => $error_code,
 		message => encode_base64($@),
-		job_id => $job->{job_id}
+		job_id  => $job->{job_id}
 	};
 
 	return $self;
@@ -80,11 +76,11 @@ ERROR:
 sub _runJobs {
 	my ($self) = @_;
 
-	foreach my $job (@{$self->{jobs}}){
-		if($job->{antivirus_name} eq "Armadito"){
+	foreach my $job ( @{ $self->{jobs} } ) {
+		if ( $job->{antivirus_name} eq "Armadito" ) {
 			$self->_runJob($job);
 			$self->_sendStatus();
-			$self->_rmJobFromStorage($job->{job_id});
+			$self->_rmJobFromStorage( $job->{job_id} );
 		}
 	}
 
@@ -93,50 +89,50 @@ sub _runJobs {
 
 sub _handleResponse {
 
-    my ($self, $response) = @_;
+	my ( $self, $response ) = @_;
 
-    $self = $self->SUPER::_handleResponse($response);
+	$self = $self->SUPER::_handleResponse($response);
 
-    return $self;
+	return $self;
 }
 
 sub _handleError {
 
-    my ($self, $response) = @_;
+	my ( $self, $response ) = @_;
 
 	$self = $self->SUPER::_handleError($response);
 
-    return $self;
+	return $self;
 }
 
 sub _sendStatus {
 	my ($self) = @_;
 
-	my $json_text = to_json($self->{jobj});
+	my $json_text = to_json( $self->{jobj} );
 
 	my $response = $self->{glpi_client}->send(
-        "url" => $self->{agent}->{config}->{armadito}->{server}."/api/jobs",
-        message => $json_text,
-		method => "POST"
-    );
+		"url"   => $self->{agent}->{config}->{armadito}->{server} . "/api/jobs",
+		message => $json_text,
+		method  => "POST"
+	);
 
-    if($response->is_success()){
-         $self->_handleResponse($response);
-         $self->{logger}->info("Runjobs sendStatus successful...");
-    }
-    else{
-         $self->_handleError($response);
-         $self->{logger}->info("Runjobs sendStatus failed...");
-    }
+	if ( $response->is_success() ) {
+		$self->_handleResponse($response);
+		$self->{logger}->info("Runjobs sendStatus successful...");
+	}
+	else {
+		$self->_handleError($response);
+		$self->{logger}->info("Runjobs sendStatus failed...");
+	}
 }
 
 sub run {
-    my ( $self, %params ) = @_;
+	my ( $self, %params ) = @_;
 
-    $self = $self->SUPER::run(%params);
+	$self = $self->SUPER::run(%params);
 	$self = $self->_runJobs();
 
-    return $self;
+	return $self;
 }
 1;
 
