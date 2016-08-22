@@ -1,0 +1,5 @@
+# please alpha sort config items as you add them
+
+severity = 5
+theme = core
+verbose = 11
