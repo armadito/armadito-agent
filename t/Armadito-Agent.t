@@ -52,3 +52,4 @@ BEGIN {
 
 	use_ok('Armadito::Agent');
 }
+1;
