@@ -219,10 +219,7 @@ sub _loadFromFile {
 	}
 
 	my $handle;
-	if ( !open $handle, '<', $file ) {
-		warn "Config: Failed to open $file: $ERRNO";
-		return;
-	}
+	die "Config: Failed to open $file: $ERRNO" if ( !open $handle, '<', $file );
 
 	while ( my $line = <$handle> ) {
 		$line =~ s/#.+//;
