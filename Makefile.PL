@@ -22,8 +22,12 @@ requires 'JSON'                  => '0';
 requires 'Encode'                => '0';
 requires 'Getopt::Long'          => '0';
 requires 'Pod::Usage'            => '0';
-requires 'XML::TreePP'           => '0';
-requires 'Test::Compile'         => '0';
+
+test_requires 'XML::TreePP'         => '0';
+test_requires 'Test::Compile'       => '0';
+test_requires 'Test::More'          => '0';
+test_requires 'Test::Perl::Critic'  => '0';
+test_requires 'Test::Code::TidyAll' => '0';
 
 ## See data_install for MSWin32 script installation
 install_script 'bin/armadito-agent' if ( $OSNAME ne "MSWin32" );
