@@ -14,7 +14,8 @@ use Armadito::Agent::Tools::Fingerprint qw(getFingerprint);
 
 our $VERSION = "0.1.0_01";
 my @supported_antiviruses = ("Armadito");
-my @supported_tasks = ( "State", "Enrollment", "Getjobs", "Runjobs", "Alerts", "Scan" );
+my @supported_tasks       = ( "State", "Enrollment", "Getjobs", "Runjobs", "Alerts", "Scan" );
+my @superuser_tasks       = ( "Enrollment", "Getjobs", "Runjobs" );
 
 sub new {
 	my ( $class, %params ) = @_;
@@ -177,6 +178,16 @@ sub isTaskSupported {
 	return 0;
 }
 
+sub isTaskUidOk {
+	my ( $self, $task ) = @_;
+	foreach (@supported_tasks) {
+		if ( $task eq $_ && $< != 0 ) {
+			return 0;
+		}
+	}
+	return 1;
+}
+
 sub displaySupportedTasks {
 	my ($self) = @_;
 	print "List of supported tasks :\n";
@@ -244,6 +255,10 @@ Returns true if given antivirus is supported by the current version of the agent
 =head2 isTaskSupported($task)
 
 Returns true if given task is supported by the current version of the agent.
+
+=head2 isTaskUidOk($task)
+
+Returns true if we run with given task required uid.
 
 =head2 displaySupportedTasks()
 

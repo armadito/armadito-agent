@@ -135,12 +135,8 @@ my $config = {};
 eval{
 	$agent->isAVSupported($options->{antivirus}) or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
 	$agent->isTaskSupported($options->{task}) or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
+	$agent->isTaskUidOk($options->{task}) or die "Insufficient permissions. This task must be run as root.";
 	$agent->init(options => $options);
-
-	if($options->{task} eq "Enrollment" && $< != 0 ) {
-		print "Enrollment Task must be run as root.\n";
-		exit (1);
-	}
 
 	my $class = "Armadito::Agent::Task::$options->{task}::$options->{antivirus}";
 	$class->require();
