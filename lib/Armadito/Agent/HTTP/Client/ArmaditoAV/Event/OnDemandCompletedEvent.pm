@@ -1,5 +1,9 @@
 package Armadito::Agent::HTTP::Client::ArmaditoAV::Event::OnDemandCompletedEvent;
 
+use strict;
+use warnings;
+use base 'Armadito::Agent::HTTP::Client::ArmaditoAV::Event';
+
 sub new {
 	my ( $class, %params ) = @_;
 

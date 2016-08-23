@@ -1,11 +1,12 @@
 package Armadito::Agent::HTTP::Client::ArmaditoAV::Event;
 
+use strict;
+use warnings;
+
 sub new {
 	my ( $class, %params ) = @_;
 
-	my $self = { 
-		"event_type" => $params{jobj}->{"event_type"}
-	};
+	my $self = { "event_type" => $params{jobj}->{"event_type"} };
 
 	bless $self, $class;
 	return $self;
