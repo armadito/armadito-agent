@@ -10,7 +10,7 @@ require Exporter;
 
 use Armadito::Agent::Config;
 use Armadito::Agent::Storage;
-use Armadito::Agent::Tools::Fingerprint;
+use Armadito::Agent::Tools::Fingerprint qw(getFingerprint);
 
 our $VERSION = "0.1.0_01";
 my @supported_antiviruses = ("Armadito");
