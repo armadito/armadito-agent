@@ -15,6 +15,8 @@ use URI::Escape;
 use JSON;
 use FusionInventory::Agent::Tools;
 
+my @supported_events = ( "DetectionEvent", "OnDemandCompletedEvent", "OnDemandProgressEvent", "StatusEvent" );
+
 sub new {
 	my ( $class, %params ) = @_;
 	my $self = $class->SUPER::new(%params);
@@ -86,7 +88,63 @@ sub register {
 
 	die "Unable to register to ArmaditoAV api." if ( !$response->is_success() || !$response->content() =~ /^\s*\{/ms );
 	$self->_handleRegisterResponse($response);
+}
 
+sub _handleEventResponse() {
+	my ( $self, $response ) = @_;
+
+	$self->{logger}->info( $response->content() );
+
+	return from_json( $response->content(), { utf8 => 1 } );
+}
+
+sub pollEvents {
+	my ($self) = @_;
+	while (1) {
+		my $event = $self->_getEvent();
+		if ( defined( $event->{"event_type"} ) ) {
+			$self->_handleEvent($event);
+		}
+	}
+}
+
+sub _getEvent {
+	my ($self) = @_;
+
+	my $response = $self->sendRequest(
+		"url"  => $self->{server_url} . "/api/event",
+		method => "GET"
+	);
+
+	die "Unable to get event with ArmaditoAV api."
+		if ( !$response->is_success() || !$response->content() =~ /^\s*\{/ms );
+	return $self->_handleEventResponse($response);
+}
+
+sub _isEventSupported {
+	my ( $self, $event ) = @_;
+	foreach (@supported_events) {
+		if ( $event eq $_ ) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+sub _handleEvent {
+	my ( $self, $event_jobj ) = @_;
+
+	if ( !$self->_isEventSupported( $event_jobj->{"event_type"} ) ) {
+		$self->{logger}->info("Unknown ArmaditoAV api event.");
+		return;
+	}
+
+	my $class = "Armadito::Agent::HTTP::Client::ArmaditoAV::$event_jobj->{'event_type'}";
+	$class->require();
+	my $event = $class->new( jobj => $event_jobj );
+	$event->run();
+
+	return;
 }
 
 1;
