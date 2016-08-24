@@ -122,7 +122,7 @@ sub pollEvents {
 	while (1) {
 		my $event = $self->_getEvent();
 		if ( defined( $event->{"event_type"} ) ) {
-			$self->_handleEvent($event);
+			last if $self->_handleEvent($event);    # return endpolling flag
 		}
 	}
 }
@@ -155,7 +155,7 @@ sub _handleEvent {
 
 	if ( !$self->_isEventSupported( $event_jobj->{"event_type"} ) ) {
 		$self->{logger}->info("Unknown ArmaditoAV api event.");
-		return;
+		return 0;
 	}
 
 	my $class = "Armadito::Agent::HTTP::Client::ArmaditoAV::Event::$event_jobj->{'event_type'}";
@@ -163,7 +163,7 @@ sub _handleEvent {
 	my $event = $class->new( jobj => $event_jobj );
 	$event->run();
 
-	return;
+	return $event->{"end_polling"};
 }
 
 1;

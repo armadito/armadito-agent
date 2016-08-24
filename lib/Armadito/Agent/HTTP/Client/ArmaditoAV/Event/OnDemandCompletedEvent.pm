@@ -28,6 +28,9 @@ sub new {
 sub run {
 	my ( $self, %params ) = @_;
 
+	# TODO : POST glpi/plugins/armadito api/scans
+	$self->{end_polling} = 1;
+
 	return $self;
 }
 1;
