@@ -1,5 +1,15 @@
 Revision history for Perl extension Armadito::Agent.
 
+0.1.0_02 24/08/2016
+	- Add ArmaditoAV api RESTful client implementation
+	- State task with ArmaditoAV
+	- Scan task with ArmaditoAV
+	- Fix basic perlcritic policy violations
+	- Beautify code with PerlTidy
+	- Add perlcritic test
+	- Add tidyall test
+	- update perlpod documentation
+
 0.1.0_01 10/08/2016
 	- Add RESTful API client-side implementation
 	- Add Getjobs task

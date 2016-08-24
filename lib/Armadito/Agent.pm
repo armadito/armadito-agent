@@ -12,7 +12,7 @@ use Armadito::Agent::Config;
 use Armadito::Agent::Storage;
 use Armadito::Agent::Tools::Fingerprint qw(getFingerprint);
 
-our $VERSION = "0.1.0_01";
+our $VERSION = "0.1.0_02";
 my @supported_antiviruses = ("Armadito");
 my @supported_tasks       = ( "State", "Enrollment", "Getjobs", "Runjobs", "Alerts", "Scan" );
 my @superuser_tasks       = ( "Enrollment", "Getjobs", "Runjobs" );
@@ -211,7 +211,7 @@ Armadito::Agent - Armadito Agent
 
 =head1 VERSION
 
-0.1.0_01
+0.1.0_02
 
 =head1 DESCRIPTION
 
