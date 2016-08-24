@@ -25,7 +25,8 @@ sub new {
 	delete $self->{jobj}->{total_suspicious_count};
 	delete $self->{jobj}->{total_scanned_count};
 
-	$self->{jobj}->{job_id} = $self->{taskobj}->{job}->{job_id};
+	$self->{jobj}->{progress} = 100;
+	$self->{jobj}->{job_id}   = $self->{taskobj}->{job}->{job_id};
 
 	return $self;
 }
