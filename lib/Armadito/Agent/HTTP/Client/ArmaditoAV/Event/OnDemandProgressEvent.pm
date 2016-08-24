@@ -11,16 +11,10 @@ sub new {
 
 	my $self = $class->SUPER::new(%params);
 
-	$self->{"progress"}         = $params{jobj}->{"progress"};
-	$self->{"path"}             = $params{jobj}->{"path"};
-	$self->{"malware_count"}    = $params{jobj}->{"malware_count"};
-	$self->{"suspicious_count"} = $params{jobj}->{"suspicious_count"};
-	$self->{"scanned_count"}    = $params{jobj}->{"scanned_count"};
-
 	# TODO: Add more validation
-	die "Invalid malware_count."    if !isANumber( $self->{"malware_count"} );
-	die "Invalid suspicious_count." if !isANumber( $self->{"suspicious_count"} );
-	die "Invalid scanned_count."    if !isANumber( $self->{"scanned_count"} );
+	die "Invalid malware_count."    if !isANumber( $self->{jobj}->{"malware_count"} );
+	die "Invalid suspicious_count." if !isANumber( $self->{jobj}->{"suspicious_count"} );
+	die "Invalid scanned_count."    if !isANumber( $self->{jobj}->{"scanned_count"} );
 
 	return $self;
 }

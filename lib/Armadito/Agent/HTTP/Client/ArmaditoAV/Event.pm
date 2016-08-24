@@ -8,7 +8,9 @@ sub new {
 
 	my $self = {
 		"event_type"  => $params{jobj}->{"event_type"},
-		"end_polling" => 0
+		"end_polling" => 0,
+		taskobj       => $params{taskobj},
+		jobj          => $params{jobj}
 	};
 
 	bless $self, $class;

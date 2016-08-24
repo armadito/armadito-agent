@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::HTTP::Client::ArmaditoAV::Event';
 
+use JSON;
 use Armadito::Agent::Tools::Security qw(isANumber);
 
 sub new {
@@ -11,16 +12,10 @@ sub new {
 
 	my $self = $class->SUPER::new(%params);
 
-	$self->{"start_time"}             = $params{jobj}->{"start_time"};
-	$self->{"duration"}               = $params{jobj}->{"duration"};
-	$self->{"total_malware_count"}    = $params{jobj}->{"total_malware_count"};
-	$self->{"total_suspicious_count"} = $params{jobj}->{"total_suspicious_count"};
-	$self->{"total_scanned_count"}    = $params{jobj}->{"total_scanned_count"};
-
 	# TODO: Add more validation
-	die "Invalid total_malware_count."    if !isANumber( $self->{"total_malware_count"} );
-	die "Invalid total_suspicious_count." if !isANumber( $self->{"total_suspicious_count"} );
-	die "Invalid total_scanned_count."    if !isANumber( $self->{"total_scanned_count"} );
+	die "Invalid total_malware_count."    if !isANumber( $self->{jobj}->{"total_malware_count"} );
+	die "Invalid total_suspicious_count." if !isANumber( $self->{jobj}->{"total_suspicious_count"} );
+	die "Invalid total_scanned_count."    if !isANumber( $self->{jobj}->{"total_scanned_count"} );
 
 	return $self;
 }
@@ -28,7 +23,24 @@ sub new {
 sub run {
 	my ( $self, %params ) = @_;
 
-	# TODO : POST glpi/plugins/armadito api/scans
+	$self->{taskobj}->{jobj}->{task}->{obj} = $self->{jobj};
+	my $json_text = to_json( $self->{taskobj}->{jobj} );
+
+	my $response = $self->{taskobj}->{glpi_client}->sendRequest(
+		"url"   => $self->{taskobj}->{agent}->{config}->{armadito}->{server} . "/api/scans",
+		message => $json_text,
+		method  => "POST"
+	);
+
+	if ( $response->is_success() ) {
+		$self->{taskobj}->_handleResponse($response);
+		$self->{taskobj}->{logger}->info("Send Scan results successful...");
+	}
+	else {
+		$self->{taskobj}->_handleError($response);
+		$self->{taskobj}->{logger}->info("Send Scan results failed...");
+	}
+
 	$self->{end_polling} = 1;
 
 	return $self;

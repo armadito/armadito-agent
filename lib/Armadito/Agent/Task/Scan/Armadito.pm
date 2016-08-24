@@ -68,7 +68,7 @@ sub run {
 	$self->_validateScanParams(%params);
 
 	$self->{logger}->info("Armadito Scan launched.");
-	$self->{av_client} = Armadito::Agent::HTTP::Client::ArmaditoAV->new();
+	$self->{av_client} = Armadito::Agent::HTTP::Client::ArmaditoAV->new( taskobj => $self );
 	$self->{av_client}->register();
 
 	my $response = $self->{av_client}->sendRequest(

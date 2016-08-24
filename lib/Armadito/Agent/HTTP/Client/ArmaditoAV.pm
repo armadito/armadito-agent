@@ -27,7 +27,7 @@ sub new {
 	my ( $class, %params ) = @_;
 	my $self = $class->SUPER::new(%params);
 
-	# default options
+	$self->{taskobj}    = $params{taskobj};
 	$self->{server_url} = "http://localhost:8888";
 
 	return $self;
@@ -160,7 +160,7 @@ sub _handleEvent {
 
 	my $class = "Armadito::Agent::HTTP::Client::ArmaditoAV::Event::$event_jobj->{'event_type'}";
 	$class->require();
-	my $event = $class->new( jobj => $event_jobj );
+	my $event = $class->new( jobj => $event_jobj, taskobj => $self->{taskobj} );
 	$event->run();
 
 	return $event->{"end_polling"};
