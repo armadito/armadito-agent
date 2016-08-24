@@ -30,6 +30,7 @@ sub new {
 	};
 
 	$self->{jobj}->{task} = $task;
+	$self->{job} = $params{job};
 
 	return $self;
 }

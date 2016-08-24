@@ -13,9 +13,19 @@ sub new {
 	my $self = $class->SUPER::new(%params);
 
 	# TODO: Add more validation
-	die "Invalid total_malware_count."    if !isANumber( $self->{jobj}->{"total_malware_count"} );
-	die "Invalid total_suspicious_count." if !isANumber( $self->{jobj}->{"total_suspicious_count"} );
-	die "Invalid total_scanned_count."    if !isANumber( $self->{jobj}->{"total_scanned_count"} );
+	die "Invalid total_malware_count."    if !isANumber( $self->{jobj}->{total_malware_count} );
+	die "Invalid total_suspicious_count." if !isANumber( $self->{jobj}->{total_suspicious_count} );
+	die "Invalid total_scanned_count."    if !isANumber( $self->{jobj}->{total_scanned_count} );
+
+	$self->{jobj}->{malware_count}    = $self->{jobj}->{total_malware_count};
+	$self->{jobj}->{suspicious_count} = $self->{jobj}->{total_suspicious_count};
+	$self->{jobj}->{scanned_count}    = $self->{jobj}->{total_scanned_count};
+
+	delete $self->{jobj}->{total_malware_count};
+	delete $self->{jobj}->{total_suspicious_count};
+	delete $self->{jobj}->{total_scanned_count};
+
+	$self->{jobj}->{job_id} = $self->{taskobj}->{job}->{job_id};
 
 	return $self;
 }

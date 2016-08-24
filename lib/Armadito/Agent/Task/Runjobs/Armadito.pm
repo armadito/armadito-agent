@@ -46,8 +46,8 @@ sub _runJob {
 
 	$error_code = 3;
 	eval {
-		my $task = $class->new( config => $config, agent => $self->{agent} );
-		$task->run( obj => $job->{obj} );
+		my $task = $class->new( config => $config, agent => $self->{agent}, job => $job );
+		$task->run();
 	};
 	goto ERROR if ($@);
 

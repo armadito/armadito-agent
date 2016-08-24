@@ -12,9 +12,9 @@ sub new {
 	my $self = $class->SUPER::new(%params);
 
 	# TODO: Add more validation
-	die "Invalid malware_count."    if !isANumber( $self->{jobj}->{"malware_count"} );
-	die "Invalid suspicious_count." if !isANumber( $self->{jobj}->{"suspicious_count"} );
-	die "Invalid scanned_count."    if !isANumber( $self->{jobj}->{"scanned_count"} );
+	die "Invalid malware_count."    if !isANumber( $self->{jobj}->{malware_count} );
+	die "Invalid suspicious_count." if !isANumber( $self->{jobj}->{suspicious_count} );
+	die "Invalid scanned_count."    if !isANumber( $self->{jobj}->{scanned_count} );
 
 	return $self;
 }

@@ -16,14 +16,14 @@ sub isEnabled {
 sub new {
 	my ( $class, %params ) = @_;
 
-	my $self = $class->SUPER::new(%params);
-
+	my $self      = $class->SUPER::new(%params);
 	my $antivirus = {
 		name    => "Armadito",
 		version => ""
 	};
-
 	$self->{jobj}->{task}->{antivirus} = $antivirus;
+
+	$self->_validateScanObj( $self->{job}->{obj} );
 
 	return $self;
 }
@@ -44,28 +44,27 @@ sub _handleError {
 	return $self;
 }
 
-sub _validateScanParams {
-	my ( $self, %params ) = @_;
+sub _validateScanObj {
+	my ( $self, $scanobj ) = @_;
 
-	die "undefined scan_type." if ( !defined( $params{obj}->{scan_name} ) );
-	die "undefined scan_path." if ( !defined( $params{obj}->{scan_path} ) );
-	die "Empty scan_path."     if ( $params{obj}->{scan_path} eq "" );
+	die "undefined scan_type." if ( !defined( $scanobj->{scan_name} ) );
+	die "undefined scan_path." if ( !defined( $scanobj->{scan_path} ) );
+	die "Empty scan_path."     if ( $scanobj->{scan_path} eq "" );
 
 	# TODO: validate scan_paths, etc.
-	return $self->setJsonScanMessage(%params);
+	return;
 }
 
-sub setJsonScanMessage {
-	my ( $self, %params ) = @_;
+sub getScanAPIMessage {
+	my ($self) = @_;
 
-	$self->{json_message} = "{ 'path' : '" . $params{obj}->{scan_path} . "' }";
+	return "{ 'path' : '" . $self->{job}->{obj}->{scan_path} . "' }";
 }
 
 sub run {
 	my ( $self, %params ) = @_;
 
 	$self = $self->SUPER::run(%params);
-	$self->_validateScanParams(%params);
 
 	$self->{logger}->info("Armadito Scan launched.");
 	$self->{av_client} = Armadito::Agent::HTTP::Client::ArmaditoAV->new( taskobj => $self );
@@ -73,7 +72,7 @@ sub run {
 
 	my $response = $self->{av_client}->sendRequest(
 		"url"   => $self->{av_client}->{server_url} . "/api/scan",
-		message => $self->{json_message},
+		message => $self->getScanAPIMessage(),
 		method  => "POST"
 	);
 
