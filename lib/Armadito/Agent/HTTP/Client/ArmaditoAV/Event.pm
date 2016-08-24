@@ -35,7 +35,7 @@ This is a base class for each Events used given by ArmaditoAV /api/event.
 
 Run event related stuff.
 
-=head2 new ( $self, %params )
+=head2 new ( $class, %params )
 
 Instanciate this class.
 

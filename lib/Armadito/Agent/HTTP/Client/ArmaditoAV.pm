@@ -94,6 +94,7 @@ sub register {
 
 	die "Unable to register to ArmaditoAV api." if ( !$response->is_success() || !$response->content() =~ /^\s*\{/ms );
 	$self->_handleRegisterResponse($response);
+	return $self;
 }
 
 sub _handleEventResponse() {

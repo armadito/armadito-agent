@@ -35,6 +35,6 @@ This is the class dedicated to OnDemandProgressEvent of ArmaditoAV api.
 
 Run event related stuff.
 
-=head2 new ( $self, %params )
+=head2 new ( $class, %params )
 
 Instanciate this class.
