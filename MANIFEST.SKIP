@@ -32,3 +32,6 @@ var/
 /tarballs/
 ^setup.sh
 debian
+^\.tidy
+\.perltidyrc
+.perlcriticrc
