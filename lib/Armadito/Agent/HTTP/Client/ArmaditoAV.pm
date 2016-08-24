@@ -15,6 +15,12 @@ use URI::Escape;
 use JSON;
 use FusionInventory::Agent::Tools;
 
+use Armadito::Agent::HTTP::Client::ArmaditoAV::Event;
+use Armadito::Agent::HTTP::Client::ArmaditoAV::Event::DetectionEvent;
+use Armadito::Agent::HTTP::Client::ArmaditoAV::Event::OnDemandCompletedEvent;
+use Armadito::Agent::HTTP::Client::ArmaditoAV::Event::OnDemandProgressEvent;
+use Armadito::Agent::HTTP::Client::ArmaditoAV::Event::StatusEvent;
+
 my @supported_events = ( "DetectionEvent", "OnDemandCompletedEvent", "OnDemandProgressEvent", "StatusEvent" );
 
 sub new {
@@ -139,7 +145,7 @@ sub _handleEvent {
 		return;
 	}
 
-	my $class = "Armadito::Agent::HTTP::Client::ArmaditoAV::$event_jobj->{'event_type'}";
+	my $class = "Armadito::Agent::HTTP::Client::ArmaditoAV::Event::$event_jobj->{'event_type'}";
 	$class->require();
 	my $event = $class->new( jobj => $event_jobj );
 	$event->run();
