@@ -4,10 +4,23 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::HTTP::Client::ArmaditoAV::Event';
 
+use Armadito::Agent::Tools::Security qw(isANumber);
+
 sub new {
 	my ( $class, %params ) = @_;
 
 	my $self = $class->SUPER::new(%params);
+
+	$self->{"start_time"}             = $params{jobj}->{"start_time"};
+	$self->{"duration"}               = $params{jobj}->{"duration"};
+	$self->{"total_malware_count"}    = $params{jobj}->{"total_malware_count"};
+	$self->{"total_suspicious_count"} = $params{jobj}->{"total_suspicious_count"};
+	$self->{"total_scanned_count"}    = $params{jobj}->{"total_scanned_count"};
+
+	# TODO: Add more validation
+	die "Invalid total_malware_count."    if !isANumber( $self->{"total_malware_count"} );
+	die "Invalid total_suspicious_count." if !isANumber( $self->{"total_suspicious_count"} );
+	die "Invalid total_scanned_count."    if !isANumber( $self->{"total_scanned_count"} );
 
 	return $self;
 }
