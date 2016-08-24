@@ -97,6 +97,18 @@ sub register {
 	return $self;
 }
 
+sub unregister {
+	my ($self) = @_;
+
+	my $response = $self->sendRequest(
+		"url"  => $self->{server_url} . "/api/unregister",
+		method => "GET"
+	);
+
+	die "Unable to unregister to ArmaditoAV api." if ( !$response->is_success() );
+	return $self;
+}
+
 sub _handleEventResponse() {
 	my ( $self, $response ) = @_;
 

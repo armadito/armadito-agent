@@ -80,6 +80,8 @@ sub run {
 	die "ArmaditoAV Scan request failed." if ( !$response->is_success() );
 
 	$self->{av_client}->pollEvents();
+	$self->{av_client}->unregister();
+
 	return $self;
 }
 
