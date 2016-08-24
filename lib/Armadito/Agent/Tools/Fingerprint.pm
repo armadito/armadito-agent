@@ -71,7 +71,7 @@ __END__
 
 =head1 NAME
 
-FusionInventory::Agent::Tools::Fingerprint - OS-independent fingerprint computing
+Armadito::Agent::Tools::Fingerprint - OS-independent fingerprint computing
 
 =head1 DESCRIPTION
 

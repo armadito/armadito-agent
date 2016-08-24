@@ -12,9 +12,9 @@ our @EXPORT_OK = qw(
 sub isANumber {
 	my ($unsafe) = @_;
 
-	if($unsafe !~ /^\d+$/msi){
+	if ( $unsafe !~ /^\d+$/msi ) {
 		return 0;
-	} 
+	}
 	return 1;
 }
 1;
