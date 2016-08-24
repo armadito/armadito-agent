@@ -42,8 +42,7 @@ sub _runJob {
 	goto ERROR if ($@);
 
 	$error_code = 2;
-	eval { die "Job Class is not enabled." if ( !$class->isEnabled() ); };
-	goto ERROR if ($@);
+	goto ERROR if ( !$class->isEnabled() );
 
 	$error_code = 3;
 	eval {
