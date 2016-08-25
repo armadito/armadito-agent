@@ -76,8 +76,6 @@ my $deprecated = {
 	},
 };
 
-my $confReloadIntervalMinValue = 60;
-
 sub new {
 	my ( $class, %params ) = @_;
 
@@ -343,19 +341,6 @@ sub _checkContent {
 		if $self->{'ca-cert-dir'};
 	$self->{'logfile'} = File::Spec->rel2abs( $self->{'logfile'} )
 		if $self->{'logfile'};
-
-	# conf-reload-interval option
-	# If value is less than the required minimum, we force it to that
-	# minimum because it's useless to reload the config so often and,
-	# furthermore, it can cause a loss of performance
-	if ( $self->{'conf-reload-interval'} != 0 ) {
-		if ( $self->{'conf-reload-interval'} < 0 ) {
-			$self->{'conf-reload-interval'} = 0;
-		}
-		elsif ( $self->{'conf-reload-interval'} < $confReloadIntervalMinValue ) {
-			$self->{'conf-reload-interval'} = $confReloadIntervalMinValue;
-		}
-	}
 }
 
 1;
