@@ -35,6 +35,16 @@ sub new {
 	return $self;
 }
 
+sub _validateConfiguration {
+	my ( $self, %params ) = @_;
+
+	$self->isAVSupported( $self->{config}->{armadito}->{antivirus} )
+		or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
+	$self->isTaskSupported( $params{options}->{task} )
+		or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
+	$self->isTaskUidOk( $params{options}->{task} ) or die "Insufficient permissions. This task must be run as root.";
+}
+
 sub init {
 	my ( $self, %params ) = @_;
 
@@ -49,13 +59,14 @@ sub init {
 	$self->{config}->{armadito}->{server} = $params{options}->{server}
 		if ( defined( $params{options}->{server} ) );
 
+	$self->_validateConfiguration(%params);
+
 	$self->{logger} = FusionInventory::Agent::Logger->new( backends => ['Stderr'] );
 
 	$self->{fusion_storage} = Armadito::Agent::Storage->new(
 		logger    => $self->{logger},
 		directory => $self->{fusion_vardir}
 	);
-
 	$self->{armadito_storage} = Armadito::Agent::Storage->new(
 		logger    => $self->{logger},
 		directory => $self->{vardir}

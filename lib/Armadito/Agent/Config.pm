@@ -27,6 +27,7 @@ my $default_armadito = {
 	'proxy'                => undef,
 	'server'               => undef,
 	'stdout'               => undef,
+	'antivirus'            => undef,
 };
 
 my $default_fusion = {
