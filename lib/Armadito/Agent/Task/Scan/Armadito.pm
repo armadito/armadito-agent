@@ -17,11 +17,6 @@ sub new {
 	my ( $class, %params ) = @_;
 
 	my $self      = $class->SUPER::new(%params);
-	my $antivirus = {
-		name    => "Armadito",
-		version => ""
-	};
-	$self->{jobj}->{task}->{antivirus} = $antivirus;
 
 	$self->_validateScanObj( $self->{job}->{obj} );
 

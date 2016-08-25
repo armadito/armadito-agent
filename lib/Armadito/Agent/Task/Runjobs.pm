@@ -27,7 +27,7 @@ sub new {
 
 	my $task = {
 		name      => "Runjobs",
-		antivirus => ""
+		antivirus => $self->{agent}->{antivirus}->getJobj()
 	};
 
 	$self->{jobj}->{task} = $task;

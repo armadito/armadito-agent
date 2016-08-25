@@ -10,6 +10,7 @@ require Exporter;
 
 use Armadito::Agent::Config;
 use Armadito::Agent::Storage;
+use Armadito::Agent::Antivirus;
 use Armadito::Agent::Tools::Fingerprint qw(getFingerprint);
 
 our $VERSION = "0.1.0_02";
@@ -77,6 +78,10 @@ sub init {
 	$self->_getArmaditoId();
 
 	$self->{fingerprint} = getFingerprint();
+
+	my $class = "Armadito::Agent::Antivirus::$self->{config}->{armadito}->{antivirus}";
+	$class->require();
+	$self->{antivirus} = $class->new();
 }
 
 sub _getLinuxFusionSetupDir {
