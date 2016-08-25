@@ -35,3 +35,4 @@ debian
 ^\.tidy
 \.perltidyrc
 .perlcriticrc
+^do_all.sh
