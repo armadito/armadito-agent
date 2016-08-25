@@ -128,7 +128,6 @@ if ($options->{'list-avs'}) {
 
 ## default
 $options->{antivirus} = "Armadito" unless(defined($options->{antivirus}));
-$options->{server} = "http://armadito-glpi/glpi/plugins/armadito/" unless(defined($options->{server}));
 
 my $config = {};
 
