@@ -38,10 +38,8 @@ sub new {
 sub init {
 	my ( $self, %params ) = @_;
 
-	# Get FusionInventory setup directories
 	$self->_getFusionSetup();
 
-	# Load configuration
 	$self->{config} = Armadito::Agent::Config->new(
 		armadito_confdir => $self->{confdir},
 		fusion_confdir   => $self->{fusion_confdir},
@@ -49,12 +47,10 @@ sub init {
 	);
 
 	$self->{config}->{armadito}->{server} = $params{options}->{server}
-		unless @{ $self->{config}->{armadito}->{server} };
+		if ( defined( $params{options}->{server} ) );
 
-	# Create logger
 	$self->{logger} = FusionInventory::Agent::Logger->new( backends => ['Stderr'] );
 
-	# Init storages
 	$self->{fusion_storage} = Armadito::Agent::Storage->new(
 		logger    => $self->{logger},
 		directory => $self->{fusion_vardir}
@@ -65,7 +61,6 @@ sub init {
 		directory => $self->{vardir}
 	);
 
-	# Read persistent data from storages
 	$self->{agent_id} = 0;
 	$self->_getFusionId();
 	$self->_getArmaditoId();
@@ -203,6 +198,7 @@ sub displaySupportedAVs {
 		print $_. "\n";
 	}
 }
+
 1;
 __END__
 =head1 NAME

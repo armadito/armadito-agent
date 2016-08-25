@@ -91,9 +91,6 @@ sub new {
 	$self->_loadFromBackend( "", $params{options}->{'config-fusion'}, $params{fusion_confdir},
 		"FusionInventory-Agent" );
 
-	# TODO test on Win32
-	# $self->_loadFromBackend("", "", $params{fusion_confdir}, "FusionInventory-Agent");
-
 	# Load armadito agent configuration
 	$self->_loadDefaults("Armadito-Agent");
 	$self->_loadFromBackend(
