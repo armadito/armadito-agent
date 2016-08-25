@@ -70,7 +70,7 @@ sub run {
 	print "JSON formatted str : \n" . $json_text . "\n";
 
 	my $response = $self->{glpi_client}->sendRequest(
-		"url"   => $self->{config}->{plugin_server_url} . "/api/alerts",
+		"url"   => $self->{taskobj}->{agent}->{config}->{armadito}->{server}[0] . "/api/alerts",
 		message => $json_text,
 		method  => "POST"
 	);
