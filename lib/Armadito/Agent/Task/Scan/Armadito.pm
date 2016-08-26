@@ -16,7 +16,7 @@ sub isEnabled {
 sub new {
 	my ( $class, %params ) = @_;
 
-	my $self      = $class->SUPER::new(%params);
+	my $self = $class->SUPER::new(%params);
 
 	$self->_validateScanObj( $self->{job}->{obj} );
 
