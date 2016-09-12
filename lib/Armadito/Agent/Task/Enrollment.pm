@@ -57,7 +57,7 @@ sub _handleError {
 	$self->{logger}->error( "Error Response : " . $response->content() . "\n" );
 	if ( $response->content() =~ /^\s*\{/ ) {
 		my $obj = from_json( $response->content(), { utf8 => 1 } );
-		$self->{logger}->error( $obj->{message} . "[plugin_version:" . $obj->{plugin_version} . "]" );
+		$self->{logger}->error( $obj->{message} );
 	}
 	return $self;
 }
