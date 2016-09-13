@@ -69,11 +69,9 @@ sub _runJobs {
 	my ($self) = @_;
 
 	foreach my $job ( @{ $self->{jobs} } ) {
-		if ( $job->{antivirus_name} eq "Armadito" ) {
-			$self->_runJob($job);
-			$self->_sendStatus();
-			$self->_rmJobFromStorage( $job->{job_id} );
-		}
+		$self->_runJob($job);
+		$self->_sendStatus();
+		$self->_rmJobFromStorage( $job->{job_id} );
 	}
 
 	return $self;
