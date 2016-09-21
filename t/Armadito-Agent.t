@@ -5,7 +5,7 @@ use Test::More tests => 1;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
-BEGIN {
+SKIP: {
 	my $libdir = "";
 	if ( $OSNAME eq 'MSWin32' ) {
 		my $Registry;
@@ -37,16 +37,16 @@ BEGIN {
 		use lib "../share/armadito-agent/lib";
 	}
 	else {
-		# Set up fusioninventory agent libdir
 		my $setup = `fusioninventory-agent --setup`;
-		die
-			"fusioninventory-agent --setup not available. Please, install fusioninventory-agent (2.3.5+) before retrying."
+
+		skip( 'fusioninventory-agent --setup invalid or not found.', 1 )
 			if ( $setup !~ /libdir: (.*?)\n/ms );
+
 		$libdir = $1;
 	}
 
 	# If ok, we add libdir to @INC
-	die "FusionInventoryAgent libs not found. Please, install fusioninventory-agent before retrying."
+	warn "FusionInventoryAgent libs not found. Please, install fusioninventory-agent before retrying."
 		if ( !-f $libdir . "/FusionInventory/Agent.pm" );
 	push( @INC, $libdir );
 

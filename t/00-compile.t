@@ -1,10 +1,12 @@
 use strict;
 use warnings;
+use Test::More;
 use Test::Compile;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
+use Module::Runtime qw(use_module);
 
-BEGIN {
+SKIP: {
 	my $libdir = "";
 	if ( $OSNAME eq 'MSWin32' ) {
 		my $Registry;
@@ -38,22 +40,21 @@ BEGIN {
 	else {
 		# Set up fusioninventory agent libdir
 		my $setup = `fusioninventory-agent --setup`;
-		die
-			"fusioninventory-agent --setup not available. Please, install fusioninventory-agent (2.3.5+) before retrying."
+		plan skip_all => 'fusioninventory-agent --setup invalid or not found.'
 			if ( $setup !~ /libdir: (.*?)\n/ms );
 		$libdir = $1;
 	}
 
 	# If ok, we add libdir to @INC
-	die "FusionInventoryAgent libs not found. Please, install fusioninventory-agent before retrying."
+	warn "FusionInventoryAgent libs not found. Please, install fusioninventory-agent before retrying."
 		if ( !-f $libdir . "/FusionInventory/Agent.pm" );
 	push( @INC, $libdir );
-}
 
-my @scripts = qw(mod2html podtree2html pods2html perl2html);
-my $test    = Test::Compile->new();
-$test->all_files_ok();
-$test->pl_file_compiles($_) for @scripts;
-$test->done_testing();
+	my @scripts = qw(mod2html podtree2html pods2html perl2html);
+	my $test    = Test::Compile->new();
+	$test->all_files_ok();
+	$test->pl_file_compiles($_) for @scripts;
+	$test->done_testing();
+}
 
 1;
