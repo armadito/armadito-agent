@@ -8,42 +8,50 @@ use English qw(-no_match_vars) ;
 use Getopt::Long;
 use Pod::Usage;
 use UNIVERSAL::require;
+use IPC::System::Simple qw(capture);
+use Data::Dumper;
+use Try::Tiny;
+
+our $VERSION = 1.0;
 
 BEGIN {
 
-	my $libdir = "";
+	my $libdir;
 	if ($OSNAME eq 'MSWin32'){
 		my $Registry;
 		Win32::TieRegistry->require();
 		Win32::TieRegistry->import(
-			Delimiter   => '/',
+			Delimiter   => q{/},
 			ArrayValues => 0,
 			TiedRef     => \$Registry
 		);
 
 		my $machKey = $Registry->Open('LMachine', {
 			Access => Win32::TieRegistry::KEY_READ()
-		}) or die "Can't open HKEY_LOCAL_MACHINE key: $EXTENDED_OS_ERROR";
+		}) or die "Can't open HKEY_LOCAL_MACHINE key: $EXTENDED_OS_ERROR\n";
 
 		my $uninstallValues =
 			$machKey->{'SOFTWARE/Microsoft/Windows/CurrentVersion/Uninstall/FusionInventory-Agent'};
-		die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)" unless $uninstallValues;
+		if(!$uninstallValues){ die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)\n"; }
 
 		my $installLocation = $uninstallValues->{'/InstallLocation'};
-		die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)"  unless $installLocation;
+		if(!$installLocation){ die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)\n"; }
 
 		$libdir = $installLocation."\\perl\\agent\\";
 		use lib "../share/armadito-agent/lib";
 	}
 	else{
-		# Set up fusioninventory agent libdir
-		my $setup = `fusioninventory-agent --setup`;
-		die "fusioninventory-agent --setup not available. Please, install fusioninventory-agent (2.3.5+) before retrying." if($setup !~ /libdir: (.*?)\n/ms);
-		$libdir = $1;
+		my $setup = capture( 'fusioninventory-agent --setup' );
+		if($setup =~ /libdir: (.*?)\n/ms) { 
+			$libdir = $1;
+		}
+		else{
+			die "fusioninventory-agent --setup not available. Please, install fusioninventory-agent (2.3.5+) before retrying.\n"; 
+		}
 	}
 
-	# If ok, we add libdir to @INC
-	die "FusionInventoryAgent libs not found. Please, install fusioninventory-agent before retrying." if(! -f $libdir."/FusionInventory/Agent.pm");
+	if(! -f $libdir."/FusionInventory/Agent.pm") { die "FusionInventoryAgent libs not found. Please, install fusioninventory-agent before retrying.\n"; }
+
 	push(@INC, $libdir);
 }
 
@@ -64,7 +72,7 @@ use Armadito::Agent::Task::Enrollment::Armadito;
 
 my $options = {};
 
-pod2usage(-verbose => 0, -exitstatus => 0) unless $ARGV[0];
+if( !$ARGV[0] ){ pod2usage(-verbose => 0, -exitstatus => 0) }
 
 GetOptions(
     $options,
@@ -81,7 +89,7 @@ GetOptions(
 	'version|v',
 ) or pod2usage(-verbose => 0);
 
-pod2usage(-verbose => 0, -exitstatus => 0) if $options->{help};
+if( $options->{help} ){ pod2usage(-verbose => 0, -exitstatus => 0) }
 
 if ($options->{version}) {
     print "armadito-agent $Armadito::Agent::Task::VERSION\n";
@@ -128,20 +136,19 @@ if ($options->{'list-avs'}) {
 
 my $config = {};
 
-eval{
+try {
 	$agent->init(options => $options);
 
 	my $class = "Armadito::Agent::Task::$options->{task}::$agent->{config}->{armadito}->{antivirus}";
 	$class->require();
 	my $task = $class->new(config => $config, agent => $agent);
 	$task->run();
-};
 
-if ($EVAL_ERROR) {
+} catch {
     print STDERR "Execution failure:\n";
-    print STDERR $EVAL_ERROR;
+    print STDERR $_;
     exit(1);
-}
+};
 
 exit(0);
 __END__

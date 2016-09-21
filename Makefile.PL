@@ -56,13 +56,12 @@ makemaker_args(
 WriteAll;
 
 # substitute prefix everywhere
-$MY::variables{SYSCONFDIR} =~ s/\$\(PREFIX\)/$MY::variables{PREFIX}/;
-$MY::variables{DATADIR} =~ s/\$\(PREFIX\)/$MY::variables{PREFIX}/;
-$MY::variables{LOCALSTATEDIR} =~ s/\$\(PREFIX\)/$MY::variables{PREFIX}/;
+$MY::Variables{SYSCONFDIR} =~ s/\$\(PREFIX\)/$MY::Variables{PREFIX}/;
+$MY::Variables{DATADIR} =~ s/\$\(PREFIX\)/$MY::Variables{PREFIX}/;
+$MY::Variables{LOCALSTATEDIR} =~ s/\$\(PREFIX\)/$MY::Variables{PREFIX}/;
 
-# look for already existing configuration file
-my $config_file_message
-	= -f "$MY::variables{SYSCONFDIR}/agent.cfg"
+my $ConfigFileMessage
+	= -f "$MY::Variables{SYSCONFDIR}/agent.cfg"
 	? "previous configuration file found, new one will be installed as agent.cfg.new"
 	: "no previous configuration file found, new one will be installed as agent.cfg";
 
@@ -70,26 +69,26 @@ print <<EOF;
 
 Installation summary
 --------------------
-prefix: $MY::variables{PREFIX}
-configuration installation directory: $MY::variables{SYSCONFDIR}
-constant data installation directory: $MY::variables{DATADIR}
-variable data installation directory: $MY::variables{LOCALSTATEDIR}
+prefix: $MY::Variables{PREFIX}
+configuration installation directory: $MY::Variables{SYSCONFDIR}
+constant data installation directory: $MY::Variables{DATADIR}
+variable data installation directory: $MY::Variables{LOCALSTATEDIR}
 
-$config_file_message
+$ConfigFileMessage
 EOF
 
 package MY;
 
 use English qw(-no_match_vars);
 
-our %variables;
+our %Variables;
 
 # force a perl-independant prefix for everything
 sub constants {
 	my ($self) = @_;
 
 	if ( $OSNAME eq "MSWin32" ) {
-		%variables = (
+		%Variables = (
 			PREFIX               => 'C:\\Program Files\\Armadito-Agent',
 			INSTALLSCRIPT        => '$(PREFIX)\\bin',
 			INSTALLSITESCRIPT    => '$(PREFIX)\\bin',
@@ -109,8 +108,8 @@ sub constants {
 		);
 	}
 	else {
-		# for some reason, initialising variables from the global scope doesn't work
-		%variables = (
+		# for some reason, initialising Variables from the global scope doesn't work
+		%Variables = (
 			PREFIX               => '/usr/local',
 			INSTALLSCRIPT        => '$(PREFIX)/bin',
 			INSTALLSITESCRIPT    => '$(PREFIX)/bin',
@@ -130,12 +129,12 @@ sub constants {
 		);
 	}
 
-	# allow variables defined on command line to override defaults
-	foreach my $name ( keys %variables ) {
-		$variables{$name} = $self->{ARGS}->{$name} if $self->{ARGS}->{$name};
+	# allow Variables defined on command line to override defaults
+	foreach my $name ( keys %Variables ) {
+		$Variables{$name} = $self->{ARGS}->{$name} if $self->{ARGS}->{$name};
 	}
 
-	# get all standard MM variables definitions, and override them if needed
+	# get all standard MM Variables definitions, and override them if needed
 	my @code = split( /\n/, $self->SUPER::constants(@_) );
 	foreach my $line (@code) {
 
@@ -146,15 +145,15 @@ sub constants {
 		next unless $line =~ /^([A-Z0-9_]+) =/;
 		my $name = $1;
 
-		# skip variables we're not interested
-		next unless $variables{$name};
+		# skip Variables we're not interested
+		next unless $Variables{$name};
 
-		$line = "$name = $variables{$name}";
+		$line = "$name = $Variables{$name}";
 	}
 
-	# add out own variables
+	# add out own Variables
 	foreach my $name (qw/SYSCONFDIR DATADIR LOCALSTATEDIR/) {
-		push @code, "$name = $variables{$name}";
+		push @code, "$name = $Variables{$name}";
 	}
 
 	return join( "\n", @code );
