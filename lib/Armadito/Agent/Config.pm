@@ -100,10 +100,22 @@ sub new {
 		"Armadito-Agent"
 	);
 
+	$self->_overrideWithArgs(%params);
+
 	_checkContent( $self->{fusion} );
 	_checkContent( $self->{armadito} );
 
 	return $self;
+}
+
+sub _overrideWithArgs {
+	my ( $self, %params ) = @_;
+
+	foreach my $key ( keys %{ $self->{armadito} } ) {
+		if ( defined( $params{options}->{$key} ) && $params{options}->{$key} ne "" ) {
+			$self->{armadito}->{$key} = $params{options}->{$key};
+		}
+	}
 }
 
 sub _loadDefaults {
