@@ -29,7 +29,7 @@ sub readDirectory {
 	if ( opendir( my $dh, $params{dirpath} ) ) {
 		while ( readdir $dh ) {
 			if ( ( $_ ne "." ) && ( $_ ne ".." ) ) {
-				if ( -f $params{dirpath} . $_ ) {
+				if ( -f $params{dirpath} . "/" . $_ ) {
 					push( @files, $_ );
 				}
 			}
