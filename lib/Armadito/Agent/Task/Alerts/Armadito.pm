@@ -68,7 +68,7 @@ sub _processAlert {
 		return 1;
 	}
 
-	if ( !defined($self->{agent}->{config}->{armadito}->{"no-rm-alerts"}) ) {
+	if ( !defined( $self->{agent}->{config}->{armadito}->{"no-rm-alerts"} ) ) {
 		unlink $params{filepath};
 	}
 

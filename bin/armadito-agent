@@ -81,7 +81,7 @@ GetOptions(
 	'antivirus|av=s',
 	'alert-dir=s',
 	'max-alerts=i',
-	'no-rm-alerts=i',
+	'no-rm-alerts',
 	'conf-file=s',
 	'conf-reload-interval=i',
 	'config=s',
