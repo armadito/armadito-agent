@@ -42,11 +42,11 @@ BEGIN {
 	}
 	else{
 		my $setup = capture( 'fusioninventory-agent --setup' );
-		if($setup =~ /libdir: (.*?)\n/ms) { 
+		if($setup =~ /libdir: (.*?)\n/ms) {
 			$libdir = $1;
 		}
 		else{
-			die "fusioninventory-agent --setup not available. Please, install fusioninventory-agent (2.3.5+) before retrying.\n"; 
+			die "fusioninventory-agent --setup not available. Please, install fusioninventory-agent (2.3.5+) before retrying.\n";
 		}
 	}
 
