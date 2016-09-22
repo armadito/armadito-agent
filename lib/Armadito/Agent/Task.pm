@@ -28,8 +28,8 @@ sub run {
 sub new {
 	my ( $class, %params ) = @_;
 
-	my $self = { config => $params{config} };
-
+	my $self = {};
+	$self->{config} = $params{config};
 	$self->{agent}  = $params{agent};
 	$self->{logger} = $self->{agent}->{logger};
 
