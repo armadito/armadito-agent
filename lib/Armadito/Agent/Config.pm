@@ -28,6 +28,7 @@ my $default_armadito = {
 	'server'               => undef,
 	'stdout'               => undef,
 	'antivirus'            => undef,
+	'alert-dir'            => undef
 };
 
 my $default_fusion = {

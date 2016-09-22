@@ -79,6 +79,7 @@ GetOptions(
 	'server|s=s',
 	'task|t=s',
 	'antivirus|av=s',
+	'alert-dir=s',
 	'conf-file=s',
 	'conf-reload-interval=i',
 	'config=s',
@@ -171,6 +172,9 @@ armadito-agent --server <server> --task <task>
     --task task            Task to be executed
 	--list-tasks           List supported tasks
 
+  Specific task options:
+	--alert-dir            Directory where AV alerts are stored
+
   Antivirus selection options:
     --antivirus antivirus  Antivirus to be managed
 	--list-avs             List supported antiviruses
@@ -186,7 +190,11 @@ armadito-agent --server <server> --task <task>
 	% armadito-agent --task "Enrollment"
 	% armadito-agent -s http://armadito-glpi --task "State"
 	% armadito-agent --server http://armadito-glpi --task "Getjobs"
-	% armadito-agent --task "Enrollment" --conf-file /etc/myarmaditoconf.cfg
+	% armadito-agent --task "Enrollment"
+	% armadito-agent --task "State"
+	% armadito-agent --task "GetJobs"
+	% armadito-agent --task "RunJobs"
+	% armadito-agent --task "Alerts" --alert-dir /var/spool/armadito
 
 =head1 DESCRIPTION
 
