@@ -3,6 +3,7 @@ package Armadito::Agent::Antivirus::Armadito;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Antivirus';
+use Armadito::Agent::HTTP::Client::ArmaditoAV;
 
 sub isEnabled {
 	my ($self) = @_;
@@ -19,10 +20,13 @@ sub getJobj {
 	};
 }
 
-sub _getVersion {
+sub getVersion {
+	my ($self) = @_;
 
-	# TODO
-	return "0.10.1";
+	$self->{av_client} = Armadito::Agent::HTTP::Client::ArmaditoAV->new( taskobj => $self );
+	my $jobj = $self->{av_client}->getAntivirusVersion();
+
+	return $jobj->{"antivirus-version"};
 }
 
 sub new {
@@ -31,7 +35,7 @@ sub new {
 	my $self = $class->SUPER::new(%params);
 
 	$self->{name}    = "Armadito";
-	$self->{version} = _getVersion();
+	$self->{version} = $self->getVersion();
 
 	return $self;
 }
@@ -57,8 +61,12 @@ Returns true if the task is enabled.
 
 Instanciate Armadito module. Set task's default logger.
 
-=head2 getJobj ( $self)
+=head2 getJobj ( $self )
 
 Return unblessed object for json ecnapsulation.
+
+=head2 getVersion ( $self )
+
+Return Antivirus Version by using RESTful API /version.
 
 

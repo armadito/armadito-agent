@@ -109,7 +109,7 @@ sub unregister {
 	return $self;
 }
 
-sub _handleEventResponse() {
+sub _handleJsonResponse() {
 	my ( $self, $response ) = @_;
 
 	$self->{logger}->info( $response->content() );
@@ -137,7 +137,20 @@ sub _getEvent {
 
 	die "Unable to get event with ArmaditoAV api."
 		if ( !$response->is_success() || !$response->content() =~ /^\s*\{/ms );
-	return $self->_handleEventResponse($response);
+	return $self->_handleJsonResponse($response);
+}
+
+sub getAntivirusVersion {
+	my ($self) = @_;
+
+	my $response = $self->sendRequest(
+		"url"  => $self->{server_url} . "/api/version",
+		method => "GET"
+	);
+
+	die "Unable to get Armadito version with ArmaditoAV api."
+		if ( !$response->is_success() || !$response->content() =~ /^\s*\{/ms );
+	return $self->_handleJsonResponse($response);
 }
 
 sub _isEventSupported {

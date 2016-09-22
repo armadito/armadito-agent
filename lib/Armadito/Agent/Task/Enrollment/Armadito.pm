@@ -52,6 +52,8 @@ sub run {
 
 	my $json_text = to_json( $self->{jobj} );
 
+	print $json_text. "\n";
+
 	my $response = $self->{glpi_client}->sendRequest(
 		"url"   => $self->{agent}->{config}->{armadito}->{server}[0] . "/api/agents",
 		message => $json_text,
