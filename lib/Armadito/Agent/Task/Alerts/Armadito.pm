@@ -4,10 +4,13 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Task::Alerts';
 
-use FusionInventory::Agent::Config;
-use FusionInventory::Agent::Logger;
+use Armadito::Agent::XML::Parser;
+use Armadito::Agent::Tools::Dir qw(readDirectory);
+use Armadito::Agent::Tools::File qw(readFile);
+use English qw(-no_match_vars);
 use Data::Dumper;
 use JSON;
+use Carp;
 
 sub isEnabled {
 	my ($self) = @_;
@@ -19,6 +22,16 @@ sub new {
 	my ( $class, %params ) = @_;
 
 	my $self = $class->SUPER::new(%params);
+
+	print "alert-dir = " . $self->{agent}->{config}->{armadito}->{"alert-dir"} . "\n";
+
+	if ( !-d $self->{agent}->{config}->{armadito}->{"alert-dir"} ) {
+		croak("alert-dir not found or not a directory.");
+	}
+
+	$self->{alertdir}  = $self->{agent}->{config}->{armadito}->{"alert-dir"};
+	$self->{maxalerts} = $self->{agent}->{config}->{armadito}->{"max-alerts"};
+	$self->{glpi_url}  = $self->{agent}->{config}->{armadito}->{server}[0];
 
 	return $self;
 }
@@ -41,29 +54,54 @@ sub _handleError {
 	return $self;
 }
 
-sub run {
+sub _processAlert {
 	my ( $self, %params ) = @_;
 
-	$self = $self->SUPER::run(%params);
+	my $filecontent = readFile( filepath => $params{filepath} );
+	my $parser = Armadito::Agent::XML::Parser->new( text => $filecontent );
 
-	# TODO: get alerts
+	if ( !$parser->run() ) {
+		return 1;
+	}
 
-	my $av_response = '
-{ "av_response":"alerts",
-  "id":123,
-  "status":0,
-  "alert": "OK"
-}';
-	my $state_jobj = from_json( $av_response, { utf8 => 1 } );
+	if ( !$self->_sendAlert( xmlobj => $parser->{xmlparsed} ) ) {
+		return 1;
+	}
 
-	$self->{jobj}->{task}->{obj} = $state_jobj;
+	if ( !defined($self->{agent}->{config}->{armadito}->{"no-rm-alerts"}) ) {
+		unlink $params{filepath};
+	}
+
+	return 0;
+}
+
+sub _processAlertDir {
+	my ($self) = @_;
+	my @alerts = readDirectory( dirpath => $self->{alertdir} );
+
+	my $i      = 0;
+	my $errors = 0;
+
+	foreach my $alert (@alerts) {
+		$errors += $self->_processAlert( filepath => $self->{alertdir} . "/" . $alert );
+		$i++;
+		last if ( $i - $errors >= $self->{maxalerts} && $self->{maxalerts} >= 0 );
+	}
+
+	print "$i alerts processed, $errors errors.\n";
+	return $self;
+}
+
+sub _sendAlert {
+	my ( $self, %params ) = @_;
+
+	$self->{jobj}->{task}->{obj} = $params{xmlobj};
 
 	my $json_text = to_json( $self->{jobj} );
-
 	print "JSON formatted str : \n" . $json_text . "\n";
 
 	my $response = $self->{glpi_client}->sendRequest(
-		"url"   => $self->{taskobj}->{agent}->{config}->{armadito}->{server}[0] . "/api/alerts",
+		"url"   => $self->{glpi_url} . "/api/alerts",
 		message => $json_text,
 		method  => "POST"
 	);
@@ -76,6 +114,16 @@ sub run {
 		$self->_handleError($response);
 		$self->{logger}->info("Alerts failed...");
 	}
+
+	return 1;
+}
+
+sub run {
+	my ( $self, %params ) = @_;
+
+	$self = $self->SUPER::run(%params);
+
+	$self->_processAlertDir();
 
 	return $self;
 }
