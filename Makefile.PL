@@ -188,6 +188,7 @@ config_install :
 
 data_install :
 	install -d -m 755 $(DESTDIR)$(DATADIR)
+	install -d -m 775 $(DESTDIR)$(LOCALSTATEDIR)
 EOF
 	}
 	else {
