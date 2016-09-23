@@ -174,7 +174,6 @@ sub install {
 	$install =~ s/.*\.packlist \\\n//g;
 
 	# add data and configuration installation targets
-
 	if ( $OSNAME ne "MSWin32" ) {
 		$install .= <<'EOF';
 

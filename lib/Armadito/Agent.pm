@@ -43,7 +43,6 @@ sub _validateConfiguration {
 		or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
 	$self->isTaskSupported( $params{options}->{task} )
 		or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
-	$self->isTaskUidOk( $params{options}->{task} ) or die "Insufficient permissions. This task must be run as root.";
 }
 
 sub init {
@@ -189,16 +188,6 @@ sub isTaskSupported {
 	return 0;
 }
 
-sub isTaskUidOk {
-	my ( $self, $task ) = @_;
-	foreach (@supported_tasks) {
-		if ( $task eq $_ && $< != 0 ) {
-			return 0;
-		}
-	}
-	return 1;
-}
-
 sub displaySupportedTasks {
 	my ($self) = @_;
 	print "List of supported tasks :\n";
@@ -267,10 +256,6 @@ Returns true if given antivirus is supported by the current version of the agent
 =head2 isTaskSupported($task)
 
 Returns true if given task is supported by the current version of the agent.
-
-=head2 isTaskUidOk($task)
-
-Returns true if we run with given task required uid.
 
 =head2 displaySupportedTasks()
 
