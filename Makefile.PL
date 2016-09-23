@@ -22,6 +22,7 @@ requires 'JSON'                  => '0';
 requires 'Encode'                => '0';
 requires 'Getopt::Long'          => '0';
 requires 'Pod::Usage'            => '0';
+requires 'XML::Bare'             => '0';
 
 test_requires 'XML::TreePP'         => '0';
 test_requires 'Test::Compile'       => '0';
