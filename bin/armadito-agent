@@ -87,6 +87,7 @@ GetOptions(
 	'conf-reload-interval=i',
 	'config=s',
 	'setup',
+    'wait|w=i',
 	'list-tasks',
 	'list-avs',
 	'help|h',
@@ -140,6 +141,10 @@ if ($options->{'list-avs'}) {
 
 my $config = {};
 
+if ($options->{"wait"}) {
+    sleep $options->{"wait"};
+}
+
 try {
 	$agent->init(options => $options);
 
@@ -167,6 +172,7 @@ armadito-agent --server <server> --task <task>
 
   Options:
     --help                 this menu
+    --wait|w               Sleep during given seconds.
 
   Target definition options:
     --server server        Armadito Plugin for GLPI server URL
