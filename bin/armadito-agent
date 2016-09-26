@@ -80,6 +80,7 @@ GetOptions(
 	'task|t=s',
 	'antivirus|av=s',
 	'alert-dir=s',
+	'job-priority|p=s',
 	'max-alerts=i',
 	'no-rm-alerts',
 	'conf-file=s',
@@ -178,6 +179,7 @@ armadito-agent --server <server> --task <task>
 	--alert-dir            Directory where AV alerts are stored
 	--max-alerts           Maximum alerts processed by execution
 	--no-rm-alerts         Do not remove alerts after processing
+	--job-priority         Specify Job priority for RunJobs task
 
   Antivirus selection options:
     --antivirus antivirus  Antivirus to be managed

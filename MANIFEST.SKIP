@@ -36,3 +36,4 @@ debian
 \.perltidyrc
 .perlcriticrc
 ^do_all.sh
+/scripts/
