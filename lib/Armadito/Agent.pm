@@ -6,11 +6,20 @@ use warnings;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
+use Readonly;
+Readonly my $LOG_DEBUG2  => 5;
+Readonly my $LOG_DEBUG   => 4;
+Readonly my $LOG_INFO    => 3;
+Readonly my $LOG_WARNING => 2;
+Readonly my $LOG_ERROR   => 1;
+Readonly my $LOG_NONE    => 0;
+
 require Exporter;
 
 use Armadito::Agent::Config;
 use Armadito::Agent::Storage;
 use Armadito::Agent::Antivirus;
+use Armadito::Agent::Logger;
 use Armadito::Agent::Tools::Fingerprint qw(getFingerprint);
 
 our $VERSION = "0.1.0_02";
@@ -56,12 +65,21 @@ sub init {
 		options          => $params{options}
 	);
 
+	my $verbosity
+		= $self->{config}->{armadito}->{debug} && $self->{config}->{armadito}->{debug} == 1 ? $LOG_DEBUG
+		: $self->{config}->{armadito}->{debug} && $self->{config}->{armadito}->{debug} == 2 ? $LOG_DEBUG2
+		:                                                                                     $LOG_INFO;
+
 	$self->{config}->{armadito}->{server} = $params{options}->{server}
 		if ( defined( $params{options}->{server} ) );
 
 	$self->_validateConfiguration(%params);
 
-	$self->{logger} = FusionInventory::Agent::Logger->new( backends => ['Stderr'] );
+	$self->{logger} = Armadito::Agent::Logger->new(
+		config    => $self->{config}->{armadito},
+		backends  => $self->{config}->{armadito}->{logger},
+		verbosity => $verbosity
+	);
 
 	$self->{fusion_storage} = Armadito::Agent::Storage->new(
 		logger    => $self->{logger},
