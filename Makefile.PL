@@ -23,7 +23,7 @@ requires 'Encode'                => '0';
 requires 'Getopt::Long'          => '0';
 requires 'Pod::Usage'            => '0';
 requires 'XML::Bare'             => '0';
-requires 'ReadOnly'              => '0';
+requires 'Readonly'              => '0';
 requires 'Try::Tiny'             => '0';
 
 test_requires 'XML::TreePP'         => '0';
