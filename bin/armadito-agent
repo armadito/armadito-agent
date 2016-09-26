@@ -80,7 +80,7 @@ GetOptions(
 	'task|t=s',
 	'antivirus|av=s',
 	'alert-dir=s',
-	'job-priority|p=s',
+	'job-priority|p=i',
 	'max-alerts=i',
 	'no-rm-alerts',
 	'conf-file=s',

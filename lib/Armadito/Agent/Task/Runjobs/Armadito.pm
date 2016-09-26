@@ -26,7 +26,6 @@ sub new {
 
 sub _runJob {
 	my ( $self, $job ) = @_;
-
 	my $config = ();
 	my $class  = "Armadito::Agent::Task::$job->{job_type}::$self->{jobj}->{task}->{antivirus}->{name}";
 
@@ -69,9 +68,11 @@ sub _runJobs {
 	my ($self) = @_;
 
 	foreach my $job ( @{ $self->{jobs} } ) {
-		$self->_runJob($job);
-		$self->_sendStatus();
-		$self->_rmJobFromStorage( $job->{job_id} );
+		if ( $job->{job_priority} == $self->{agent}->{job_priority} || $self->{agent}->{job_priority} == -1 ) {
+			$self->_runJob($job);
+			$self->_sendStatus();
+			$self->_rmJobFromStorage( $job->{job_id} );
+		}
 	}
 
 	return $self;
