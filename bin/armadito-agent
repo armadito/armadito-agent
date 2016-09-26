@@ -92,6 +92,7 @@ GetOptions(
 	'list-avs',
 	'help|h',
 	'version|v',
+    'debug|d=i',
 ) or pod2usage(-verbose => 0);
 
 if( $options->{help} ){ pod2usage(-verbose => 0, -exitstatus => 0) }
@@ -173,6 +174,7 @@ armadito-agent --server <server> --task <task>
   Options:
     --help                 this menu
     --wait|w               Sleep during given seconds.
+    --debug|d  level       Activate debug mode with given level (0,1,2)
 
   Target definition options:
     --server server        Armadito Plugin for GLPI server URL
