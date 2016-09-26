@@ -32,8 +32,7 @@ This module requires these other modules and libraries:
 
 On ubuntu :
 
-  sudo apt-get install fusioninventory-agent
-  sudo apt-get install libmodule-install-perl
+  sudo apt-get install fusioninventory-agent libmodule-install-perl libreadonly-perl
 
 On Windows :
   cpan install inc::Module::Install
