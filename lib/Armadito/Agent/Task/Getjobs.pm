@@ -4,8 +4,6 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Task';
 
-use FusionInventory::Agent::Config;
-use FusionInventory::Agent::Logger;
 use Armadito::Agent::Storage;
 use Data::Dumper;
 use JSON;
