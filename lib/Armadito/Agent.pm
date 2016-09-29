@@ -78,7 +78,6 @@ sub init {
 	$self->{job_priority} = $params{options}->{job_priority} ? $params{options}->{job_priority} : -1;
 
 	$self->{agent_id} = 0;
-	$self->{fusionid} = "unknown";
 	$self->_getArmaditoId();
 
 	$self->{fingerprint} = getFingerprint();

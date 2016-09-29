@@ -38,7 +38,6 @@ sub new {
 		task          => ""
 	};
 
-	$self->{logger}->debug( "Fusion Device Id : " . $self->{agent}->{fusionid} );
 	$self->{logger}->debug( "Armadito agent Id : " . $self->{agent}->{agent_id} );
 
 	bless $self, $class;
