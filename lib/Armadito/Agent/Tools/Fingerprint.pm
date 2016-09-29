@@ -9,10 +9,9 @@ use Encode;
 use English qw(-no_match_vars);
 use Digest::SHA qw(sha256_hex);
 
-use FusionInventory::Agent::Task::Inventory::Generic::Dmidecode;
-use FusionInventory::Agent::Tools::Hostname;
-use FusionInventory::Agent::Tools::Generic;
-use FusionInventory::Agent::Tools;
+use Armadito::Agent::Tools::File qw(canRun);
+use Armadito::Agent::Tools::Dmidecode qw(getDmidecodeInfos);
+use Armadito::Agent::Tools::Hostname qw(getHostname);
 
 our @EXPORT_OK = qw(
 	getFingerprint
@@ -26,11 +25,13 @@ sub getFingerprint {
 		? _getFingerprintWindows()
 		: _getFingerprintUnix();
 
+	print $fingerprint. "\n";
+
 	return sha256_hex($fingerprint);
 }
 
 sub _getFingerprintUnix {
-	my $fingerprint = FusionInventory::Agent::Tools::Hostname::getHostname();
+	my $fingerprint = getHostname();
 
 	if ( canRun('dmidecode') ) {
 		$fingerprint .= _getSystemInfos();
@@ -39,9 +40,8 @@ sub _getFingerprintUnix {
 	return $fingerprint;
 }
 
-## To be tested
 sub _getFingerprintWindows {
-	my $fingerprint = FusionInventory::Agent::Tools::Hostname::getHostname();
+	my $fingerprint = getHostname();
 
 	if ( canRun('dmidecode') ) {
 		$fingerprint .= _getSystemInfos();
@@ -50,7 +50,6 @@ sub _getFingerprintWindows {
 	return $fingerprint;
 }
 
-# Add kind of uniqueness
 sub _getSystemInfos {
 	my $infos       = getDmidecodeInfos();
 	my $bios_info   = $infos->{0}->[0];
