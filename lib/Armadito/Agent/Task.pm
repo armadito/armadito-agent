@@ -2,7 +2,6 @@ package Armadito::Agent::Task;
 
 use strict;
 use warnings;
-use base 'FusionInventory::Agent::Task';
 
 use FusionInventory::Agent;
 use FusionInventory::Agent::Config;
