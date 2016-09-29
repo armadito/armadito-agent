@@ -13,7 +13,6 @@ use Encode;
 use Data::Dumper;
 use URI::Escape;
 use JSON;
-use FusionInventory::Agent::Tools;
 
 use Armadito::Agent::HTTP::Client::ArmaditoAV::Event;
 use Armadito::Agent::HTTP::Client::ArmaditoAV::Event::DetectionEvent;
