@@ -26,13 +26,9 @@ Minimum perl version: 5.8
 
 ## Dependencies
 
-This module requires these other modules and libraries:
-
-  FusionInventory::Agent > 2.3.5+
-
 On ubuntu :
 
-  sudo apt-get install fusioninventory-agent libmodule-install-perl libreadonly-perl
+  sudo apt-get install libmodule-install-perl libreadonly-perl
 
 On Windows :
   cpan install inc::Module::Install
