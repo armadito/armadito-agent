@@ -99,7 +99,7 @@ GetOptions(
 if( $options->{help} ){ pod2usage(-verbose => 0, -exitstatus => 0) }
 
 if ($options->{version}) {
-    print "armadito-agent $Armadito::Agent::Task::VERSION\n";
+    print "armadito-agent $Armadito::Agent::VERSION\n";
     exit 0;
 }
 
