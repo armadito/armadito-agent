@@ -23,15 +23,15 @@ sub new {
 
 	my $self = $class->SUPER::new(%params);
 
-	print "alert-dir = " . $self->{agent}->{config}->{armadito}->{"alert-dir"} . "\n";
+	print "alert-dir = " . $self->{agent}->{config}->{"alert-dir"} . "\n";
 
-	if ( !-d $self->{agent}->{config}->{armadito}->{"alert-dir"} ) {
+	if ( !-d $self->{agent}->{config}->{"alert-dir"} ) {
 		croak("alert-dir not found or not a directory.");
 	}
 
-	$self->{alertdir}  = $self->{agent}->{config}->{armadito}->{"alert-dir"};
-	$self->{maxalerts} = $self->{agent}->{config}->{armadito}->{"max-alerts"};
-	$self->{glpi_url}  = $self->{agent}->{config}->{armadito}->{server}[0];
+	$self->{alertdir}  = $self->{agent}->{config}->{"alert-dir"};
+	$self->{maxalerts} = $self->{agent}->{config}->{"max-alerts"};
+	$self->{glpi_url}  = $self->{agent}->{config}->{server}[0];
 
 	return $self;
 }
@@ -68,7 +68,7 @@ sub _processAlert {
 		return 1;
 	}
 
-	if ( !defined( $self->{agent}->{config}->{armadito}->{"no-rm-alerts"} ) ) {
+	if ( !defined( $self->{agent}->{config}->{"no-rm-alerts"} ) ) {
 		unlink $params{filepath};
 	}
 

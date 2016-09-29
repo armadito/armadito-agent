@@ -53,7 +53,7 @@ sub run {
 	print $json_text. "\n";
 
 	my $response = $self->{glpi_client}->sendRequest(
-		"url"   => $self->{agent}->{config}->{armadito}->{server}[0] . "/api/agents",
+		"url"   => $self->{agent}->{config}->{server}[0] . "/api/agents",
 		message => $json_text,
 		method  => "POST"
 	);

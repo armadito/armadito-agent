@@ -38,7 +38,7 @@ sub run {
 	my $json_text = to_json( $self->{taskobj}->{jobj} );
 
 	my $response = $self->{taskobj}->{glpi_client}->sendRequest(
-		"url"   => $self->{taskobj}->{agent}->{config}->{armadito}->{server}[0] . "/api/scans",
+		"url"   => $self->{taskobj}->{agent}->{config}->{server}[0] . "/api/scans",
 		message => $json_text,
 		method  => "POST"
 	);

@@ -8,7 +8,7 @@ use File::Spec;
 use Getopt::Long;
 use UNIVERSAL::require;
 
-my $default_armadito = {
+my $default = {
 	'ca-cert-dir'          => undef,
 	'ca-cert-file'         => undef,
 	'color'                => undef,
@@ -31,79 +31,19 @@ my $default_armadito = {
 	'no-rm-alerts'         => undef
 };
 
-my $default_fusion = {
-	'additional-content'      => undef,
-	'backend-collect-timeout' => 180,
-	'ca-cert-dir'             => undef,
-	'ca-cert-file'            => undef,
-	'color'                   => undef,
-	'conf-reload-interval'    => 0,
-	'debug'                   => undef,
-	'delaytime'               => 3600,
-	'force'                   => undef,
-	'html'                    => undef,
-	'lazy'                    => undef,
-	'local'                   => undef,
-	'logger'                  => 'Stderr',
-	'logfile'                 => undef,
-	'logfacility'             => 'LOG_USER',
-	'logfile-maxsize'         => undef,
-	'no-category'             => [],
-	'no-httpd'                => undef,
-	'no-ssl-check'            => undef,
-	'no-task'                 => [],
-	'no-p2p'                  => undef,
-	'password'                => undef,
-	'proxy'                   => undef,
-	'httpd-ip'                => undef,
-	'httpd-port'              => 62354,
-	'httpd-trust'             => [],
-	'scan-homedirs'           => undef,
-	'scan-profiles'           => undef,
-	'server'                  => undef,
-	'tag'                     => undef,
-	'tasks'                   => undef,
-	'timeout'                 => 180,
-	'user'                    => undef,
-
-	# deprecated options
-	'stdout' => undef,
-};
-
-my $deprecated = {
-	'stdout' => {
-		message => 'use --local - option instead',
-		new     => { 'local' => '-' }
-	},
-};
+my $deprecated = {};
 
 sub new {
 	my ( $class, %params ) = @_;
 
-	my $self = {
-		fusion   => undef,
-		armadito => undef
-	};
+	my $self = {};
 	bless $self, $class;
 
-	# Load fusioninventory configuration
-	$self->_loadDefaults("FusionInventory-Agent");
-	$self->_loadFromBackend( "", $params{options}->{'config-fusion'}, $params{fusion_confdir},
-		"FusionInventory-Agent" );
-
-	# Load armadito agent configuration
-	$self->_loadDefaults("Armadito-Agent");
-	$self->_loadFromBackend(
-		$params{options}->{'conf-file'},
-		$params{options}->{'config'},
-		$params{armadito_confdir},
-		"Armadito-Agent"
-	);
+	$self->_loadDefaults();
+	$self->_loadFromBackend( $params{options}->{'conf-file'}, $params{options}->{'config'}, $params{confdir} );
 
 	$self->_overrideWithArgs(%params);
-
-	_checkContent( $self->{fusion} );
-	_checkContent( $self->{armadito} );
+	$self->_checkContent();
 
 	return $self;
 }
@@ -111,30 +51,23 @@ sub new {
 sub _overrideWithArgs {
 	my ( $self, %params ) = @_;
 
-	foreach my $key ( keys %{ $self->{armadito} } ) {
+	foreach my $key ( keys %{$self} ) {
 		if ( defined( $params{options}->{$key} ) && $params{options}->{$key} ne "" ) {
-			$self->{armadito}->{$key} = $params{options}->{$key};
+			$self->{$key} = $params{options}->{$key};
 		}
 	}
 }
 
 sub _loadDefaults {
-	my ( $self, $agent_type ) = @_;
+	my ($self) = @_;
 
-	if ( $agent_type eq "FusionInventory-Agent" ) {
-		foreach my $key ( keys %$default_fusion ) {
-			$self->{fusion}->{$key} = $default_fusion->{$key};
-		}
-	}
-	elsif ( $agent_type eq "Armadito-Agent" ) {
-		foreach my $key ( keys %$default_armadito ) {
-			$self->{armadito}->{$key} = $default_armadito->{$key};
-		}
+	foreach my $key ( keys %$default ) {
+		$self->{$key} = $default->{$key};
 	}
 }
 
 sub _loadFromBackend {
-	my ( $self, $confFile, $config, $confdir, $agent_type ) = @_;
+	my ( $self, $confFile, $config, $confdir ) = @_;
 
 	my $backend
 		= $confFile            ? 'file'
@@ -146,7 +79,7 @@ SWITCH: {
 		if ( $backend eq 'registry' ) {
 			die "Unavailable configuration backend\n"
 				unless $OSNAME eq 'MSWin32';
-			$self->_loadFromRegistry($agent_type);
+			$self->_loadFromRegistry();
 			last SWITCH;
 		}
 
@@ -155,8 +88,7 @@ SWITCH: {
 				{
 					file      => $confFile,
 					directory => $confdir,
-				},
-				$agent_type
+				}
 			);
 			last SWITCH;
 		}
@@ -170,7 +102,7 @@ SWITCH: {
 }
 
 sub _loadFromRegistry {    # TOBETESTED
-	my ( $self, $agent_type ) = @_;
+	my ($self) = @_;
 
 	my $Registry;
 	Win32::TieRegistry->require();
@@ -187,7 +119,7 @@ sub _loadFromRegistry {    # TOBETESTED
 		}
 	) or die "Can't open HKEY_LOCAL_MACHINE key: $EXTENDED_OS_ERROR";
 
-	my $settings = $machKey->{ "SOFTWARE/" . $agent_type };
+	my $settings = $machKey->{"SOFTWARE/Armadito-Agent"};
 
 	foreach my $rawKey ( keys %$settings ) {
 		next unless $rawKey =~ /^\/(\S+)/;
@@ -199,15 +131,8 @@ sub _loadFromRegistry {    # TOBETESTED
 		$val =~ s/^'(.*)'$/$1/;
 		$val =~ s/^"(.*)"$/$1/;
 
-		if ( $agent_type eq "FusionInventory-Agent" ) {
-			if ( exists $default_fusion->{$key} ) {
-				$self->{fusion}->{$key} = $val;
-			}
-		}
-		elsif ( $agent_type eq "Armadito-Agent" ) {
-			if ( exists $default_armadito->{$key} ) {
-				$self->{armadito}->{$key} = $val;
-			}
+		if ( exists $default->{$key} ) {
+			$self->{$key} = $val;
 		}
 		else {
 			warn "unknown configuration directive $key";
@@ -216,7 +141,7 @@ sub _loadFromRegistry {    # TOBETESTED
 }
 
 sub _loadFromFile {
-	my ( $self, $params, $agent_type ) = @_;
+	my ( $self, $params ) = @_;
 	my $file = $params->{file} ? $params->{file} : $params->{directory} . '/agent.cfg';
 
 	if ($file) {
@@ -241,15 +166,8 @@ sub _loadFromFile {
 			$val =~ s/^'(.*)'$/$1/;
 			$val =~ s/^"(.*)"$/$1/;
 
-			if ( $agent_type eq "FusionInventory-Agent" ) {
-				if ( exists $default_fusion->{$key} ) {
-					$self->{fusion}->{$key} = $val;
-				}
-			}
-			elsif ( $agent_type eq "Armadito-Agent" ) {
-				if ( exists $default_armadito->{$key} ) {
-					$self->{armadito}->{$key} = $val;
-				}
+			if ( exists $default->{$key} ) {
+				$self->{$key} = $val;
 			}
 			else {
 				warn "unknown configuration directive $key";

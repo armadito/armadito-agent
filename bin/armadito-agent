@@ -155,7 +155,7 @@ try {
        exit 0;
     }
 
-	my $class = "Armadito::Agent::Task::$options->{task}::$agent->{config}->{armadito}->{antivirus}";
+	my $class = "Armadito::Agent::Task::$options->{task}::$agent->{config}->{antivirus}";
 	$class->require();
 	my $task = $class->new(config => $config, agent => $agent);
 	$task->run();

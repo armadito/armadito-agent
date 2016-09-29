@@ -17,7 +17,7 @@ sub _sendToGLPI {
 	my ( $self, $message ) = @_;
 
 	my $response = $self->{taskobj}->{glpi_client}->sendRequest(
-		"url"   => $self->{taskobj}->{agent}->{config}->{armadito}->{server}[0] . "/api/states",
+		"url"   => $self->{taskobj}->{agent}->{config}->{server}[0] . "/api/states",
 		message => $message,
 		method  => "POST"
 	);
