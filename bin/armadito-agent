@@ -12,48 +12,7 @@ use IPC::System::Simple qw(capture);
 use Data::Dumper;
 use Try::Tiny;
 
-our $VERSION = 1.0;
-
-BEGIN {
-
-	my $libdir;
-	if ($OSNAME eq 'MSWin32'){
-		my $Registry;
-		Win32::TieRegistry->require();
-		Win32::TieRegistry->import(
-			Delimiter   => q{/},
-			ArrayValues => 0,
-			TiedRef     => \$Registry
-		);
-
-		my $machKey = $Registry->Open('LMachine', {
-			Access => Win32::TieRegistry::KEY_READ()
-		}) or die "Can't open HKEY_LOCAL_MACHINE key: $EXTENDED_OS_ERROR\n";
-
-		my $uninstallValues =
-			$machKey->{'SOFTWARE/Microsoft/Windows/CurrentVersion/Uninstall/FusionInventory-Agent'};
-		if(!$uninstallValues){ die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)\n"; }
-
-		my $installLocation = $uninstallValues->{'/InstallLocation'};
-		if(!$installLocation){ die "FusionInventory-Agent InstallLocation registry key not found. Please install FusionInventory-Agent (2.3.17+)\n"; }
-
-		$libdir = $installLocation."\\perl\\agent\\";
-		use lib "../share/armadito-agent/lib";
-	}
-	else{
-		my $setup = capture( 'fusioninventory-agent --setup' );
-		if($setup =~ /libdir: (.*?)\n/ms) {
-			$libdir = $1;
-		}
-		else{
-			die "fusioninventory-agent --setup not available. Please, install fusioninventory-agent (2.3.5+) before retrying.\n";
-		}
-	}
-
-	if(! -f $libdir."/FusionInventory/Agent.pm") { die "FusionInventoryAgent libs not found. Please, install fusioninventory-agent before retrying.\n"; }
-
-	push(@INC, $libdir);
-}
+our $VERSION = 0.1;
 
 use Armadito::Agent;
 use Armadito::Agent::Task;
