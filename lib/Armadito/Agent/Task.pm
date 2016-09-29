@@ -3,9 +3,8 @@ package Armadito::Agent::Task;
 use strict;
 use warnings;
 
-use FusionInventory::Agent;
-use FusionInventory::Agent::Config;
-use FusionInventory::Agent::Logger;
+use Armadito::Agent;
+use Armadito::Agent::Logger;
 use Armadito::Agent::HTTP::Client::ArmaditoGLPI;
 use Data::Dumper;
 
@@ -35,7 +34,7 @@ sub new {
 
 	$self->{jobj} = {
 		agent_id      => $self->{agent}->{agent_id},
-		agent_version => $FusionInventory::Agent::VERSION,
+		agent_version => $Armadito::Agent::VERSION,
 		task          => ""
 	};
 
