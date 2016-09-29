@@ -92,6 +92,7 @@ GetOptions(
 	'list-avs',
 	'help|h',
 	'version|v',
+    'get-id',
     'debug|d=i',
 ) or pod2usage(-verbose => 0);
 
@@ -149,6 +150,11 @@ if ($options->{"wait"}) {
 try {
 	$agent->init(options => $options);
 
+    if ($options->{'get-id'}) {
+       print $agent->{agent_id};
+       exit 0;
+    }
+
 	my $class = "Armadito::Agent::Task::$options->{task}::$agent->{config}->{armadito}->{antivirus}";
 	$class->require();
 	my $task = $class->new(config => $config, agent => $agent);
@@ -175,6 +181,7 @@ armadito-agent --server <server> --task <task>
     --help                 this menu
     --wait|w               Sleep during given seconds.
     --debug|d  level       Activate debug mode with given level (0,1,2)
+    --get-id               Get current agent id
 
   Target definition options:
     --server server        Armadito Plugin for GLPI server URL
