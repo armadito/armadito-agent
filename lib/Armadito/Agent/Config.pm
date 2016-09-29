@@ -8,8 +8,6 @@ use File::Spec;
 use Getopt::Long;
 use UNIVERSAL::require;
 
-require FusionInventory::Agent::Tools;
-
 my $default_armadito = {
 	'ca-cert-dir'          => undef,
 	'ca-cert-file'         => undef,

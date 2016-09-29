@@ -2,7 +2,7 @@ package Armadito::Agent::HTTP::Client::ArmaditoGLPI;
 
 use strict;
 use warnings;
-use base 'FusionInventory::Agent::HTTP::Client';
+use base 'Armadito::Agent::HTTP::Client';
 
 use English qw(-no_match_vars);
 use HTTP::Request;
@@ -12,8 +12,6 @@ use URI;
 use Encode;
 use Data::Dumper;
 use URI::Escape;
-
-use FusionInventory::Agent::Tools;
 
 sub new {
 	my ( $class, %params ) = @_;
