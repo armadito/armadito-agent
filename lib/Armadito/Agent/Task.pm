@@ -39,11 +39,8 @@ sub new {
 		task          => ""
 	};
 
-	if ( defined( $self->{agent}->{fusionid} ) ) {
-		$self->{logger}->info( "Fusion Device Id : " . $self->{agent}->{fusionid} );
-	}
-
-	$self->{logger}->info( "Armadito agent Id : " . $self->{agent}->{agent_id} );
+	$self->{logger}->debug( "Fusion Device Id : " . $self->{agent}->{fusionid} );
+	$self->{logger}->debug( "Armadito agent Id : " . $self->{agent}->{agent_id} );
 
 	bless $self, $class;
 	return $self;
