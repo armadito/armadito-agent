@@ -16,12 +16,8 @@ Revision history for Perl extension Armadito::Agent.
 	- Add Runjobs task
 	- Enrollment with fingerprint
 	- Build and Install from sources on Win32
-	- Retrieve fusion deviceid from fusion storage
 	- Add --setup option
 	- Add empty Scan and Alert tasks
-	- Fix compatibility with fusioninventory agent 2.3.5.1
-	- Tested on Win7 64bit (VM)
-	- Use Fusion minimal Strawberry Perl distribution on Win32
 	- Refactor dynamic class loading
 
 0.0.3_03 30/06/2016
