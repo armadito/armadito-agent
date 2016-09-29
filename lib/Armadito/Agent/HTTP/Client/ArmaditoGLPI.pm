@@ -82,8 +82,6 @@ sub sendRequest {
 	);
 
 	if ( $params{message} && $params{method} eq 'POST' ) {
-
-		# json utf-8 encoded
 		$request->content( encode( 'UTF-8', $params{message} ) );
 	}
 
