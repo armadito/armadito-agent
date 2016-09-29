@@ -235,7 +235,7 @@ Copyright (C) 2011-2016 Teclib'
 
 =head1 LICENSE
 
-This software is licensed under the terms of GPLv2+, see LICENSE file for
+This software is licensed under the terms of GPLv3, see COPYING file for
 details.
 
 =cut
