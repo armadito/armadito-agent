@@ -27,10 +27,11 @@ sub run {
 sub new {
 	my ( $class, %params ) = @_;
 
-	my $self = {};
-	$self->{config} = $params{config};
-	$self->{agent}  = $params{agent};
-	$self->{logger} = $self->{agent}->{logger};
+	my $self = {
+		logger => $params{logger} || Armadito::Agent::Logger->new(),
+		config => $params{config},
+		agent  => $params{agent}
+	};
 
 	$self->{jobj} = {
 		agent_id      => $self->{agent}->{agent_id},
