@@ -6,20 +6,12 @@ use warnings;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
-use Readonly;
-Readonly my $LOG_DEBUG2  => 5;
-Readonly my $LOG_DEBUG   => 4;
-Readonly my $LOG_INFO    => 3;
-Readonly my $LOG_WARNING => 2;
-Readonly my $LOG_ERROR   => 1;
-Readonly my $LOG_NONE    => 0;
-
 require Exporter;
 
 use Armadito::Agent::Config;
 use Armadito::Agent::Storage;
 use Armadito::Agent::Antivirus;
-use Armadito::Agent::Logger;
+use Armadito::Agent::Logger qw (LOG_DEBUG LOG_INFO LOG_DEBUG2);
 use Armadito::Agent::Tools::Fingerprint qw(getFingerprint);
 
 our $VERSION = "0.1.0_02";
@@ -66,9 +58,9 @@ sub init {
 	);
 
 	my $verbosity
-		= $self->{config}->{debug} && $self->{config}->{debug} == 1 ? $LOG_DEBUG
-		: $self->{config}->{debug} && $self->{config}->{debug} == 2 ? $LOG_DEBUG2
-		:                                                             $LOG_INFO;
+		= $self->{config}->{debug} && $self->{config}->{debug} == 1 ? LOG_DEBUG
+		: $self->{config}->{debug} && $self->{config}->{debug} == 2 ? LOG_DEBUG2
+		:                                                             LOG_INFO;
 
 	$self->_validateConfiguration(%params);
 
