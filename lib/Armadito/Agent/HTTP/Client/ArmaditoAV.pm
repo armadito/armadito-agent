@@ -112,7 +112,7 @@ sub unregister {
 sub _handleJsonResponse() {
 	my ( $self, $response ) = @_;
 
-	$self->{logger}->info( $response->content() );
+	$self->{logger}->debug( $response->content() );
 
 	return from_json( $response->content(), { utf8 => 1 } );
 }

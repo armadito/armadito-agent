@@ -50,8 +50,11 @@ sub _validateConfiguration {
 
 	$self->isAVSupported( $self->{config}->{armadito}->{antivirus} )
 		or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
-	$self->isTaskSupported( $params{options}->{task} )
-		or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
+
+	if ( $params{options}->{task} ) {
+		$self->isTaskSupported( $params{options}->{task} )
+			or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
+	}
 }
 
 sub init {

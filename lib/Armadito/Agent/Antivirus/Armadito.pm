@@ -11,6 +11,17 @@ sub isEnabled {
 	return 1;
 }
 
+sub new {
+	my ( $class, %params ) = @_;
+
+	my $self = $class->SUPER::new(%params);
+
+	$self->{name}    = "Armadito";
+	$self->{version} = $self->getVersion();
+
+	return $self;
+}
+
 sub getJobj {
 	my ($self) = @_;
 
@@ -27,17 +38,6 @@ sub getVersion {
 	my $jobj = $self->{av_client}->getAntivirusVersion();
 
 	return $jobj->{"antivirus-version"};
-}
-
-sub new {
-	my ( $class, %params ) = @_;
-
-	my $self = $class->SUPER::new(%params);
-
-	$self->{name}    = "Armadito";
-	$self->{version} = $self->getVersion();
-
-	return $self;
 }
 1;
 
