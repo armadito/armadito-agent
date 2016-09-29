@@ -8,23 +8,19 @@ use English qw(-no_match_vars);
 use File::Path qw(mkpath);
 use Storable;
 
-use FusionInventory::Agent::Logger;
+use Armadito::Agent::Logger;
 
 sub new {
 	my ( $class, %params ) = @_;
 
 	die "no directory parameter" unless $params{directory};
 	if ( !-d $params{directory} ) {
-
-		# {error => \my $err} is not supported on RHEL 5,
-		# we let mkpath call die() itself
-		# http://forge.fusioninventory.org/issues/1817
 		eval { mkpath( $params{directory} ); };
 		die "Can't create $params{directory}: $EVAL_ERROR" if $EVAL_ERROR;
 	}
 
 	my $self = {
-		logger => $params{logger} || FusionInventory::Agent::Logger->new(),
+		logger => $params{logger} || Armadito::Agent::Logger->new(),
 		directory => $params{directory}
 	};
 
