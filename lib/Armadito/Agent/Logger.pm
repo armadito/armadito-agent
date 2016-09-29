@@ -15,6 +15,13 @@ Readonly my $LOG_NONE    => 0;
 use English qw(-no_match_vars);
 use UNIVERSAL::require;
 
+sub LOG_DEBUG2  { return $LOG_DEBUG2 }
+sub LOG_DEBUG   { return $LOG_DEBUG }
+sub LOG_INFO    { return $LOG_INFO }
+sub LOG_WARNING { return $LOG_WARNING }
+sub LOG_ERROR   { return $LOG_ERROR }
+sub LOG_NONE    { return $LOG_NONE }
+
 our @EXPORT_OK = qw/LOG_DEBUG2 LOG_DEBUG LOG_INFO LOG_WARNING LOG_ERROR LOG_NONE/;
 
 sub new {
