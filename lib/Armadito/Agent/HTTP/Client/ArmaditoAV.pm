@@ -2,7 +2,7 @@ package Armadito::Agent::HTTP::Client::ArmaditoAV;
 
 use strict;
 use warnings;
-use base 'FusionInventory::Agent::HTTP::Client';
+use base 'Armadito::Agent::HTTP::Client';
 
 use English qw(-no_match_vars);
 use HTTP::Request;
