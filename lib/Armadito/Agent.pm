@@ -92,7 +92,7 @@ sub _getArmaditoId {
 
 	my $data = $self->{armadito_storage}->restore( name => 'Armadito-Agent' );
 
-	$self->{agent_id} = $data->{agent_id} if (defined($data->{agent_id}));
+	$self->{agent_id} = $data->{agent_id} if ( defined( $data->{agent_id} ) );
 }
 
 sub _storeArmaditoId {

@@ -14,55 +14,55 @@ use Armadito::Agent::Tools::Dmidecode qw(getDmidecodeInfos);
 use Armadito::Agent::Tools::Hostname qw(getHostname);
 
 our @EXPORT_OK = qw(
-	getFingerprint
+    getFingerprint
 );
 
 sub getFingerprint {
-	my (%params) = @_;
+    my (%params) = @_;
 
-	my $fingerprint
-		= $OSNAME eq 'MSWin32'
-		? _getFingerprintWindows()
-		: _getFingerprintUnix();
+    my $fingerprint
+        = $OSNAME eq 'MSWin32'
+        ? _getFingerprintWindows()
+        : _getFingerprintUnix();
 
-	print $fingerprint. "\n";
+    print $fingerprint. "\n";
 
-	return sha256_hex($fingerprint);
+    return sha256_hex($fingerprint);
 }
 
 sub _getFingerprintUnix {
-	my $fingerprint = getHostname();
+    my $fingerprint = getHostname();
 
-	if ( canRun('dmidecode') ) {
-		$fingerprint .= _getSystemInfos();
-	}
+    if ( canRun('dmidecode') ) {
+        $fingerprint .= _getSystemInfos();
+    }
 
-	return $fingerprint;
+    return $fingerprint;
 }
 
 sub _getFingerprintWindows {
-	my $fingerprint = getHostname();
+    my $fingerprint = getHostname();
 
-	if ( canRun('dmidecode') ) {
-		$fingerprint .= _getSystemInfos();
-	}
+    if ( canRun('dmidecode') ) {
+        $fingerprint .= _getSystemInfos();
+    }
 
-	return $fingerprint;
+    return $fingerprint;
 }
 
 sub _getSystemInfos {
-	my $infos       = getDmidecodeInfos();
-	my $bios_info   = $infos->{0}->[0];
-	my $system_info = $infos->{1}->[0];
-	my $base_info   = $infos->{2}->[0];
+    my $infos       = getDmidecodeInfos();
+    my $bios_info   = $infos->{0}->[0];
+    my $system_info = $infos->{1}->[0];
+    my $base_info   = $infos->{2}->[0];
 
-	$infos = "";
-	$infos .= " " . $system_info->{'UUID'}          if ( defined( $system_info->{'UUID'} ) );
-	$infos .= " " . $system_info->{'SKU Number'}    if ( defined( $system_info->{'SKU Number'} ) );
-	$infos .= " " . $system_info->{'Serial Number'} if ( defined( $system_info->{'Serial Number'} ) );
-	$infos .= " " . $base_info->{'Serial Number'}   if ( defined( $base_info->{'Serial Number'} ) );
+    $infos = "";
+    $infos .= " " . $system_info->{'UUID'}          if ( defined( $system_info->{'UUID'} ) );
+    $infos .= " " . $system_info->{'SKU Number'}    if ( defined( $system_info->{'SKU Number'} ) );
+    $infos .= " " . $system_info->{'Serial Number'} if ( defined( $system_info->{'Serial Number'} ) );
+    $infos .= " " . $base_info->{'Serial Number'}   if ( defined( $base_info->{'Serial Number'} ) );
 
-	return $infos;
+    return $infos;
 }
 
 1;
