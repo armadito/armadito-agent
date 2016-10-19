@@ -24,6 +24,7 @@ requires 'Pod::Usage'            => '0';
 requires 'XML::Bare'             => '0';
 requires 'Readonly'              => '0';
 requires 'Try::Tiny'             => '0';
+requires 'Perl::Critic'          => '0';
 
 test_requires 'XML::TreePP'         => '0';
 test_requires 'Test::Compile'       => '0';
