@@ -54,7 +54,7 @@ sub _getSystemInfos {
 
 	$infos = "";
 	$infos .= $system_info->{'UUID'} if ( defined( $system_info->{'UUID'} ) );
-	$infos .= "-" . $system_info->{'Serial Number'} if ( defined( $system_info->{'Serial Number'} ) );
+	$infos .= "---" . $system_info->{'Serial Number'} if ( defined( $system_info->{'Serial Number'} ) );
 
 	return $infos;
 }
