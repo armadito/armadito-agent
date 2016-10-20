@@ -27,8 +27,8 @@ Minimum perl version: 5.8
 ## Dependencies
 
 On ubuntu :
-
-  sudo apt-get install libmodule-install-perl libreadonly-perl
+  sudo apt-get install cpanminus libmodule-install-perl libreadonly-perl
+  cpanm --quiet --installdeps --notest .
 
 On Windows :
   cpan install inc::Module::Install
