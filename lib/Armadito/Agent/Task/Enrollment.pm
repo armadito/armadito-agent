@@ -27,8 +27,8 @@ sub new {
 		antivirus => $self->{agent}->{antivirus}->getJobj()
 	};
 
-	$self->{jobj}->{task}        = $task;
-	$self->{jobj}->{fingerprint} = $self->{agent}->{fingerprint};
+	$self->{jobj}->{task} = $task;
+	$self->{jobj}->{uuid} = $self->{agent}->{uuid};
 
 	return $self;
 }

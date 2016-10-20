@@ -12,7 +12,7 @@ use Armadito::Agent::Config;
 use Armadito::Agent::Storage;
 use Armadito::Agent::Antivirus;
 use Armadito::Agent::Logger qw (LOG_DEBUG LOG_INFO LOG_DEBUG2);
-use Armadito::Agent::Tools::Fingerprint qw(getFingerprint);
+use Armadito::Agent::Tools::Inventory qw(getUUID);
 
 our $VERSION = "0.1.0_02";
 my @supported_antiviruses = ("Armadito");
@@ -80,7 +80,7 @@ sub init {
 	$self->{agent_id} = 0;
 	$self->_getArmaditoId();
 
-	$self->{fingerprint} = getFingerprint();
+	$self->{uuid} = getUUID();
 
 	my $class = "Armadito::Agent::Antivirus::$self->{config}->{antivirus}";
 	$class->require();
