@@ -44,7 +44,6 @@ sub run {
 	);
 
 	if ( $response->is_success() ) {
-		$self->{taskobj}->_handleResponse($response);
 		$self->{taskobj}->{logger}->info("Send Scan results successful...");
 	}
 	else {

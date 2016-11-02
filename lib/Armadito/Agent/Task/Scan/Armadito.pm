@@ -23,22 +23,6 @@ sub new {
 	return $self;
 }
 
-sub _handleScanResponse {
-	my ( $self, $response ) = @_;
-
-	$self = $self->SUPER::_handleResponse($response);
-
-	return $self;
-}
-
-sub _handleError {
-	my ( $self, $response ) = @_;
-
-	$self = $self->SUPER::_handleError($response);
-
-	return $self;
-}
-
 sub _validateScanObj {
 	my ( $self, $scanobj ) = @_;
 

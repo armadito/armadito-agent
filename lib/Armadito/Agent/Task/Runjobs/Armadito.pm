@@ -76,24 +76,6 @@ sub _runJobs {
 	return $self;
 }
 
-sub _handleResponse {
-
-	my ( $self, $response ) = @_;
-
-	$self = $self->SUPER::_handleResponse($response);
-
-	return $self;
-}
-
-sub _handleError {
-
-	my ( $self, $response ) = @_;
-
-	$self = $self->SUPER::_handleError($response);
-
-	return $self;
-}
-
 sub _sendStatus {
 	my ($self) = @_;
 
@@ -106,7 +88,6 @@ sub _sendStatus {
 	);
 
 	if ( $response->is_success() ) {
-		$self->_handleResponse($response);
 		$self->{logger}->info("Runjobs sendStatus successful...");
 	}
 	else {

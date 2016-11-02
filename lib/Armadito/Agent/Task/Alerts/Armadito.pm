@@ -36,15 +36,6 @@ sub new {
 	return $self;
 }
 
-sub _handleResponse {
-
-	my ( $self, $response ) = @_;
-
-	$self = $self->SUPER::_handleResponse($response);
-
-	return $self;
-}
-
 sub _handleError {
 
 	my ( $self, $response ) = @_;
@@ -107,7 +98,6 @@ sub _sendAlert {
 	);
 
 	if ( $response->is_success() ) {
-		$self->_handleResponse($response);
 		$self->{logger}->info("Alerts successful...");
 	}
 	else {

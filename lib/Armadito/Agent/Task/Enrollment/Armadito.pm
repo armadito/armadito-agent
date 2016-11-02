@@ -21,24 +21,6 @@ sub new {
 	return $self;
 }
 
-sub _handleResponse {
-
-	my ( $self, $response ) = @_;
-
-	$self = $self->SUPER::_handleResponse($response);
-
-	return $self;
-}
-
-sub _handleError {
-
-	my ( $self, $response ) = @_;
-
-	$self = $self->SUPER::_handleError($response);
-
-	return $self;
-}
-
 sub run {
 	my ( $self, %params ) = @_;
 

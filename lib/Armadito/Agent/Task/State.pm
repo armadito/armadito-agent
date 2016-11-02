@@ -32,16 +32,6 @@ sub new {
 	return $self;
 }
 
-sub _handleResponse {
-	my ( $self, $response ) = @_;
-
-	$self->{logger}->info( "Successful Response : " . $response->content() );
-	my $obj = from_json( $response->content(), { utf8 => 1 } );
-	$self->{logger}->info( Dumper($obj) );
-
-	return $self;
-}
-
 sub _handleError {
 	my ( $self, $response ) = @_;
 
