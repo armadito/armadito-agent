@@ -26,12 +26,8 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 
-	my $enrollment_obj = '{}';    #TODO
-
-	$self->{jobj}->{task}->{obj} = $enrollment_obj;
-
+	$self->{jobj}->{task}->{obj} = '{}';
 	my $json_text = to_json( $self->{jobj} );
-
 	print $json_text. "\n";
 
 	my $response = $self->{glpi_client}->sendRequest(
