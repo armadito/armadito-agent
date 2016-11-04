@@ -51,7 +51,6 @@ sub _runJob {
 
 ERROR:
 
-	# We send error as base64
 	$self->{logger}->error($@);
 	$self->{jobj}->{task}->{obj} = {
 		code    => $error_code,
@@ -129,6 +128,4 @@ Run the task.
 =head2 new ( $self, %params )
 
 Instanciate Task.
-
-
 
