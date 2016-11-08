@@ -35,23 +35,30 @@ if( !$ARGV[0] ){ pod2usage(-verbose => 0, -exitstatus => 0) }
 
 GetOptions(
     $options,
-	'server|s=s',
-	'task|t=s',
-	'antivirus|av=s',
-	'alert-dir=s',
-	'job-priority|p=i',
-	'max-alerts=i',
-	'no-rm-alerts',
-	'conf-file=s',
-	'conf-reload-interval=i',
-	'config=s',
-	'setup',
-    'wait|w=i',
-	'list-tasks',
-	'list-avs',
-	'help|h',
-	'version|v',
     'get-id',
+    'server|s=s',
+    'task|t=s',
+    'antivirus|av=s',
+    'alert-dir=s',
+    'job-priority=i',
+    'max-alerts=i',
+    'no-rm-alerts',
+    'conf-file=s',
+    'conf-reload-interval=i',
+    'config=s',
+    'setup',
+    'wait|w=i',
+    'list-tasks',
+    'list-avs',
+    'ca-cert-dir=s',
+    'ca-cert-file=s',
+    'no-ssl-check',
+    'proxy|P=s',
+    'user|u=s',
+    'password|p=s',
+    'timeout=i',
+    'help|h',
+    'version|v',
     'debug|d=i',
 ) or pod2usage(-verbose => 0);
 
@@ -164,6 +171,14 @@ armadito-agent --server <server> --task <task>
     --conf-file=FILE                   configuration file
     --conf-reload-interval=<SECONDS>   number of seconds between two
                                          configuration reloadings
+  Network options:
+    -P --proxy=PROXY               proxy address
+    -u --user=USER                 user name for server authentication
+    -p --password=PASSWORD         password for server authentication
+    --ca-cert-dir=DIRECTORY        CA certificates directory
+    --ca-cert-file=FILE            CA certificates file
+    --no-ssl-check                 do not check server SSL certificate
+    --timeout=TIME                 connection timeout, in seconds (180)
 
 =head1 EXAMPLES
 
@@ -173,7 +188,7 @@ armadito-agent --server <server> --task <task>
 	% armadito-agent --task "Enrollment"
 	% armadito-agent --task "State"
 	% armadito-agent --task "GetJobs"
-	% armadito-agent --task "RunJobs" --priority "high"
+	% armadito-agent --task "RunJobs" --job-priority 0
 	% armadito-agent --task "Alerts" --alert-dir /var/spool/armadito --max-alerts 10
 
 =head1 DESCRIPTION
@@ -272,3 +287,40 @@ Minimum value is 60. If given value is less than this minimum, it is set to
 this minimum. If given value is less than 0, it is set to 0.
 
 =back
+
+=head2 Network options
+
+=over
+
+=item B<-P>, B<--proxy>=I<PROXY>
+
+Use I<PROXY> as HTTP proxy.
+
+By default, the agent uses HTTP_PROXY environment variable.
+
+=item B<-u> I<USER>, B<--user>=I<USER>
+
+Use I<USER> for server authentication.
+
+=item B<-p>, B<--password>=I<PASSWORD>
+
+Use I<PASSWORD> for server authentication.
+
+=item B<--ca-cert-dir>=I<DIRECTORY>
+
+CA certificates directory.
+
+=item B<--ca-cert-file>=I<FILE>
+
+CA certificates file.
+
+=item B<--no-ssl-check>
+
+Do not check server SSL certificate.
+
+=item B<--timeout>=I<TIME>
+
+Timeout for server connections.
+
+=back
+
