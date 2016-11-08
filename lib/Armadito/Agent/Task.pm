@@ -17,7 +17,17 @@ sub isEnabled {
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self->{glpi_client} = Armadito::Agent::HTTP::Client::ArmaditoGLPI->new();
+	$self->{glpi_client} = Armadito::Agent::HTTP::Client::ArmaditoGLPI->new(
+        logger       => $self->{logger},
+        user         => $self->{agent}->{config}->{user},
+        password     => $self->{agent}->{config}->{password},
+        proxy        => $self->{agent}->{config}->{proxy},
+        ca_cert_file => $self->{agent}->{config}->{ca_cert_file},
+        ca_cert_dir  => $self->{agent}->{config}->{ca_cert_dir},
+        no_ssl_check => $self->{agent}->{config}->{no_ssl_check},
+        debug        => $self->{agent}->{config}->{debug}
+    );
+
 	die "Error when creating ArmaditoGLPI client!" unless $self->{glpi_client};
 
 	return $self;
@@ -27,8 +37,7 @@ sub new {
 	my ( $class, %params ) = @_;
 
 	my $self = {
-		logger => $params{logger} || Armadito::Agent::Logger->new(),
-		config => $params{config},
+		logger => $params{agent}->{logger},
 		agent  => $params{agent}
 	};
 

@@ -107,8 +107,6 @@ if ($options->{'list-avs'}) {
    exit 0;
 }
 
-my $config = {};
-
 if ($options->{"wait"}) {
     sleep $options->{"wait"};
 }
@@ -123,7 +121,7 @@ try {
 
 	my $class = "Armadito::Agent::Task::$options->{task}::$agent->{config}->{antivirus}";
 	$class->require();
-	my $task = $class->new(config => $config, agent => $agent);
+	my $task = $class->new(agent => $agent);
 	$task->run();
 
 } catch {
