@@ -76,29 +76,35 @@ sub init {
 
 	$self->{job_priority} = $params{options}->{job_priority} ? $params{options}->{job_priority} : -1;
 
-	$self->{agent_id} = 0;
-	$self->_getArmaditoId();
+	$self->{agent_id}     = 0;
+	$self->{scheduler_id} = 0;
+	$self->_getArmaditoIds();
 
 	my $class = "Armadito::Agent::Antivirus::$self->{config}->{antivirus}";
 	$class->require();
 	$self->{antivirus} = $class->new();
 }
 
-sub _getArmaditoId {
+sub _getArmaditoIds {
 	my ($self) = @_;
 
 	my $data = $self->{armadito_storage}->restore( name => 'Armadito-Agent' );
 
-	$self->{agent_id} = $data->{agent_id} if ( defined( $data->{agent_id} ) );
+	$self->{agent_id}     = $data->{agent_id}     if ( defined( $data->{agent_id} ) );
+	$self->{scheduler_id} = $data->{scheduler_id} if ( defined( $data->{scheduler_id} ) );
+
+	$self->{logger}->info( "agent_id = " . $self->{agent_id} );
+	$self->{logger}->info( "scheduler_id = " . $self->{scheduler_id} );
 }
 
-sub _storeArmaditoId {
+sub _storeArmaditoIds {
 	my ($self) = @_;
 
 	$self->{armadito_storage}->save(
 		name => 'Armadito-Agent',
 		data => {
-			agent_id => $self->{agent_id},
+			agent_id     => $self->{agent_id},
+			scheduler_id => $self->{scheduler_id}
 		}
 	);
 }

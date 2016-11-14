@@ -38,15 +38,23 @@ sub _handleResponse {
 	my ( $self, $response ) = @_;
 
 	$self->{logger}->info( $response->content() );
-	my $obj = from_json( $response->content(), { utf8 => 1 } );
 
-	# Update armadito agent_id
-	if ( defined( $obj->{agent_id} ) && $obj->{agent_id} > 0 ) {
-		$self->{agent}->{agent_id} = $obj->{agent_id};
-		$self->{agent}->_storeArmaditoId();
-		$self->{logger}->info( "Agent successfully enrolled with id " . $obj->{agent_id} );
-	}
+	my $jobj = from_json( $response->content(), { utf8 => 1 } );
+	$self->_updateStorage($jobj);
+
 	return $self;
+}
+
+sub _updateStorage {
+	my ( $self, $jobj ) = @_;
+
+	$self->{agent}->{agent_id}     = defined( $jobj->{agent_id} )     ? $jobj->{agent_id}     : 0;
+	$self->{agent}->{scheduler_id} = defined( $jobj->{scheduler_id} ) ? $jobj->{scheduler_id} : 0;
+
+	if ( $jobj->{agent_id} > 0 ) {
+		$self->{agent}->_storeArmaditoIds();
+		$self->{logger}->info( "Agent successfully enrolled with id " . $jobj->{agent_id} );
+	}
 }
 
 sub _handleError {
