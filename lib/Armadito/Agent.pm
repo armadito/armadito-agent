@@ -93,8 +93,8 @@ sub _getArmaditoIds {
 	$self->{agent_id}     = $data->{agent_id}     if ( defined( $data->{agent_id} ) );
 	$self->{scheduler_id} = $data->{scheduler_id} if ( defined( $data->{scheduler_id} ) );
 
-	$self->{logger}->info( "agent_id = " . $self->{agent_id} );
-	$self->{logger}->info( "scheduler_id = " . $self->{scheduler_id} );
+	$self->{logger}->debug( "agent_id = " . $self->{agent_id} );
+	$self->{logger}->debug( "scheduler_id = " . $self->{scheduler_id} );
 }
 
 sub _storeArmaditoIds {
