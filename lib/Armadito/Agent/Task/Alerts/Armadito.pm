@@ -89,7 +89,7 @@ sub _sendAlert {
 	$self->{jobj}->{task}->{obj} = $params{xmlobj};
 
 	my $json_text = to_json( $self->{jobj} );
-	print "JSON formatted str : \n" . $json_text . "\n";
+	$self->{logger}->debug( $json_text );
 
 	my $response = $self->{glpi_client}->sendRequest(
 		"url"   => $self->{glpi_url} . "/api/alerts",
