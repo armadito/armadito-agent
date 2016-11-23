@@ -6,7 +6,7 @@ use warnings;
 sub new {
 	my ( $class, %params ) = @_;
 
-	my $self = {};
+	my $self = { logger => $params{logger} };
 
 	bless $self, $class;
 	return $self;

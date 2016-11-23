@@ -82,7 +82,7 @@ sub init {
 
 	my $class = "Armadito::Agent::Antivirus::$self->{config}->{antivirus}";
 	$class->require();
-	$self->{antivirus} = $class->new();
+	$self->{antivirus} = $class->new( logger => $self->{logger} );
 }
 
 sub _getArmaditoIds {
