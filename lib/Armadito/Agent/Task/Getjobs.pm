@@ -81,6 +81,24 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 
+	my $response = $self->{glpi_client}->sendRequest(
+		"url" => $self->{agent}->{config}->{server}[0] . "/api/jobs",
+		args  => {
+			antivirus => $self->{jobj}->{task}->{antivirus}->{name},
+			agent_id  => $self->{jobj}->{agent_id}
+		},
+		method => "GET"
+	);
+
+	if ( $response->is_success() ) {
+		$self->_handleResponse($response);
+		$self->{logger}->info("Getjobs successful...");
+	}
+	else {
+		$self->_handleError($response);
+		$self->{logger}->info("Getjobs failed...");
+	}
+
 	return $self;
 }
 

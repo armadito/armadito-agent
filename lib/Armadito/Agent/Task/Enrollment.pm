@@ -73,6 +73,25 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 
+	$self->{jobj}->{task}->{obj} = '{}';
+	my $json_text = to_json( $self->{jobj} );
+	print $json_text. "\n";
+
+	my $response = $self->{glpi_client}->sendRequest(
+		"url"   => $self->{agent}->{config}->{server}[0] . "/api/agents",
+		message => $json_text,
+		method  => "POST"
+	);
+
+	if ( $response->is_success() && $response->content() =~ /^\s*\{/ms ) {
+		$self->_handleResponse($response);
+		$self->{logger}->info("Enrollment successful...");
+	}
+	else {
+		$self->_handleError($response);
+		$self->{logger}->info("Enrollment failed...");
+	}
+
 	return $self;
 }
 

@@ -1,4 +1,4 @@
-package Armadito::Agent::Task::Alerts::Armadito;
+package Armadito::Agent::Antivirus::Armadito::Alerts;
 
 use strict;
 use warnings;
@@ -89,7 +89,7 @@ sub _sendAlert {
 	$self->{jobj}->{task}->{obj} = $params{xmlobj};
 
 	my $json_text = to_json( $self->{jobj} );
-	$self->{logger}->debug( $json_text );
+	$self->{logger}->debug($json_text);
 
 	my $response = $self->{glpi_client}->sendRequest(
 		"url"   => $self->{glpi_url} . "/api/alerts",
@@ -124,7 +124,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task::Alerts::Armadito - Alerts Task for Armadito Antivirus.
+Armadito::Agent::Antivirus::Armadito::Alerts - Alerts Task for Armadito Antivirus.
 
 =head1 DESCRIPTION
 

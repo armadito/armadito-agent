@@ -11,23 +11,9 @@ use UNIVERSAL::require;
 use IPC::System::Simple qw(capture);
 use Data::Dumper;
 use Try::Tiny;
+use Armadito::Agent;
 
 our $VERSION = 0.1;
-
-use Armadito::Agent;
-use Armadito::Agent::Task;
-use Armadito::Agent::Task::Scan;
-use Armadito::Agent::Task::Scan::Armadito;
-use Armadito::Agent::Task::State;
-use Armadito::Agent::Task::State::Armadito;
-use Armadito::Agent::Task::Alerts;
-use Armadito::Agent::Task::Alerts::Armadito;
-use Armadito::Agent::Task::Getjobs;
-use Armadito::Agent::Task::Getjobs::Armadito;
-use Armadito::Agent::Task::Runjobs;
-use Armadito::Agent::Task::Runjobs::Armadito;
-use Armadito::Agent::Task::Enrollment;
-use Armadito::Agent::Task::Enrollment::Armadito;
 
 my $options = {};
 
@@ -113,6 +99,7 @@ if ($options->{"wait"}) {
 }
 
 try {
+
 	$agent->init(options => $options);
 
     if ($options->{'get-agentid'}) {
@@ -125,10 +112,7 @@ try {
        exit 0;
     }
 
-	my $class = "Armadito::Agent::Task::$options->{task}::$agent->{config}->{antivirus}";
-	$class->require();
-	my $task = $class->new(agent => $agent);
-	$task->run();
+    $agent->runTask( $options->{task} );
 
 } catch {
     print STDERR "Execution failure:\n";

@@ -16,7 +16,7 @@ use Armadito::Agent::Logger qw (LOG_DEBUG LOG_INFO LOG_DEBUG2);
 our $VERSION = "0.1.0_02";
 my @supported_antiviruses = ("Armadito");
 my @supported_tasks       = ( "State", "Enrollment", "Getjobs", "Runjobs", "Alerts", "Scan" );
-my @superuser_tasks       = ( "Enrollment", "Getjobs", "Runjobs" );
+my @unspecific_tasks      = ( "Enrollment", "Getjobs", "Runjobs" );
 
 sub new {
 	my ( $class, %params ) = @_;
@@ -129,6 +129,16 @@ sub isTaskSupported {
 	return 0;
 }
 
+sub isTaskSpecificToAV {
+	my ( $self, $task ) = @_;
+	foreach (@unspecific_tasks) {
+		if ( $task eq $_ ) {
+			return 0;
+		}
+	}
+	return 1;
+}
+
 sub displaySupportedTasks {
 	my ($self) = @_;
 	print "List of supported tasks :\n";
@@ -143,6 +153,21 @@ sub displaySupportedAVs {
 	foreach (@supported_antiviruses) {
 		print $_. "\n";
 	}
+}
+
+sub runTask {
+	my ( $self, $task ) = @_;
+
+	my $class     = "Armadito::Agent::Task::$task";
+	my $antivirus = $self->{config}->{antivirus};
+
+	if ( $self->isTaskSpecificToAV($task) ) {
+		$class = "Armadito::Agent::Antivirus::$antivirus::$task";
+	}
+
+	$class->require();
+	my $taskclass = $class->new( agent => $self );
+	$taskclass->run();
 }
 
 1;
@@ -198,6 +223,10 @@ Returns true if given antivirus is supported by the current version of the agent
 
 Returns true if given task is supported by the current version of the agent.
 
+=head2 isTaskSpecificToAV($task)
+
+Returns true if given task is specific to an Antivirus.
+
 =head2 displaySupportedTasks()
 
 Display all currently supported tasks to stdout.
@@ -205,6 +234,10 @@ Display all currently supported tasks to stdout.
 =head2 displaySupportedAVs()
 
 Display all currently supported Antiviruses to stdout.
+
+=head2 runTask($task)
+
+Run a given task.
 
 =head1 SEE ALSO
 

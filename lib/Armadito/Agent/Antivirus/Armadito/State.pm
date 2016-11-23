@@ -1,4 +1,4 @@
-package Armadito::Agent::Task::State::Armadito;
+package Armadito::Agent::Antivirus::Armadito::State;
 
 use strict;
 use warnings;
@@ -48,11 +48,11 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Task::State::Armadito - State Task for Armadito Antivirus.
+Armadito::Agent::Antivirus::Armadito::State - State Task for Armadito Antivirus.
 
 =head1 DESCRIPTION
 
-This task inherits from L<Armadito::Agent::Task:State>. Ask for Armadito Antivirus state using AV's API REST protocol and then send it in a json formatted POST request to Armadito plugin for GLPI. 
+This task inherits from L<Armadito::Agent::Task:State>. Ask for Armadito Antivirus state using AV's API REST protocol and then send it in a json formatted POST request to Armadito plugin for GLPI.
 
 =head1 FUNCTIONS
 
