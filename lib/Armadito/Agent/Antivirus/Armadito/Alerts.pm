@@ -122,7 +122,7 @@ Armadito::Agent::Antivirus::Armadito::Alerts - Alerts Task for Armadito Antiviru
 
 =head1 DESCRIPTION
 
-This task inherits from L<Armadito::Agent::Task:Scan>. Get Armadito Antivirus alerts and send them as json messages to armadito glpi plugin.
+This task inherits from L<Armadito::Agent::Task:Alerts>. Get Armadito Antivirus alerts and send them as json messages to armadito glpi plugin.
 
 =head1 FUNCTIONS
 
