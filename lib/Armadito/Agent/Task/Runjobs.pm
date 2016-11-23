@@ -7,6 +7,7 @@ use base 'Armadito::Agent::Task';
 use Armadito::Agent::Storage;
 use Data::Dumper;
 use MIME::Base64;
+use Try::Tiny;
 use JSON;
 
 sub new {
@@ -93,33 +94,30 @@ sub run {
 sub _runJob {
 	my ( $self, $job ) = @_;
 	my $config = ();
-	my $class  = "Armadito::Agent::Task::$job->{job_type}::$self->{jobj}->{task}->{antivirus}->{name}";
 
-	my $error_code = 1;
-	eval { $class->require(); };
-	goto ERROR if ($@);
+	try {
+		my $antivirus = $self->{jobj}->{task}->{antivirus}->{name};
+		my $task      = $job->{job_type};
+		my $class     = "Armadito::Agent::Task::$antivirus::$task";
 
-	$error_code = 2;
-	eval {
-		my $task = $class->new( config => $config, agent => $self->{agent}, job => $job );
-		$task->run();
-	};
-	goto ERROR if ($@);
+		$class->require();
+		my $taskclass = $class->new( agent => $self->{agent}, job => $job );
+		$taskclass->run();
+	}
+	catch {
+		$self->{logger}->error($@);
+		$self->{jobj}->{task}->{obj} = {
+			code    => 1,
+			message => encode_base64($@),
+			job_id  => $job->{job_id}
+		};
+
+		return $self;
+	}
 
 	$self->{jobj}->{task}->{obj} = {
 		code    => 0,
 		message => "runJob successful",
-		job_id  => $job->{job_id}
-	};
-
-	return $self;
-
-ERROR:
-
-	$self->{logger}->error($@);
-	$self->{jobj}->{task}->{obj} = {
-		code    => $error_code,
-		message => encode_base64($@),
 		job_id  => $job->{job_id}
 	};
 
