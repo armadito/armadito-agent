@@ -8,11 +8,6 @@ use Data::Dumper;
 use JSON;
 use Armadito::Agent::HTTP::Client::ArmaditoAV;
 
-sub isEnabled {
-	my ($self) = @_;
-	return 1;
-}
-
 sub new {
 	my ( $class, %params ) = @_;
 
@@ -76,10 +71,6 @@ Armadito::Agent::Antivirus::Armadito::Scan - Scan Task for Armadito Antivirus.
 This task inherits from L<Armadito::Agent::Task:Scan>. Launch an Armadito Antivirus on-demand scan using AV's API REST protocol and then send a brief report in a json formatted POST request to Armadito plugin for GLPI.
 
 =head1 FUNCTIONS
-
-=head2 isEnabled ( $self )
-
-Returns true if the task is enabled.
 
 =head2 run ( $self, %params )
 

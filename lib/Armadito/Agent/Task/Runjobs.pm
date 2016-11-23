@@ -9,12 +9,6 @@ use Data::Dumper;
 use MIME::Base64;
 use JSON;
 
-sub isEnabled {
-	my ($self) = @_;
-
-	return 1;
-}
-
 sub new {
 	my ( $class, %params ) = @_;
 
@@ -106,9 +100,6 @@ sub _runJob {
 	goto ERROR if ($@);
 
 	$error_code = 2;
-	goto ERROR if ( !$class->isEnabled() );
-
-	$error_code = 3;
 	eval {
 		my $task = $class->new( config => $config, agent => $self->{agent}, job => $job );
 		$task->run();
@@ -182,10 +173,6 @@ Armadito::Agent::Task::Runjobs - Runjobs Task base class.
 This task inherits from L<Armadito::Agent::Task>. Run jobs and send results to /jobs REST API of Armadito Plugin for GLPI.
 
 =head1 FUNCTIONS
-
-=head2 isEnabled ( $self )
-
-Returns true if the task is enabled.
 
 =head2 run ( $self, %params )
 

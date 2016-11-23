@@ -8,12 +8,6 @@ use Armadito::Agent::Logger;
 use Armadito::Agent::HTTP::Client::ArmaditoGLPI;
 use Data::Dumper;
 
-sub isEnabled {
-	my ($self) = @_;
-
-	return 1;
-}
-
 sub run {
 	my ( $self, %params ) = @_;
 
@@ -66,10 +60,6 @@ Armadito::Agent::Task - Armadito Agent Task base class.
 This is a base class for each Tasks used to interact with Armadito Antivirus and Armadito plugin for GLPI.
 
 =head1 FUNCTIONS
-
-=head2 isEnabled ( $self )
-
-Returns true if the task is enabled.
 
 =head2 run ( $self, %params )
 

@@ -7,12 +7,6 @@ use base 'Armadito::Agent::Task::State';
 use Data::Dumper;
 use JSON;
 
-sub isEnabled {
-	my ($self) = @_;
-
-	return 1;
-}
-
 sub new {
 	my ( $class, %params ) = @_;
 
@@ -55,10 +49,6 @@ Armadito::Agent::Antivirus::Armadito::State - State Task for Armadito Antivirus.
 This task inherits from L<Armadito::Agent::Task:State>. Ask for Armadito Antivirus state using AV's API REST protocol and then send it in a json formatted POST request to Armadito plugin for GLPI.
 
 =head1 FUNCTIONS
-
-=head2 isEnabled ( $self )
-
-Returns true if the task is enabled.
 
 =head2 run ( $self, %params )
 

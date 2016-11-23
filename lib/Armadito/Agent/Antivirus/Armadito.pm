@@ -5,12 +5,6 @@ use warnings;
 use base 'Armadito::Agent::Antivirus';
 use Armadito::Agent::HTTP::Client::ArmaditoAV;
 
-sub isEnabled {
-	my ($self) = @_;
-
-	return 1;
-}
-
 sub new {
 	my ( $class, %params ) = @_;
 
@@ -52,10 +46,6 @@ Armadito::Agent::Antivirus - Armadito Agent Antivirus base class.
 This is a base class for all stuff specific to an Antivirus.
 
 =head1 FUNCTIONS
-
-=head2 isEnabled ( $self )
-
-Returns true if the task is enabled.
 
 =head2 new ( $self, %params )
 

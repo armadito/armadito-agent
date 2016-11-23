@@ -7,12 +7,6 @@ use base 'Armadito::Agent::Task';
 use Data::Dumper;
 use JSON;
 
-sub isEnabled {
-	my ($self) = @_;
-
-	return 1;
-}
-
 sub new {
 	my ( $class, %params ) = @_;
 
@@ -64,10 +58,6 @@ Armadito::Agent::Task::Scan - Scan Task base class
 This task inherits from L<Armadito::Agent::Task>. Launch a Antivirus on-demand scan and send a brief report to GPLI server Armadito plugin.
 
 =head1 FUNCTIONS
-
-=head2 isEnabled ( $self )
-
-Returns true if the task is enabled.
 
 =head2 run ( $self, %params )
 

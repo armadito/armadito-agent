@@ -12,12 +12,6 @@ use Data::Dumper;
 use JSON;
 use Carp;
 
-sub isEnabled {
-	my ($self) = @_;
-
-	return 1;
-}
-
 sub new {
 	my ( $class, %params ) = @_;
 
@@ -131,10 +125,6 @@ Armadito::Agent::Antivirus::Armadito::Alerts - Alerts Task for Armadito Antiviru
 This task inherits from L<Armadito::Agent::Task:Scan>. Get Armadito Antivirus alerts and send them as json messages to armadito glpi plugin.
 
 =head1 FUNCTIONS
-
-=head2 isEnabled ( $self )
-
-Returns true if the task is enabled.
 
 =head2 run ( $self, %params )
 

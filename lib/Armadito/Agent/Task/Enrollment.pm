@@ -8,12 +8,6 @@ use Armadito::Agent::Tools::Inventory qw(getUUID);
 use Data::Dumper;
 use JSON;
 
-sub isEnabled {
-	my ($self) = @_;
-
-	return 1;
-}
-
 sub new {
 	my ( $class, %params ) = @_;
 
@@ -108,10 +102,6 @@ Armadito::Agent::Task::Enrollment - Enrollment task of Armadito Agent.
 This task inherits from L<Armadito::Agent::Task>. Enroll the device into Armadito plugin for GLPI.
 
 =head1 FUNCTIONS
-
-=head2 isEnabled ( $self )
-
-Returns true if the task is enabled.
 
 =head2 run ( $self, %params )
 
