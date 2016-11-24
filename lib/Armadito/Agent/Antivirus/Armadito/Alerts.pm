@@ -25,7 +25,6 @@ sub new {
 
 	$self->{alertdir}  = $self->{agent}->{config}->{"alert-dir"};
 	$self->{maxalerts} = $self->{agent}->{config}->{"max-alerts"};
-	$self->{glpi_url}  = $self->{agent}->{config}->{server}[0];
 
 	return $self;
 }

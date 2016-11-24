@@ -22,6 +22,7 @@ sub new {
 	};
 
 	$self->{jobj}->{task} = $task;
+	$self->{glpi_url}  = $self->{agent}->{config}->{server}[0];
 
 	return $self;
 }

@@ -16,9 +16,6 @@ sub new {
 
 	my $self = $class->SUPER::new(%params);
 
-	$self->{maxalerts} = $self->{agent}->{config}->{"max-alerts"};
-	$self->{glpi_url}  = $self->{agent}->{config}->{server}[0];
-
 	return $self;
 }
 
