@@ -6,6 +6,7 @@ use base 'Armadito::Agent::Task::Scan';
 
 use Data::Dumper;
 use Try::Tiny;
+use MIME::Base64;
 use IPC::System::Simple qw(capture);
 use Armadito::Agent::Stdout::Parser;
 
@@ -26,8 +27,7 @@ sub _validateScanObj {
 	die "undefined scan_options." if ( !defined( $scanobj->{scan_options} ) );
 	die "Empty scan_path."        if ( $scanobj->{scan_path} eq "" );
 
-	# TODO: validate scan_paths, etc.
-	return;
+	$scanobj->{scan_options} = decode_base64( $scanobj->{scan_options} );
 }
 
 # Scan completed at: mer. 23 nov. 2016 15:05:32 CET
