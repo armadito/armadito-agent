@@ -8,7 +8,7 @@ use Data::Dumper;
 use Try::Tiny;
 use MIME::Base64;
 use IPC::System::Simple qw(capture);
-use Armadito::Agent::Stdout::Parser;
+use Armadito::Agent::Patterns::Matcher;
 
 sub new {
 	my ( $class, %params ) = @_;
@@ -27,7 +27,7 @@ sub new {
 sub _parseScanOutput {
 	my ( $self, $output ) = @_;
 
-	my $parser = Armadito::Agent::Stdout::Parser->new( logger => $self->{logger} );
+	my $parser = Armadito::Agent::Patterns::Matcher->new( logger => $self->{logger} );
 	$parser->addPattern( 'end_time',      '^Scan completed at: (.*)' );
 	$parser->addPattern( 'duration',      '^Scan time:.+?\((.*?)\)' );
 	$parser->addPattern( 'scanned_count', '^Total:\s+files - (\d+)' );

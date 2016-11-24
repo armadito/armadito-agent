@@ -79,11 +79,11 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Stdout::Parser - simple class for parsing Stdout with multiple regular expressions.
+Armadito::Agent::Patterns::Matcher - Parses an input string with multiple regular expressions.
 
 =head1 DESCRIPTION
 
-Given plain text content is parsed with multiple patterns.
+Given plain text content is parsed with multiple patterns. Each pattern should have capturing parentheses.
 
 =head1 METHODS
 
