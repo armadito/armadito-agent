@@ -13,20 +13,7 @@ sub new {
 
 	my $self = $class->SUPER::new(%params);
 
-	$self->_validateScanObj( $self->{job}->{obj} );
-
 	return $self;
-}
-
-sub _validateScanObj {
-	my ( $self, $scanobj ) = @_;
-
-	die "undefined scan_type." if ( !defined( $scanobj->{scan_name} ) );
-	die "undefined scan_path." if ( !defined( $scanobj->{scan_path} ) );
-	die "Empty scan_path."     if ( $scanobj->{scan_path} eq "" );
-
-	# TODO: validate scan_paths, etc.
-	return;
 }
 
 sub getScanAPIMessage {

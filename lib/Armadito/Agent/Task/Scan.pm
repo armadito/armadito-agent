@@ -23,8 +23,22 @@ sub new {
 
 	$self->{jobj}->{task} = $task;
 	$self->{job} = $params{job};
+	$self->_validateScanObj( $self->{job}->{obj} );
 
 	return $self;
+}
+
+sub _validateScanObj {
+	my ( $self, $scanobj ) = @_;
+
+	die "undefined scan_type."    if ( !defined( $scanobj->{scan_name} ) );
+	die "undefined scan_path."    if ( !defined( $scanobj->{scan_path} ) );
+	die "undefined scan_options." if ( !defined( $scanobj->{scan_options} ) );
+	die "Empty scan_path."        if ( $scanobj->{scan_path} eq "" );
+
+    if($scanobj->{scan_options} ne "") {
+	    $scanobj->{scan_options} = decode_base64( $scanobj->{scan_options} );
+    }
 }
 
 sub _handleError {

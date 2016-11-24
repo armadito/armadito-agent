@@ -14,20 +14,8 @@ sub new {
 	my ( $class, %params ) = @_;
 
 	my $self = $class->SUPER::new(%params);
-	$self->_validateScanObj( $self->{job}->{obj} );
 
 	return $self;
-}
-
-sub _validateScanObj {
-	my ( $self, $scanobj ) = @_;
-
-	die "undefined scan_type."    if ( !defined( $scanobj->{scan_name} ) );
-	die "undefined scan_path."    if ( !defined( $scanobj->{scan_path} ) );
-	die "undefined scan_options." if ( !defined( $scanobj->{scan_options} ) );
-	die "Empty scan_path."        if ( $scanobj->{scan_path} eq "" );
-
-	$scanobj->{scan_options} = decode_base64( $scanobj->{scan_options} );
 }
 
 # Scan completed at: mer. 23 nov. 2016 15:05:32 CET
