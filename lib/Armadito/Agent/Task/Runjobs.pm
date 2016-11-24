@@ -98,22 +98,26 @@ sub _runJob {
 	try {
 		my $antivirus = $self->{jobj}->{task}->{antivirus}->{name};
 		my $task      = $job->{job_type};
-		my $class     = "Armadito::Agent::Task::$antivirus::$task";
+		my $class     = "Armadito::Agent::Task::$task";
+
+		if ( $self->{agent}->isTaskSpecificToAV($task) ) {
+			$class = "Armadito::Agent::Antivirus::$antivirus::$task";
+		}
 
 		$class->require();
 		my $taskclass = $class->new( agent => $self->{agent}, job => $job );
 		$taskclass->run();
 	}
 	catch {
-		$self->{logger}->error($@);
+		$self->{logger}->error($_);
 		$self->{jobj}->{task}->{obj} = {
 			code    => 1,
-			message => encode_base64($@),
+			message => encode_base64($_),
 			job_id  => $job->{job_id}
 		};
 
 		return $self;
-	}
+	};
 
 	$self->{jobj}->{task}->{obj} = {
 		code    => 0,
