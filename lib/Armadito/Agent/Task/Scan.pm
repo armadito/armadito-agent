@@ -37,6 +37,27 @@ sub _handleError {
 	return $self;
 }
 
+sub sendScanResults {
+	my ( $self, $scanresults ) = @_;
+
+	$self->{jobj}->{task}->{obj} = $scanresults;
+	my $json_text = to_json( $self->{jobj} );
+
+	my $response = $self->{glpi_client}->sendRequest(
+		"url"   => $self->{agent}->{config}->{server}[0] . "/api/scans",
+		message => $json_text,
+		method  => "POST"
+	);
+
+	if ( $response->is_success() ) {
+		$self->{logger}->info("Send Scan results successful...");
+	}
+	else {
+		$self->_handleError($response);
+		$self->{logger}->info("Send Scan results failed...");
+	}
+}
+
 sub run {
 	my ( $self, %params ) = @_;
 

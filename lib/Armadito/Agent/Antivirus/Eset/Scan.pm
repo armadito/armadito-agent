@@ -7,6 +7,7 @@ use base 'Armadito::Agent::Task::Scan';
 use Data::Dumper;
 use Try::Tiny;
 use IPC::System::Simple qw(capture);
+use Armadito::Agent::Stdout::Parser;
 
 sub new {
 	my ( $class, %params ) = @_;
@@ -29,6 +30,29 @@ sub _validateScanObj {
 	return;
 }
 
+# Scan completed at: mer. 23 nov. 2016 15:05:32 CET
+# Scan time:         9 sec (0:00:09)
+# Total:             files - 232, objects 1699
+# Infected:          files - 188, objects 886
+# Cleaned:           files - 0, objects 0
+
+sub _parseScanOutput {
+	my ( $self, $output ) = @_;
+
+	my $parser = Armadito::Agent::Stdout::Parser->new( logger => $self->{logger} );
+	$parser->addPattern( 'end_time',      '^Scan completed at: (.*)' );
+	$parser->addPattern( 'duration',      '^Scan time:.+?\((.*?)\)' );
+	$parser->addPattern( 'scanned_count', '^Total:\s+files - (\d+)' );
+	$parser->addPattern( 'malware_count', '^Infected:\s+files - (\d+)' );
+	$parser->addPattern( 'cleaned_count', '^Cleaned:\s+files - (\d+)' );
+
+	if ( $output =~ m/(Scan completed at:.*)$/ms ) {
+		$parser->run($1);
+	}
+
+	return $parser->getResults();
+}
+
 sub run {
 	my ( $self, %params ) = @_;
 
@@ -38,9 +62,16 @@ sub run {
 	my $scan_path    = $self->{job}->{obj}->{scan_path};
 	my $scan_options = $self->{job}->{obj}->{scan_options};
 
-	capture( $bin_path . " " . $scan_options . " " . $scan_path );
+	my $output = capture( [ 0, 1, 10, 50 ], $bin_path . " " . $scan_options . " " . $scan_path );
+	$self->{logger}->info($output);
 
-	return $self;
+	my $results = $self->_parseScanOutput($output);
+	$results->{start_time}       = "";
+	$results->{suspicious_count} = 0;
+	$results->{progress}         = 100;
+	$results->{job_id}           = $self->{job}->{job_id};
+
+	$self->sendScanResults($results);
 }
 
 1;
