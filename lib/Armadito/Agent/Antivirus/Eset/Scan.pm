@@ -35,7 +35,7 @@ sub _parseScanOutput {
 	$parser->addPattern( 'cleaned_count', '^Cleaned:\s+files - (\d+)' );
 
 	if ( $output =~ m/(Scan completed at:.*)$/ms ) {
-		$parser->run($1);
+		$parser->run($1, '/\n/');
 	}
 
 	return $parser->getResults();

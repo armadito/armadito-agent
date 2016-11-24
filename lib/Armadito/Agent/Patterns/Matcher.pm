@@ -45,30 +45,30 @@ sub addPattern {
 }
 
 sub run {
-	my ( $self, $input ) = @_;
+	my ( $self, $input, $separator ) = @_;
 
-	my @lines = split( /\n/, $input );
+	my @$substrings = split( $separator, $input );
 
-	foreach my $line (@lines) {
-		$self->_parseLine($line);
+	foreach my $substring (@$substrings) {
+		$self->_parseSubElement($substring);
 	}
 
 	return 1;
 }
 
-sub _parseLine {
-	my ( $self, $line ) = @_;
+sub _parseSubString {
+	my ( $self, $substring ) = @_;
 
 	my %patterns = %{ $self->{patterns} };
 	foreach my $label ( keys(%patterns) ) {
-		$self->_checkPattern( $line, ${ $self->{patterns} }{$label} );
+		$self->_checkPattern( $substring, ${ $self->{patterns} }{$label} );
 	}
 }
 
 sub _checkPattern {
-	my ( $self, $line, $pattern ) = @_;
+	my ( $self, $substring, $pattern ) = @_;
 
-	if ( $line =~ m/$pattern->{regex}/ms ) {
+	if ( $substring =~ m/$pattern->{regex}/ms ) {
 		$pattern->{match} = $1;
 	}
 }
