@@ -3,8 +3,6 @@ package Armadito::Agent::Task::Alerts;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Task';
-
-use Data::Dumper;
 use JSON;
 
 sub new {

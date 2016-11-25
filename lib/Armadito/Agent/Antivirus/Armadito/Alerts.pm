@@ -8,7 +8,6 @@ use Armadito::Agent::XML::Parser;
 use Armadito::Agent::Tools::Dir qw(readDirectory);
 use Armadito::Agent::Tools::File qw(readFile);
 use English qw(-no_match_vars);
-use Data::Dumper;
 use JSON;
 use Carp;
 
