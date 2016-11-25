@@ -4,12 +4,13 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Task::Alerts';
 
+use Armadito::Agent::Patterns::Matcher;
 use Armadito::Agent::XML::Parser;
 use Armadito::Agent::Tools::Dir qw(readDirectory);
 use Armadito::Agent::Tools::File qw(readFile);
 use English qw(-no_match_vars);
-use Data::Dumper;
 use JSON;
+use Parse::Syslog;
 
 sub new {
 	my ( $class, %params ) = @_;
@@ -19,31 +20,10 @@ sub new {
 	return $self;
 }
 
-sub _handleError {
-
-	my ( $self, $response ) = @_;
-
-	$self = $self->SUPER::_handleError($response);
-
-	return $self;
-}
-
-sub _processAlert {
-	my ( $self, %params ) = @_;
-
-	return 0;
-}
-
-sub _processAlertDir {
-	my ($self) = @_;
-
-	return $self;
-}
-
 sub _sendAlert {
-	my ( $self, %params ) = @_;
+	my ( $self, $alert ) = @_;
 
-	$self->{jobj}->{task}->{obj} = $params{xmlobj};
+	$self->{jobj}->{task}->{obj} = $alert;
 
 	my $json_text = to_json( $self->{jobj} );
 	$self->{logger}->debug($json_text);
@@ -65,10 +45,51 @@ sub _sendAlert {
 	return 1;
 }
 
+sub _getSystemLogs {
+	my ($self) = @_;
+
+	my $selected_logs = "";
+	my $tsnow         = time;
+	my $tssince       = $tsnow - 3600;                           # last hour
+	my $parser        = Parse::Syslog->new('/var/log/syslog');
+
+	while ( my $sl = $parser->next ) {
+		$selected_logs .= "timestamp=\"" . $sl->{timestamp} . "\", " . $sl->{text} . "\n"
+			if ( $sl->{program} eq "esets_daemon" && $sl->{timestamp} >= $tssince );
+	}
+
+	return $selected_logs;
+}
+
+# Nov 23 14:22:33 n5trusty32a esets_daemon[6974]: summ[1b3e0300]: vdb=31502, agent=pac, name="/home/malwares/contagio-malware/rtf/MALWARE_RTF_CVE-2012-0158_300_files/CVE-2012-0158_E94F9B67A66FFAF62FB5CE87B677DC5C.rtf", virus="Win32/Exploit.CVE-2012-0158.AJ trojan", action="cleaned by deleting", info="Event occurred on a new file created by the application: /usr/bin/scp (EEBC3C511B955D5AE2A52A5CE66EC472398AB6B9).", avstatus="clean (deleted)", hop="discarded"
+
+sub _parseLogs {
+	my ( $self, $logs ) = @_;
+
+	my $parser = Armadito::Agent::Patterns::Matcher->new( logger => $self->{logger} );
+
+	my $labels = [ 'detection_time', 'filepath', 'name', 'action', 'info' ];
+	my $pattern = 'timestamp="(.*?)".*?name="(.*?)", virus="(.*?)", action="(.*?)", info="(.*?)",';
+	$parser->addPattern( "alerts", $pattern, $labels );
+	$parser->run( $logs, '\n' );
+
+	return $parser->getResults();
+}
+
 sub run {
 	my ( $self, %params ) = @_;
-
 	$self = $self->SUPER::run(%params);
+
+	my $eset_logs = $self->_getSystemLogs();
+	if ( $eset_logs eq "" ) {
+		$self->{logger}->info("No alerts found.");
+		return $self;
+	}
+
+	my $alerts   = $self->_parseLogs($eset_logs);
+	my $n_alerts = @{ $alerts->{alerts} };
+	$self->{logger}->info( $n_alerts . " alert(s) found." );
+	$self->_sendAlerts($alerts);
 
 	return $self;
 }

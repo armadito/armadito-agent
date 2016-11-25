@@ -1,4 +1,4 @@
-package Armadito::Agent::Stdout::Parser;
+package Armadito::Agent::Patterns::Matcher;
 
 use strict;
 use warnings;
@@ -26,50 +26,82 @@ sub getResults {
 	my $results  = {};
 	my %patterns = %{ $self->{patterns} };
 
-	foreach my $label ( keys(%patterns) ) {
-		$results->{$label} = $patterns{$label}->{match};
+	foreach my $name ( keys(%patterns) ) {
+		$results->{$name} = $self->getResultsForPattern( $patterns{$name}, $name );
 	}
 
 	return $results;
 }
 
+sub getResultsForPattern {
+	my ( $self, $pattern, $name ) = @_;
+
+	my $i = 0;
+	my $j = 0;
+
+	my $pattern_results = [];
+
+	foreach my $match ( @{ $pattern->{matches} } ) {
+		my $match_results = {};
+		foreach my $label ( @{ $pattern->{labels} } ) {
+			$match_results->{$label} = $pattern->{matches}[$i][$j];
+			$j++;
+		}
+
+		$i++;
+		$j = 0;
+		push( @{$pattern_results}, $match_results );
+	}
+
+	return $pattern_results;
+}
+
 sub addPattern {
-	my ( $self, $label, $regex ) = @_;
+	my ( $self, $name, $regex, $labels ) = @_;
+
+	if ( !defined($labels) ) {
+		$labels = [$name];
+	}
 
 	my $pattern = {
-		regex => $regex,
-		match => ''
+		regex   => $regex,
+		matches => [],
+		labels  => $labels
 	};
 
-	${ $self->{patterns} }{$label} = $pattern;
+	${ $self->{patterns} }{$name} = $pattern;
 }
 
 sub run {
 	my ( $self, $input, $separator ) = @_;
 
-	my @$substrings = split( $separator, $input );
+	my @substrings = split( /$separator/, $input );
 
-	foreach my $substring (@$substrings) {
-		$self->_parseSubElement($substring);
+	foreach my $substring (@substrings) {
+		print $substring. "\n\n";
+		$self->_parseSubString($substring);
 	}
-
-	return 1;
 }
 
 sub _parseSubString {
 	my ( $self, $substring ) = @_;
 
 	my %patterns = %{ $self->{patterns} };
-	foreach my $label ( keys(%patterns) ) {
-		$self->_checkPattern( $substring, ${ $self->{patterns} }{$label} );
+	my $matches  = ();
+
+	foreach my $name ( keys(%patterns) ) {
+		$matches = $self->_checkPattern( $substring, ${ $self->{patterns} }{$name} );
+		if ($matches) {
+			push( @{ ${ $self->{patterns} }{$name}->{matches} }, $matches );
+		}
 	}
 }
 
 sub _checkPattern {
 	my ( $self, $substring, $pattern ) = @_;
 
-	if ( $substring =~ m/$pattern->{regex}/ms ) {
-		$pattern->{match} = $1;
+	if ( my @matches = ( $substring =~ m/$pattern->{regex}/ms ) ) {
+		return \@matches;
 	}
 }
 

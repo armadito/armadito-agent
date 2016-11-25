@@ -35,6 +35,31 @@ sub _handleError {
 	return $self;
 }
 
+sub _sendAlerts {
+	my ( $self, $alerts ) = @_;
+
+	$self->{jobj}->{task}->{obj} = $alerts;
+
+	my $json_text = to_json( $self->{jobj} );
+	$self->{logger}->debug($json_text);
+
+	my $response = $self->{glpi_client}->sendRequest(
+		"url"   => $self->{glpi_url} . "/api/alerts",
+		message => $json_text,
+		method  => "POST"
+	);
+
+	if ( $response->is_success() ) {
+		$self->{logger}->info("Alerts successful...");
+	}
+	else {
+		$self->_handleError($response);
+		$self->{logger}->info("Alerts failed...");
+	}
+
+	return 1;
+}
+
 sub run {
 	my ( $self, %params ) = @_;
 
