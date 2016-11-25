@@ -36,9 +36,9 @@ sub _validateScanObj {
 	die "undefined scan_options." if ( !defined( $scanobj->{scan_options} ) );
 	die "Empty scan_path."        if ( $scanobj->{scan_path} eq "" );
 
-    if($scanobj->{scan_options} ne "") {
-	    $scanobj->{scan_options} = decode_base64( $scanobj->{scan_options} );
-    }
+	if ( $scanobj->{scan_options} ne "" ) {
+		$scanobj->{scan_options} = decode_base64( $scanobj->{scan_options} );
+	}
 }
 
 sub _handleError {
