@@ -55,7 +55,7 @@ sub run {
 	my $scan_options = $self->{job}->{obj}->{scan_options};
 
 	my $output = capture( [ 0, 1, 10, 50 ], $bin_path . " " . $scan_options . " " . $scan_path );
-	$self->{logger}->info($output);
+	$self->{logger}->debug2($output);
 
 	my $results = $self->_parseScanOutput($output);
 	$results->{start_time}       = "";
