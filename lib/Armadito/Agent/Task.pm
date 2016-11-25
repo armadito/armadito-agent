@@ -11,6 +11,16 @@ use Data::Dumper;
 sub run {
 	my ( $self, %params ) = @_;
 
+	if ( $self->{use_glpiclient} ) {
+		$self->initGLPIClient();
+	}
+
+	return $self;
+}
+
+sub initGLPIClient {
+	my ($self) = @_;
+
 	$self->{glpi_client} = Armadito::Agent::HTTP::Client::ArmaditoGLPI->new(
 		logger       => $self->{logger},
 		user         => $self->{agent}->{config}->{user},
@@ -23,16 +33,17 @@ sub run {
 	);
 
 	die "Error when creating ArmaditoGLPI client!" unless $self->{glpi_client};
-
-	return $self;
 }
 
 sub new {
 	my ( $class, %params ) = @_;
 
+	my $use_glpiclient = defined( $params{use_glpiclient} ) ? $params{use_glpiclient} : 1;
+
 	my $self = {
-		logger => $params{agent}->{logger},
-		agent  => $params{agent}
+		logger         => $params{agent}->{logger},
+		agent          => $params{agent},
+		use_glpiclient => $use_glpiclient
 	};
 
 	$self->{jobj} = {
