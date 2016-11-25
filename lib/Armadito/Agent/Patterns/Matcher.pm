@@ -42,10 +42,17 @@ sub getResultsForPattern {
 	my $pattern_results = [];
 
 	foreach my $match ( @{ $pattern->{matches} } ) {
+
 		my $match_results = {};
-		foreach my $label ( @{ $pattern->{labels} } ) {
-			$match_results->{$label} = $pattern->{matches}[$i][$j];
-			$j++;
+
+		if ( $pattern->{labels} eq "" ) {
+			$match_results = $pattern->{matches}[$i][0];
+		}
+		else {
+			foreach my $label ( @{ $pattern->{labels} } ) {
+				$match_results->{$label} = $pattern->{matches}[$i][$j];
+				$j++;
+			}
 		}
 
 		$i++;
@@ -60,13 +67,13 @@ sub addPattern {
 	my ( $self, $name, $regex, $labels ) = @_;
 
 	if ( !defined($labels) ) {
-		$labels = [$name];
+		$labels = "";
 	}
 
 	my $pattern = {
 		regex   => $regex,
 		matches => [],
-		labels  => $labels
+		labels  => $labels,
 	};
 
 	${ $self->{patterns} }{$name} = $pattern;
