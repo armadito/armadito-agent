@@ -85,7 +85,6 @@ sub run {
 	my @substrings = split( /$separator/, $input );
 
 	foreach my $substring (@substrings) {
-		print $substring. "\n\n";
 		$self->_parseSubString($substring);
 	}
 }
