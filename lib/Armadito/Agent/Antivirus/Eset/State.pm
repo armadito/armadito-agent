@@ -6,13 +6,22 @@ use base 'Armadito::Agent::Task::State';
 
 use Data::Dumper;
 use JSON;
+use Armadito::Agent::Tools::File qw( readFile );
+use Armadito::Agent::Patterns::Matcher;
 
-sub new {
-	my ( $class, %params ) = @_;
+sub _getDatabasesInfo {
+	my ($self) = @_;
 
-	my $self = $class->SUPER::new(%params);
+	my $parser = Armadito::Agent::Patterns::Matcher->new( logger => $self->{logger} );
+	$parser->addPattern( 'install_time',        'InstallTime=(\d+)' );
+	$parser->addPattern( 'last_update',         'LastUpdate=(\d+)' );
+	$parser->addPattern( 'last_update_attempt', 'LastUpdateAttempt=(\d+)' );
 
-	return $self;
+	my $data_filepath = "/var/opt/eset/esets/lib/data/data.txt";
+	my $data = readFile( filepath => $data_filepath );
+
+	$parser->run( $data, '\n' );
+	return $parser->getResults();
 }
 
 sub run {
@@ -20,7 +29,8 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 
-	return $self;
+	my $dbinfo = $self->_getDatabasesInfo();
+	$self->_sendToGLPI($dbinfo);
 }
 
 1;

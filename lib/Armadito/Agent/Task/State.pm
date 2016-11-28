@@ -26,6 +26,27 @@ sub new {
 	return $self;
 }
 
+sub _sendToGLPI {
+	my ( $self, $stateobj ) = @_;
+
+	$self->{jobj}->{task}->{obj} = $stateobj;
+	my $json_text = to_json( $self->{jobj} );
+
+	my $response = $self->{glpi_client}->sendRequest(
+		"url"   => $self->{agent}->{config}->{server}[0] . "/api/states",
+		message => $json_text,
+		method  => "POST"
+	);
+
+	if ( $response->is_success() ) {
+		$self->{logger}->info("Send AV State successful...");
+	}
+	else {
+		$self->_handleError($response);
+		$self->{logger}->info("Send AV State failed...");
+	}
+}
+
 sub _handleError {
 	my ( $self, $response ) = @_;
 
