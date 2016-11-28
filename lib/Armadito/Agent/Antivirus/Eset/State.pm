@@ -13,9 +13,9 @@ sub _getDatabasesInfo {
 	my ($self) = @_;
 
 	my $parser = Armadito::Agent::Patterns::Matcher->new( logger => $self->{logger} );
-	$parser->addPattern( 'install_time',        'InstallTime=(\d+)' );
-	$parser->addPattern( 'last_update',         'LastUpdate=(\d+)' );
-	$parser->addPattern( 'last_update_attempt', 'LastUpdateAttempt=(\d+)' );
+	$parser->addPattern( 'install_time',            'InstallTime=(\d+)' );
+	$parser->addPattern( 'global_update_timestamp', 'LastUpdate=(\d+)' );
+	$parser->addPattern( 'last_update_attempt',     'LastUpdateAttempt=(\d+)' );
 
 	my $data_filepath = "/var/opt/eset/esets/lib/data/data.txt";
 	my $data = readFile( filepath => $data_filepath );
