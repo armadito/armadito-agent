@@ -24,13 +24,13 @@ sub makeDirectory {
 
 sub readDirectory {
 	my (%params) = @_;
-	my @files = ();
+	my @entries = ();
 
 	if ( opendir( my $dh, $params{dirpath} ) ) {
 		while ( readdir $dh ) {
 			if ( ( $_ ne "." ) && ( $_ ne ".." ) ) {
 				if ( -f $params{dirpath} . "/" . $_ ) {
-					push( @files, $_ );
+					push( @entries, $_ );
 				}
 			}
 		}
@@ -41,7 +41,7 @@ sub readDirectory {
 		return 0;
 	}
 
-	return @files;
+	return @entries;
 }
 1;
 __END__
