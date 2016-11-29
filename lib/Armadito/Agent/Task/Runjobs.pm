@@ -101,7 +101,7 @@ sub _runJob {
 		my $class     = "Armadito::Agent::Task::$task";
 
 		if ( $self->{agent}->isTaskSpecificToAV($task) ) {
-			$class = "Armadito::Agent::Antivirus::$antivirus::Task::$task";
+			$class = "Armadito::Agent::Antivirus::".$antivirus."::Task::".$task;
 		}
 
 		$class->require();
