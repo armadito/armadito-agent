@@ -11,6 +11,13 @@ use UNIVERSAL::require;
 use IPC::System::Simple qw(capture);
 use Data::Dumper;
 use Try::Tiny;
+
+BEGIN {
+	if ($OSNAME eq 'MSWin32'){
+		use lib "../share/armadito-agent/lib";
+	}
+}
+
 use Armadito::Agent;
 
 our $VERSION = 0.1;
