@@ -14,9 +14,9 @@ use Armadito::Agent::Antivirus;
 use Armadito::Agent::Logger qw (LOG_DEBUG LOG_INFO LOG_DEBUG2);
 
 our $VERSION = "0.1.0_02";
-my @supported_antiviruses = ( "Armadito",   "Eset", "Kaspersky" );
+my @supported_antiviruses = ( "Armadito",   "Eset",       "Kaspersky" );
 my @supported_tasks       = ( "State",      "Enrollment", "Getjobs", "Runjobs", "Alerts", "Scan" );
-my @unspecific_tasks      = ( "Enrollment", "Getjobs", "Runjobs" );
+my @unspecific_tasks      = ( "Enrollment", "Getjobs",    "Runjobs" );
 
 sub new {
 	my ( $class, %params ) = @_;

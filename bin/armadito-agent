@@ -238,7 +238,7 @@ List all available antiviruses and exit
 
 =item B<--antivirus>=I<ANTIVIRUS>
 
-Mange the given Antivirus
+Manage the given Antivirus
 
 See option I<--list-avs> for the list of available antiviruses.
 

@@ -8,9 +8,7 @@ use Armadito::Agent::Tools::Dir qw( readDirectory );
 sub new {
 	my ( $class, %params ) = @_;
 
-	my $self = {
-		logger => $params{logger},
-	};
+	my $self = { logger => $params{logger}, };
 
 	bless $self, $class;
 	return $self;
@@ -19,11 +17,10 @@ sub new {
 sub getProgramPath {
 	my ($self) = @_;
 
-	my @programfiles_paths = ( "C:\\Program Files (X86)\\",
-							   "C:\\Program Files\\" );
+	my @programfiles_paths = ( "C:\\Program Files (X86)\\", "C:\\Program Files\\" );
 
 	foreach my $path (@programfiles_paths) {
-		if($self->_isProgramInDir($path)) {
+		if ( $self->_isProgramInDir($path) ) {
 			return $self->{program_path};
 		}
 	}
@@ -32,10 +29,12 @@ sub getProgramPath {
 }
 
 sub _isProgramInDir {
-	my ($self, $path) = @_;
+	my ( $self, $path ) = @_;
 
-	my @entries = readDirectory( dirpath => $path,
-								 filter  => "dirs-only" );
+	my @entries = readDirectory(
+		dirpath => $path,
+		filter  => "dirs-only"
+	);
 
 	foreach my $entry (@entries) {
 		$self->{logger}->info($entry);

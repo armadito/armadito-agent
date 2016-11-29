@@ -27,18 +27,17 @@ sub readDirectory {
 	my @entries = ();
 	my $dh;
 
-	if(!defined($params{filter})) {
+	if ( !defined( $params{filter} ) ) {
 		$params{filter} = "none";
 	}
 
-	if (!opendir( $dh, $params{dirpath} ) ) {
+	if ( !opendir( $dh, $params{dirpath} ) ) {
 		die "unable to readdir $params{dirpath}.";
 	}
 
-	while ( readdir $dh )
-	{
-		if(my $selected_entry = _isSelected($_, %params)) {
-			push(@entries, $selected_entry);
+	while ( readdir $dh ) {
+		if ( my $selected_entry = _isSelected( $_, %params ) ) {
+			push( @entries, $selected_entry );
 		}
 	}
 
@@ -47,16 +46,16 @@ sub readDirectory {
 }
 
 sub _isSelected {
-	my ($entry, %params) = @_;
+	my ( $entry, %params ) = @_;
 
-	if ($params{filter} eq "files-only") {
-		if(! -f $params{dirpath} . "/" . $entry ) {
+	if ( $params{filter} eq "files-only" ) {
+		if ( !-f $params{dirpath} . "/" . $entry ) {
 			return;
 		}
 	}
 
-	if ($params{filter} eq "dirs-only") {
-		if(! -d $params{dirpath} . "/" . $entry ) {
+	if ( $params{filter} eq "dirs-only" ) {
+		if ( !-d $params{dirpath} . "/" . $entry ) {
 			return;
 		}
 	}

@@ -8,7 +8,7 @@ sub new {
 	my ( $class, %params ) = @_;
 
 	my $self = {
-		logger => $params{logger},
+		logger  => $params{logger},
 		os_info => ""
 	};
 
@@ -23,11 +23,11 @@ sub getOperatingSystemInfo {
 	my ($self) = @_;
 
 	my $os_info = {
-		name => $OSNAME,
+		name    => $OSNAME,
 		libpath => $OSNAME
 	};
 
-	if($OSNAME eq "MSWin32"){
+	if ( $OSNAME eq "MSWin32" ) {
 		$os_info->{libpath} = "Win32";
 	}
 

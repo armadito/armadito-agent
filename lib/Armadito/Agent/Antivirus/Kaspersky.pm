@@ -12,7 +12,7 @@ sub new {
 	my $self = $class->SUPER::new(%params);
 
 	$self->{name}         = "Kaspersky";
-	$self->{scancli_path} = $self->getProgramPath()."\avp.com";
+	$self->{scancli_path} = $self->getProgramPath() . "\avp.com";
 	$self->{version}      = $self->getVersion();
 
 	return $self;
@@ -38,7 +38,7 @@ sub getVersion {
 sub getProgramPath {
 	my ($self) = @_;
 
-	my $class = "Armadito::Agent::Antivirus::Kaspersky::".$self->{os_info}->{libpath};
+	my $class = "Armadito::Agent::Antivirus::Kaspersky::" . $self->{os_info}->{libpath};
 	$class->require();
 	my $osclass = $class->new( logger => $self->{logger} );
 
