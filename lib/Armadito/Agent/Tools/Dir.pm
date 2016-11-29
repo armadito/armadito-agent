@@ -25,24 +25,49 @@ sub makeDirectory {
 sub readDirectory {
 	my (%params) = @_;
 	my @entries = ();
+	my $dh;
 
-	if ( opendir( my $dh, $params{dirpath} ) ) {
-		while ( readdir $dh ) {
-			if ( ( $_ ne "." ) && ( $_ ne ".." ) ) {
-				if ( -f $params{dirpath} . "/" . $_ ) {
-					push( @entries, $_ );
-				}
-			}
+	if(!defined($params{filter})) {
+		$params{filter} = "none";
+	}
+
+	if (!opendir( $dh, $params{dirpath} ) ) {
+		die "unable to readdir $params{dirpath}.";
+	}
+
+	while ( readdir $dh )
+	{
+		if(my $selected_entry = _isSelected($_, %params)) {
+			push(@entries, $selected_entry);
 		}
-		closedir $dh;
-	}
-	else {
-		warn "unable to readdir $params{dirpath}.";
-		return 0;
 	}
 
+	closedir $dh;
 	return @entries;
 }
+
+sub _isSelected {
+	my ($entry, %params) = @_;
+
+	if ($params{filter} eq "files-only") {
+		if(! -f $params{dirpath} . "/" . $entry ) {
+			return;
+		}
+	}
+
+	if ($params{filter} eq "dirs-only") {
+		if(! -d $params{dirpath} . "/" . $entry ) {
+			return;
+		}
+	}
+
+	if ( $entry eq "." || $entry eq ".." ) {
+		return;
+	}
+
+	return $entry;
+}
+
 1;
 __END__
 
