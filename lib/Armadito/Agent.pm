@@ -162,7 +162,7 @@ sub runTask {
 	my $antivirus = $self->{config}->{antivirus};
 
 	if ( $self->isTaskSpecificToAV($task) ) {
-		$class = "Armadito::Agent::Antivirus::$antivirus::$task";
+		$class = "Armadito::Agent::Antivirus::$antivirus::Task::$task";
 	}
 
 	$class->require();
