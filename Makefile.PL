@@ -33,8 +33,7 @@ test_requires 'Test::More'          => '0';
 test_requires 'Test::Perl::Critic'  => '0';
 test_requires 'Test::Code::TidyAll' => '0';
 
-## See data_install for MSWin32 script installation
-install_script 'bin/armadito-agent' if ( $OSNAME ne "MSWin32" );
+install_script 'bin/armadito-agent';
 
 resources
 	homepage   => "http://www.teclib-edition.com/en/teclib-products/armadito-antivirus/",
@@ -208,9 +207,7 @@ data_install :
 	if not exist "$(DESTDIR)$(DATADIR)" mkdir "$(DESTDIR)$(DATADIR)"
 	if not exist "$(DESTDIR)$(INSTALLSCRIPT)" mkdir "$(DESTDIR)$(INSTALLSCRIPT)"
 	if exist "$(DESTDIR)$(INSTALLSCRIPT)\\armadito-agent" @erase "$(DESTDIR)$(INSTALLSCRIPT)\\armadito-agent"
-	if exist "$(DESTDIR)$(INSTALLSCRIPT)\\armadito-agent.bat" @erase "$(DESTDIR)$(INSTALLSCRIPT)\\armadito-agent.bat"
 	copy "bin\\armadito-agent" "$(DESTDIR)$(INSTALLSCRIPT)\\armadito-agent"
-	copy "bin\\armadito-agent.bat" "$(DESTDIR)$(INSTALLSCRIPT)\\armadito-agent.bat"
 EOF
 	}
 
