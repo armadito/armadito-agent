@@ -1,6 +1,7 @@
 @echo off
 
+call tidyall -a
 perl Makefile.PL
 dmake
-REM dmake test
+dmake test
 dmake install
