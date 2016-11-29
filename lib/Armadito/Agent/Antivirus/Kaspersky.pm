@@ -3,6 +3,8 @@ package Armadito::Agent::Antivirus::Kaspersky;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Antivirus';
+use UNIVERSAL::require;
+use English qw(-no_match_vars);
 
 sub new {
 	my ( $class, %params ) = @_;
@@ -22,6 +24,7 @@ sub getJobj {
 	return {
 		name         => $self->{name},
 		version      => $self->{version},
+		os_info      => $self->{os_info},
 		scancli_path => $self->{scancli_path}
 	};
 }
@@ -35,7 +38,11 @@ sub getVersion {
 sub getProgramPath {
 	my ($self) = @_;
 
-	return 'C:\Program Files (x86)\Kaspersky Lab\Kaspersky Anti-Virus 17.0.0';
+	my $class = "Armadito::Agent::Antivirus::Kaspersky::".$self->{os_info}->{libpath};
+	$class->require();
+	my $osclass = $class->new( logger => $self->{logger} );
+
+	return $osclass->getProgramPath();
 }
 
 1;
@@ -64,8 +71,8 @@ Return unblessed object for json encapsulation.
 
 Return Antivirus' Version.
 
-=head2 getScanCliPath ( $self )
+=head2 getProgramPath ( $self )
 
-Return Antivirus' CLI binary scan path.
+Return Antivirus' Program path.
 
 
