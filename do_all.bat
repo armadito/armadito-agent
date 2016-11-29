@@ -1,6 +1,6 @@
 @echo off
 
-call tidyall -a
+REM call tidyall -a
 perl Makefile.PL
 dmake
 dmake test
