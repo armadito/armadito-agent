@@ -3,8 +3,14 @@ package Armadito::Agent::Logger::Syslog;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Logger::Backend';
-
 use Sys::Syslog qw(:standard :macros);
+
+BEGIN{
+	if($^O ne "Linux"){
+		warn "Syslog is for unix only";
+		exit(0);
+	}
+}
 
 my %syslog_levels = (
 	error   => LOG_ERR,

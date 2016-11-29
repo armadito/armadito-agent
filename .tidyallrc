@@ -1,7 +1,6 @@
 [PerlTidy]
 select = {lib,t}/**/*.{pl,pm,t}
 select = Makefile.PL
-select = {mod2html,podtree2html,pods2html,perl2html}
 argv = --profile=$ROOT/.perltidyrc
 
 [SortLines]
