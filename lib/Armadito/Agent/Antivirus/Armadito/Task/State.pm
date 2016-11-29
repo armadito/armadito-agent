@@ -1,4 +1,4 @@
-package Armadito::Agent::Antivirus::Armadito::State;
+package Armadito::Agent::Antivirus::Armadito::Task::State;
 
 use strict;
 use warnings;
@@ -42,7 +42,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Antivirus::Armadito::State - State Task for Armadito Antivirus.
+Armadito::Agent::Antivirus::Armadito::Task::State - State Task for Armadito Antivirus.
 
 =head1 DESCRIPTION
 

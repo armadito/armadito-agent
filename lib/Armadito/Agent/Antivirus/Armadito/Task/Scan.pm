@@ -1,4 +1,4 @@
-package Armadito::Agent::Antivirus::Armadito::Scan;
+package Armadito::Agent::Antivirus::Armadito::Task::Scan;
 
 use strict;
 use warnings;
@@ -51,7 +51,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Antivirus::Armadito::Scan - Scan Task for Armadito Antivirus.
+Armadito::Agent::Antivirus::Armadito::Task::Scan - Scan Task for Armadito Antivirus.
 
 =head1 DESCRIPTION
 

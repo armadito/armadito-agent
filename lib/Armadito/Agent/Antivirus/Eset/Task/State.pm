@@ -1,4 +1,4 @@
-package Armadito::Agent::Antivirus::Eset::State;
+package Armadito::Agent::Antivirus::Eset::Task::State;
 
 use strict;
 use warnings;
@@ -39,7 +39,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Antivirus::Eset::State - State Task for ESET Antivirus.
+Armadito::Agent::Antivirus::Eset::Task::State - State Task for ESET Antivirus.
 
 =head1 DESCRIPTION
 

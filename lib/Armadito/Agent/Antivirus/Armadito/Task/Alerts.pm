@@ -1,4 +1,4 @@
-package Armadito::Agent::Antivirus::Armadito::Alerts;
+package Armadito::Agent::Antivirus::Armadito::Task::Alerts;
 
 use strict;
 use warnings;
@@ -107,7 +107,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Antivirus::Armadito::Alerts - Alerts Task for Armadito Antivirus.
+Armadito::Agent::Antivirus::Armadito::Task::Alerts - Alerts Task for Armadito Antivirus.
 
 =head1 DESCRIPTION
 

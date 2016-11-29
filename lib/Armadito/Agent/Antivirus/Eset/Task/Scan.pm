@@ -1,4 +1,4 @@
-package Armadito::Agent::Antivirus::Eset::Scan;
+package Armadito::Agent::Antivirus::Eset::Task::Scan;
 
 use strict;
 use warnings;
@@ -78,7 +78,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Antivirus::Eset::Scan - Scan Task for ESET Antivirus.
+Armadito::Agent::Antivirus::Eset::Task::Scan - Scan Task for ESET Antivirus.
 
 =head1 DESCRIPTION
 

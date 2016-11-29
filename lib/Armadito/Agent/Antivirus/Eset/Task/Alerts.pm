@@ -1,4 +1,4 @@
-package Armadito::Agent::Antivirus::Eset::Alerts;
+package Armadito::Agent::Antivirus::Eset::Task::Alerts;
 
 use strict;
 use warnings;
@@ -75,7 +75,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Antivirus::Eset::Alerts - Alerts Task for ESET Antivirus.
+Armadito::Agent::Antivirus::Eset::Task::Alerts - Alerts Task for ESET Antivirus.
 
 =head1 DESCRIPTION
 
