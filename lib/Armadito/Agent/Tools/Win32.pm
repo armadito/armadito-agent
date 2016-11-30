@@ -36,7 +36,7 @@ use Win32::TieRegistry (
 	qw/KEY_READ/
 );
 
-our @EXPORT = qw(
+our @EXPORT_OK = qw(
 	getRegistryValue
 	getRegistryKey
 	getWMIObjects
