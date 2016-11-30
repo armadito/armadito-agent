@@ -74,7 +74,6 @@ sub _loadFromBackend {
 	my $backend
 		= $confFile            ? 'file'
 		: $config              ? $config
-		: $OSNAME eq 'MSWin32' ? 'registry'
 		:                        'file';
 
 SWITCH: {
@@ -144,7 +143,8 @@ sub _loadFromRegistry {    # TOBETESTED
 
 sub _loadFromFile {
 	my ( $self, $params ) = @_;
-	my $file = $params->{file} ? $params->{file} : $params->{directory} . '/agent.cfg';
+
+	my $file = $self->getConfFilePath($params);
 
 	if ($file) {
 		die "non-existing file $file" unless -f $file;
@@ -177,6 +177,21 @@ sub _loadFromFile {
 		}
 	}
 	close $handle;
+}
+
+sub getConfFilePath {
+	my ($self, $params) = @_;
+
+	if($params->{file}){
+		return $params->{file};
+	}
+
+	my $endpath = "/agent.cfg";
+	if($OSNAME eq "MSWin32"){
+		$endpath = "\\armadito-agent\\agent.cfg";
+	}
+
+	return $params->{directory} . $endpath;
 }
 
 sub _checkContent {
