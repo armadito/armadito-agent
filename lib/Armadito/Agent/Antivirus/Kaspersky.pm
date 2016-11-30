@@ -12,7 +12,8 @@ sub new {
 	my $self = $class->SUPER::new(%params);
 
 	$self->{name}         = "Kaspersky";
-	$self->{scancli_path} = $self->getProgramPath() . "\avp.com";
+	$self->{program_path} = $self->getProgramPath();
+	$self->{scancli_path} = $self->{program_path} . "\\avp.com";
 	$self->{version}      = $self->getVersion();
 
 	return $self;
@@ -32,7 +33,11 @@ sub getJobj {
 sub getVersion {
 	my ($self) = @_;
 
-	return "17.0.0";
+	if($self->{program_path} =~ m/Kaspersky Anti-Virus (.*)$/){
+		return $1;
+	}
+
+	return "unknown";
 }
 
 sub getProgramPath {

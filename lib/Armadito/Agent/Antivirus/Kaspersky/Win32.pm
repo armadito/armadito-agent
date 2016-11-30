@@ -17,19 +17,28 @@ sub new {
 sub getProgramPath {
 	my ($self) = @_;
 
-	my @programfiles_paths = ( "C:\\Program Files (X86)\\", "C:\\Program Files\\" );
+	my $install_path = $self->getInstallPath();
 
-	foreach my $path (@programfiles_paths) {
-		if ( $self->_isProgramInDir($path) ) {
-			return $self->{program_path};
-		}
+	if ( $self->_isProgramInDir($install_path) ) {
+		return $self->{program_path};
 	}
 
 	return "";
 }
 
+sub getInstallPath {
+	my ($self) = @_;
+
+	my @programfiles_paths = ( "C:\\Program Files (X86)", "C:\\Program Files" );
+	foreach my $path (@programfiles_paths) {
+		if( -d $path . "\\Kaspersky Lab") {
+			return $path . "\\Kaspersky Lab";
+		}
+	}
+}
+
 sub _isProgramInDir {
-	my ( $self, $path ) = @_;
+	my ( $self, $path, $program ) = @_;
 
 	my @entries = readDirectory(
 		dirpath => $path,
@@ -37,7 +46,11 @@ sub _isProgramInDir {
 	);
 
 	foreach my $entry (@entries) {
-		$self->{logger}->info($entry);
+		if($entry =~ m/^Kaspersky Anti-Virus.*/){
+			$self->{logger}->info($entry);
+			$self->{program_path} = $path ."\\". $entry;
+			return 1;
+		}
 	}
 
 	return 0;
@@ -63,5 +76,5 @@ Instanciate module.
 
 =head2 getProgramPath ( $self )
 
-Return the path where Kapersky AV is installed.
+Return the path where Kaspersky AV is installed.
 
