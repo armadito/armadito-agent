@@ -6,7 +6,7 @@ use base 'Armadito::Agent::Task::Scan';
 
 use Try::Tiny;
 use MIME::Base64;
-use IPC::System::Simple qw(capture);
+use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 use Armadito::Agent::Patterns::Matcher;
 use Armadito::Agent::Task::Alerts;
 
@@ -35,10 +35,10 @@ sub run {
 	my $scan_options = $self->{job}->{obj}->{scan_options};
 	
 	my $cmdline = "\"" . $bin_path . "\" SCAN \"" . $scan_path . "\" ". $scan_options;
-	$self->{logger}->info($cmdline);
 		
-	my $output = capture( [3], $cmdline );
+	my $output = capture( EXIT_ANY, $cmdline );
 	$self->{logger}->info($output);
+	$self->{logger}->info("Program exited with ".$EXITVAL."\n");
 }
 
 1;
