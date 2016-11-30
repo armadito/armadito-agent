@@ -60,15 +60,15 @@ sub run {
 	my $bin_path     = $self->{agent}->{antivirus}->{scancli_path};
 	my $scan_path    = $self->{job}->{obj}->{scan_path};
 	my $scan_options = $self->{job}->{obj}->{scan_options};
-	
-	my $cmdline = "\"" . $bin_path . "\" SCAN \"" . $scan_path . "\" ". $scan_options;
+
+	my $cmdline = "\"" . $bin_path . "\" SCAN \"" . $scan_path . "\" " . $scan_options;
 	my $output = capture( EXIT_ANY, $cmdline );
 	$self->{logger}->info($output);
-	$self->{logger}->info("Program exited with ".$EXITVAL."\n");
-	
+	$self->{logger}->info( "Program exited with " . $EXITVAL . "\n" );
+
 	my $results = $self->_parseScanOutput($output);
-	$results->{progress}         = 100;
-	$results->{job_id}           = $self->{job}->{job_id};
+	$results->{progress} = 100;
+	$results->{job_id}   = $self->{job}->{job_id};
 
 	my $alert_task = Armadito::Agent::Task::Alerts->new( agent => $self->{agent} );
 	my $alert_jobj = { "alerts" => $results->{alerts} };
