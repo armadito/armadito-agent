@@ -13,8 +13,8 @@ use Readonly;
 Readonly my $KEY_WOW64_64 => 0x100;
 Readonly my $KEY_WOW64_32 => 0x200;
 
-sub KEY_WOW64_64  { return $KEY_WOW64_64 }
-sub KEY_WOW64_32  { return $KEY_WOW64_32 }
+sub KEY_WOW64_64 { return $KEY_WOW64_64 }
+sub KEY_WOW64_32 { return $KEY_WOW64_32 }
 
 use UNIVERSAL::require;
 use English qw(-no_match_vars);
@@ -43,10 +43,12 @@ our @EXPORT_OK = qw(
 );
 
 sub getWMIObjects {
+	my @args = @_;
+
 	my $win32_ole_dependent_api = {
 		array => 1,
 		funct => '_getWMIObjects',
-		args  => \@_
+		args  => \@args
 	};
 
 	return _call_win32_ole_dependent_api($win32_ole_dependent_api);
@@ -275,7 +277,9 @@ sub _win32_ole_worker {
 }
 
 sub _call_win32_ole_dependent_api {
-	my ($call) = @_
+	my @args = @_;
+
+	my ($call) = @args
 		or return;
 
 	if ( defined($worker) ) {
@@ -313,7 +317,7 @@ sub _call_win32_ole_dependent_api {
 				# Worker is failing: get back to mono-thread and pray
 				$worker->detach();
 				$worker = undef;
-				return _call_win32_ole_dependent_api(@_);
+				return _call_win32_ole_dependent_api(@args);
 			}
 		}
 
