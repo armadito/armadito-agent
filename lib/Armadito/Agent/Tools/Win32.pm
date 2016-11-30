@@ -43,41 +43,45 @@ our @EXPORT_OK = qw(
 	getWMIObjects
 );
 
-Win32::OLE->Option(CP => Win32::OLE::CP_UTF8);
+Win32::OLE->Option( CP => Win32::OLE::CP_UTF8 );
 
 sub getWMIObjects {
-    my (%params) = @_;
+	my (%params) = @_;
 
 	$params{moniker} = 'winmgmts:{impersonationLevel=impersonate,(security)}!//./';
 
-    my $WMIService = Win32::OLE->GetObject($params{moniker})
-        or return; #die "WMI connection failed: " . Win32::OLE->LastError();
+	my $WMIService = Win32::OLE->GetObject( $params{moniker} )
+		or return;    #die "WMI connection failed: " . Win32::OLE->LastError();
 
-    my @objects;
-    foreach my $instance (in(
-        $WMIService->InstancesOf($params{class})
-    )) {
-        my $object;
-        foreach my $property (@{$params{properties}}) {
-            if (defined $instance->{$property} && !ref($instance->{$property})) {
-                # string value
-                $object->{$property} = $instance->{$property};
-                # despite CP_UTF8 usage, Win32::OLE downgrades string to native
-                # encoding, if possible, ie all characters have code <= 0x00FF:
-                # http://code.activestate.com/lists/perl-win32-users/Win32::OLE::CP_UTF8/
-                utf8::upgrade($object->{$property});
-            } elsif (defined $instance->{$property}) {
-                # list value
-                $object->{$property} = $instance->{$property};
-            } else {
-                $object->{$property} = undef;
-            }
-        }
-        push @objects, $object;
-    }
+	my @objects;
+	foreach my $instance ( in( $WMIService->InstancesOf( $params{class} ) ) ) {
+		my $object;
+		foreach my $property ( @{ $params{properties} } ) {
+			if ( defined $instance->{$property} && !ref( $instance->{$property} ) ) {
 
-    return @objects;
+				# string value
+				$object->{$property} = $instance->{$property};
+
+				# despite CP_UTF8 usage, Win32::OLE downgrades string to native
+				# encoding, if possible, ie all characters have code <= 0x00FF:
+				# http://code.activestate.com/lists/perl-win32-users/Win32::OLE::CP_UTF8/
+				utf8::upgrade( $object->{$property} );
+			}
+			elsif ( defined $instance->{$property} ) {
+
+				# list value
+				$object->{$property} = $instance->{$property};
+			}
+			else {
+				$object->{$property} = undef;
+			}
+		}
+		push @objects, $object;
+	}
+
+	return @objects;
 }
+
 sub getRegistryValue {
 	my (%params) = @_;
 
