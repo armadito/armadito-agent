@@ -9,8 +9,12 @@ use threads;
 use threads 'exit' => 'threads_only';
 use threads::shared;
 
-use constant KEY_WOW64_64 => 0x100;
-use constant KEY_WOW64_32 => 0x200;
+use Readonly;
+Readonly my $KEY_WOW64_64 => 0x100;
+Readonly my $KEY_WOW64_32 => 0x200;
+
+sub KEY_WOW64_64  { return $KEY_WOW64_64 }
+sub KEY_WOW64_32  { return $KEY_WOW64_32 }
 
 use UNIVERSAL::require;
 use English qw(-no_match_vars);
