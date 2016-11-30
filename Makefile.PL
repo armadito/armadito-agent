@@ -105,9 +105,9 @@ sub constants {
 			INSTALLMAN3DIR       => '$(PREFIX)\\share\\man\\man3',
 			INSTALLSITEMAN3DIR   => '$(PREFIX)\\share\\man\\man3',
 			INSTALLVENDORMAN3DIR => '$(PREFIX)\\share\\man\\man3',
-			SYSCONFDIR           => '$(PREFIX)\\etc\\armadito-agent',
-			DATADIR              => '$(PREFIX)\\share\\armadito-agent',
-			LOCALSTATEDIR        => '$(PREFIX)\\var\\armadito-agent',
+			SYSCONFDIR           => '$(PREFIX)\\etc',
+			DATADIR              => '$(PREFIX)\\share',
+			LOCALSTATEDIR        => '$(PREFIX)\\var',
 		);
 	}
 	else {

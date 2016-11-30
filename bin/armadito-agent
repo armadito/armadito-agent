@@ -15,7 +15,7 @@ use Cwd 'abs_path';
 
 BEGIN {
 	if ($OSNAME eq 'MSWin32'){
-		use lib "../share/armadito-agent/lib";
+		use lib "../share/lib";
 	}
 }
 

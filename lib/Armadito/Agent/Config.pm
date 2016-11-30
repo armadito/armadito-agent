@@ -186,12 +186,7 @@ sub getConfFilePath {
 		return $params->{file};
 	}
 
-	my $endpath = "/agent.cfg";
-	if($OSNAME eq "MSWin32"){
-		$endpath = "\\armadito-agent\\agent.cfg";
-	}
-
-	return $params->{directory} . $endpath;
+	return $params->{directory} . "/agent.cfg";
 }
 
 sub _checkContent {
