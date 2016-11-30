@@ -31,7 +31,7 @@ sub getInstallPath {
 
 	my @programfiles_paths = ( "C:\\Program Files (X86)", "C:\\Program Files" );
 	foreach my $path (@programfiles_paths) {
-		if( -d $path . "\\Kaspersky Lab") {
+		if ( -d $path . "\\Kaspersky Lab" ) {
 			return $path . "\\Kaspersky Lab";
 		}
 	}
@@ -46,9 +46,9 @@ sub _isProgramInDir {
 	);
 
 	foreach my $entry (@entries) {
-		if($entry =~ m/^Kaspersky Anti-Virus.*/){
+		if ( $entry =~ m/^Kaspersky Anti-Virus.*/ ) {
 			$self->{logger}->info($entry);
-			$self->{program_path} = $path ."\\". $entry;
+			$self->{program_path} = $path . "\\" . $entry;
 			return 1;
 		}
 	}

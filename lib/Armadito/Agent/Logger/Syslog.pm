@@ -3,10 +3,13 @@ package Armadito::Agent::Logger::Syslog;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Logger::Backend';
+use English qw(-no_match_vars);
 
-BEGIN{
-	if($^O ne "Linux"){
-		warn "Syslog is for unix only";
+BEGIN {
+	if ( $OSNAME ne "linux" ) {
+
+		# Test ::Compile exception
+		warn "Syslog is for unix only (OS detected : " . $OSNAME . " )";
 		exit(0);
 	}
 }

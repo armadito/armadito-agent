@@ -72,9 +72,9 @@ sub _loadFromBackend {
 	my ( $self, $confFile, $config, $confdir ) = @_;
 
 	my $backend
-		= $confFile            ? 'file'
-		: $config              ? $config
-		:                        'file';
+		= $confFile ? 'file'
+		: $config   ? $config
+		:             'file';
 
 SWITCH: {
 		if ( $backend eq 'registry' ) {
@@ -180,9 +180,9 @@ sub _loadFromFile {
 }
 
 sub getConfFilePath {
-	my ($self, $params) = @_;
+	my ( $self, $params ) = @_;
 
-	if($params->{file}){
+	if ( $params->{file} ) {
 		return $params->{file};
 	}
 

@@ -33,7 +33,7 @@ sub getJobj {
 sub getVersion {
 	my ($self) = @_;
 
-	if($self->{program_path} =~ m/Kaspersky Anti-Virus (.*)$/){
+	if ( $self->{program_path} =~ m/Kaspersky Anti-Virus (.*)$/ ) {
 		return $1;
 	}
 
