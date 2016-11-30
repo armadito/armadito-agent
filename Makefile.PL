@@ -180,34 +180,34 @@ sub install {
 		$install .= <<'EOF';
 
 config_install :
-	install -d -m 755 $(DESTDIR)$(SYSCONFDIR)
-	if [ -f $(DESTDIR)/$(SYSCONFDIR)/agent.cfg ]; then \
-	    install -m 644 etc/agent.cfg $(DESTDIR)$(SYSCONFDIR)/agent.cfg.new; \
+	install -d -m 755 $(SYSCONFDIR)
+	if [ -f $(SYSCONFDIR)/agent.cfg ]; then \
+	    install -m 644 etc/agent.cfg $(SYSCONFDIR)/agent.cfg.new; \
 	else \
-	    install -m 644 etc/agent.cfg $(DESTDIR)$(SYSCONFDIR)/agent.cfg; \
+	    install -m 644 etc/agent.cfg $(SYSCONFDIR)/agent.cfg; \
 	fi
 
 data_install :
-	install -d -m 755 $(DESTDIR)$(DATADIR)
-	install -d -m 775 $(DESTDIR)$(LOCALSTATEDIR)
+	install -d -m 755 $(DATADIR)
+	install -d -m 775 $(LOCALSTATEDIR)
 EOF
 	}
 	else {
 		$install .= <<'EOF';
 
 config_install :
-	if not exist "$(DESTDIR)$(SYSCONFDIR)" mkdir "$(DESTDIR)$(SYSCONFDIR)"
-	if exist "$(DESTDIR)/$(SYSCONFDIR)\\agent.cfg" ( \
-	    copy "etc\\agent.cfg" "$(DESTDIR)$(SYSCONFDIR)\\agent.cfg.new"; \
+	if not exist "$(SYSCONFDIR)" mkdir "$(SYSCONFDIR)"
+	if exist "$(SYSCONFDIR)\\agent.cfg" ( \
+	    copy "etc\\agent.cfg" "$(SYSCONFDIR)\\agent.cfg.new"; \
 	) else ( \
-	    copy "etc\\agent.cfg" "$(DESTDIR)$(SYSCONFDIR)\\agent.cfg"; \
+	    copy "etc\\agent.cfg" "$(SYSCONFDIR)\\agent.cfg"; \
 	)
 
 data_install :
-	if not exist "$(DESTDIR)$(DATADIR)" mkdir "$(DESTDIR)$(DATADIR)"
-	if not exist "$(DESTDIR)$(INSTALLSCRIPT)" mkdir "$(DESTDIR)$(INSTALLSCRIPT)"
-	if exist "$(DESTDIR)$(INSTALLSCRIPT)\\armadito-agent" @erase "$(DESTDIR)$(INSTALLSCRIPT)\\armadito-agent"
-	copy "bin\\armadito-agent" "$(DESTDIR)$(INSTALLSCRIPT)\\armadito-agent"
+	if not exist "$(DATADIR)" mkdir "$(DATADIR)"
+	if not exist "$(INSTALLSCRIPT)" mkdir "$(INSTALLSCRIPT)"
+	if exist "$(INSTALLSCRIPT)\\armadito-agent" @erase "$(INSTALLSCRIPT)\\armadito-agent"
+	copy "bin\\armadito-agent" "$(INSTALLSCRIPT)\\armadito-agent"
 EOF
 	}
 
