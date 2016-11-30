@@ -5,10 +5,6 @@ use warnings;
 use base 'Exporter';
 use utf8;
 
-use threads;
-use threads 'exit' => 'threads_only';
-use threads::shared;
-
 use Readonly;
 Readonly my $KEY_WOW64_64 => 0x100;
 Readonly my $KEY_WOW64_32 => 0x200;
