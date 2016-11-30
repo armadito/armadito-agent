@@ -31,8 +31,8 @@ sub new {
 		targets => [],
 		tasks   => []
 	};
-	bless $self, $class;
 
+	bless $self, $class;
 	return $self;
 }
 

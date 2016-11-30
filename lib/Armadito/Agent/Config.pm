@@ -44,7 +44,6 @@ sub new {
 
 	$self->_loadDefaults();
 	$self->_loadFromBackend( $params{options}->{'conf-file'}, $params{options}->{'config'}, $params{confdir} );
-
 	$self->_overrideWithArgs(%params);
 	$self->_checkContent();
 
