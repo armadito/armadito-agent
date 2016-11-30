@@ -3,7 +3,6 @@ package Armadito::Agent::Logger::Syslog;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Logger::Backend';
-use Sys::Syslog qw(:standard :macros);
 
 BEGIN{
 	if($^O ne "Linux"){
@@ -11,6 +10,8 @@ BEGIN{
 		exit(0);
 	}
 }
+
+use Sys::Syslog qw(:standard :macros);
 
 my %syslog_levels = (
 	error   => LOG_ERR,
