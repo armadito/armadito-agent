@@ -18,12 +18,26 @@ our @EXPORT_OK = qw(
 sub getUUID {
 	my (%params) = @_;
 
-	if ( canRun('dmidecode') ) {
+	if ( canRun('dmidecode') )
+	{
 		my $infos = getDmidecodeInfos();
 		return $infos->{1}->[0]->{'UUID'};
 	}
 
-	die "Can't runDmidecode on this system. Unable to retrieve UUID.";
+	if ( $OSNAME eq "MSWin32" )
+	{
+		Armadito::Agent::Tools::Win32->use();
+		my ($computer_system_product) = getWMIObjects(
+			class      => 'Win32_ComputerSystemProduct',
+			properties => [ qw/UUID/ ]
+		);
+
+		if( $computer_system_product->{UUID} !~ /^[0-]+$/) {
+			return $computer_system_product->{UUID};
+		}
+	}
+
+	die "Unable to retrieve UUID.";
 }
 
 1;
