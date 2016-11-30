@@ -22,7 +22,7 @@ use File::Temp qw(:seekable tempfile);
 use File::Basename qw(basename);
 
 BEGIN {
-	if ( $^O ne "MSWin32" ) {
+	if ( $OSNAME ne "MSWin32" ) {
 
 		# Test ::Compile exception
 		exit(0);
