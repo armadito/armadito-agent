@@ -11,6 +11,7 @@ use UNIVERSAL::require;
 use IPC::System::Simple qw(capture);
 use Data::Dumper;
 use Try::Tiny;
+use Cwd 'abs_path';
 
 BEGIN {
 	if ($OSNAME eq 'MSWin32'){
@@ -63,11 +64,18 @@ if ($options->{version}) {
     exit 0;
 }
 
+my $prefix = ".\/";
+if($OSNAME eq "MSWin32"){
+	$prefix  = abs_path($0);
+	$prefix  =~ s/(.*)\\armadito-agent\.bat$/$1/;
+	$prefix .= "\\..\\";
+}
+
 my %setup = (
-    confdir => './etc',
-    datadir => './share',
-    libdir  => './lib',
-    vardir  => './var',
+    confdir => $prefix.'etc',
+    datadir => $prefix.'share',
+    libdir  => $prefix.'lib',
+    vardir  => $prefix.'var'
 );
 
 if ($options->{setup}) {
