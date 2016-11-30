@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Task';
 
+use MIME::Base64;
 use Data::Dumper;
 use JSON;
 
