@@ -24,7 +24,7 @@ sub getUUID {
 	}
 
 	if ( $OSNAME eq "MSWin32" ) {
-		Armadito::Agent::Tools::Win32->use();
+		Armadito::Agent::Tools::Win32->use(qw(getWMIObjects));
 		my ($computer_system_product) = getWMIObjects(
 			class      => 'Win32_ComputerSystemProduct',
 			properties => [qw/UUID/]
