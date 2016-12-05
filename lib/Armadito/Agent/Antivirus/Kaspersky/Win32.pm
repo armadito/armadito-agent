@@ -59,7 +59,7 @@ sub _isProgramInDir {
 	return 0;
 }
 
-sub parseDetectsDbFile {
+sub getAlerts {
 	my ($self) = @_;
 
 	my $dbfile = "C:\\ProgramData\\Kaspersky Lab\\AVP17.0.0\\Data\\detects.db";

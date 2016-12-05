@@ -15,7 +15,7 @@ sub run {
 	my $osclass = $class->new( logger => $self->{logger} );
 
 	my $alerts = {
-		alerts => $osclass->parseDetectsDbFile()
+		alerts => $osclass->getAlerts()
 	};
 	
     my $n_alerts = @{ $alerts->{alerts} };
@@ -40,8 +40,3 @@ This task inherits from L<Armadito::Agent::Task:Alerts>. Get Antivirus' alerts a
 =head2 run ( $self, %params )
 
 Run the task.
-
-=head2 new ( $self, %params )
-
-Instanciate Task.
-

@@ -24,6 +24,7 @@ sub getJobj {
 	return {
 		name         => $self->{name},
 		version      => $self->{version},
+		os_info      => $self->{os_info},
 		scancli_path => $self->{scancli_path}
 	};
 }

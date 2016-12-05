@@ -20,8 +20,9 @@ sub getJobj {
 	my ($self) = @_;
 
 	return {
-		name    => $self->{name},
-		version => $self->{version}
+		name     => $self->{name},
+	    os_info  => $self->{os_info},
+		version  => $self->{version}
 	};
 }
 
