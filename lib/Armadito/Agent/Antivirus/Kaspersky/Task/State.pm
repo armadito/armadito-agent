@@ -16,24 +16,25 @@ sub _getLastUpdateTime {
 
 	my $class = "Armadito::Agent::Antivirus::Kaspersky::Win32";
 	$class->require();
-	my $osclass = $class->new( logger => $self->{logger} );
+	my $osclass  = $class->new( logger => $self->{logger} );
 	my $basesdir = $osclass->getDatabasesPath();
-	my @files =  readDirectory(
-					dirpath => $basesdir,
-					filter  => 'files-only');
+	my @files    = readDirectory(
+		dirpath => $basesdir,
+		filter  => 'files-only'
+	);
 
-	@files = map { $basesdir."\\".$_ } @files;
+	@files = map { $basesdir . "\\" . $_ } @files;
 
-	return $self->_getMostRecentTimestamp(\@files);
+	return $self->_getMostRecentTimestamp( \@files );
 }
 
 sub _getMostRecentTimestamp {
-	my ($self, $files) = @_;
+	my ( $self, $files ) = @_;
 
 	my $max_timestamp = 0;
 	foreach my $file (@$files) {
 		my $timestamp = stat($file)->mtime;
-		if( $timestamp > $max_timestamp ) {
+		if ( $timestamp > $max_timestamp ) {
 			$max_timestamp = $timestamp;
 		}
 	}
@@ -47,9 +48,7 @@ sub run {
 	$self = $self->SUPER::run(%params);
 
 	my $lastupdate = $self->_getLastUpdateTime();
-	my $dbinfo = {
-		global_update_timestamp => $lastupdate
-	};
+	my $dbinfo = { global_update_timestamp => $lastupdate };
 
 	$self->_sendToGLPI($dbinfo);
 }
