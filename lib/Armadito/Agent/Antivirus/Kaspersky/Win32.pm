@@ -145,6 +145,12 @@ sub getVerdictId {
 	return $row[0];
 }
 
+sub getDatabasesPath {
+	my ($self) = @_;
+
+	return "C:\\ProgramData\\Kaspersky Lab\\AVP17.0.0\\Bases";
+}
+
 1;
 
 __END__

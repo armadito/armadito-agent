@@ -4,14 +4,41 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Task::State';
 
-use Data::Dumper;
-use JSON;
 use Armadito::Agent::Tools::File qw( readFile );
 use Armadito::Agent::Patterns::Matcher;
+use Armadito::Agent::Tools::Dir qw( readDirectory );
+use File::stat;
+use Data::Dumper;
 
-sub _getDatabasesInfo {
+# TODO : improve by parsing some bases index files
+sub _getLastUpdateTime {
 	my ($self) = @_;
-	return "";
+
+	my $class = "Armadito::Agent::Antivirus::Kaspersky::Win32";
+	$class->require();
+	my $osclass = $class->new( logger => $self->{logger} );
+	my $basesdir = $osclass->getDatabasesPath();
+	my @files =  readDirectory(
+					dirpath => $basesdir,
+					filter  => 'files-only');
+
+	@files = map { $basesdir."\\".$_ } @files;
+
+	return $self->_getMostRecentTimestamp(\@files);
+}
+
+sub _getMostRecentTimestamp {
+	my ($self, $files) = @_;
+
+	my $max_timestamp = 0;
+	foreach my $file (@$files) {
+		my $timestamp = stat($file)->mtime;
+		if( $timestamp > $max_timestamp ) {
+			$max_timestamp = $timestamp;
+		}
+	}
+
+	return $max_timestamp;
 }
 
 sub run {
@@ -19,7 +46,11 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 
-	my $dbinfo = $self->_getDatabasesInfo();
+	my $lastupdate = $self->_getLastUpdateTime();
+	my $dbinfo = {
+		global_update_timestamp => $lastupdate
+	};
+
 	$self->_sendToGLPI($dbinfo);
 }
 
@@ -40,8 +71,3 @@ This task inherits from L<Armadito::Agent::Task:State>. Get Antivirus state and 
 =head2 run ( $self, %params )
 
 Run the task.
-
-=head2 new ( $self, %params )
-
-Instanciate Task.
-
