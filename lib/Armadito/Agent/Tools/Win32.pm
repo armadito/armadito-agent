@@ -202,7 +202,7 @@ sub parseEventLog {
 	my $recs;
 	my $base;
 	my $hashRef;
-	my $handle = Win32::EventLog->new($journal_name, $ENV{ComputerName})
+	my $handle = Win32::EventLog->new( $journal_name, $ENV{ComputerName} )
 		or die "Can't open Application EventLog\n";
 	$handle->GetNumber($recs)
 		or die "Can't get number of EventLog records\n";
@@ -210,35 +210,33 @@ sub parseEventLog {
 		or die "Can't get number of oldest EventLog record\n";
 
 	my $x = 0;
-	while ($x < $recs) {
-		$handle->Read(EVENTLOG_FORWARDS_READ|EVENTLOG_SEEK_READ,
-								  $base+$x,
-								  $hashRef)
-				or die "Can't read EventLog entry #$x\n";
+	while ( $x < $recs ) {
+		$handle->Read( EVENTLOG_FORWARDS_READ | EVENTLOG_SEEK_READ, $base + $x, $hashRef )
+			or die "Can't read EventLog entry #$x\n";
 
-		print Dumper($hashRef)."\n";
+		print Dumper($hashRef) . "\n";
 
 		$x++;
 	}
 }
 
 sub msFiletimeToUnix {
-    my ($vt_filetime) = @_;
+	my ($vt_filetime) = @_;
 
-    # Disregard the 100 nanosecond units (but you could save them for later)
-    $vt_filetime = substr($vt_filetime, 0, 11);
+	# Disregard the 100 nanosecond units (but you could save them for later)
+	$vt_filetime = substr( $vt_filetime, 0, 11 );
 
-    my $days  =  int(  $vt_filetime               / (24*60*60) );
-    my $hours =  int( ($vt_filetime % (24*60*60)) / (60*60)    );
-    my $mins  =  int( ($vt_filetime % (60*60))    /  60        );
-    my $secs  =        $vt_filetime %  60                       ;
+	my $days = int( $vt_filetime / ( 24 * 60 * 60 ) );
+	my $hours = int( ( $vt_filetime % ( 24 * 60 * 60 ) ) / ( 60 * 60 ) );
+	my $mins  = int( ( $vt_filetime % ( 60 * 60 ) ) / 60 );
+	my $secs  = $vt_filetime % 60;
 
-    my @date = Add_Delta_DHMS(1601, 1, 1, 0, 0, 0, $days, $hours, $mins, $secs);
+	my @date = Add_Delta_DHMS( 1601, 1, 1, 0, 0, 0, $days, $hours, $mins, $secs );
 
-	my ($year,    $mon,     $mday,    $hour,    $min,     $sec) =
-	   ($date[0], $date[1], $date[2], $date[3], $date[4], $date[5]);
+	my ( $year, $mon, $mday, $hour, $min, $sec )
+		= ( $date[0], $date[1], $date[2], $date[3], $date[4], $date[5] );
 
-	return timelocal($sec,$min,$hour,$mday,$mon-1,$year);
+	return timelocal( $sec, $min, $hour, $mday, $mon - 1, $year );
 }
 
 1;

@@ -12,26 +12,25 @@ version_from 'lib/Armadito/Agent.pm';
 perl_version '5.008';
 authors 'Teclib';
 
-requires 'UNIVERSAL::require'     => '0';
-requires 'HTTP::Request::Common'  => '0';
-requires 'HTTP::Request'          => '0';
-requires 'URI::Escape'            => '0';
-requires 'URI'                    => '0';
-requires 'JSON'                   => '0';
-requires 'Encode'                 => '0';
-requires 'Getopt::Long'           => '0';
-requires 'Pod::Usage'             => '0';
-requires 'XML::Bare'              => '0';
-requires 'Readonly'               => '0';
-requires 'Try::Tiny'              => '0';
-requires 'Perl::Critic'           => '0';
-requires 'Parse::Syslog'          => '0';
-requires 'DBD::SQLite'            => '0';
-requires 'Date::Calc'             => '0';
-requires 'Time::Local'            => '0';
+requires 'UNIVERSAL::require'    => '0';
+requires 'HTTP::Request::Common' => '0';
+requires 'HTTP::Request'         => '0';
+requires 'URI::Escape'           => '0';
+requires 'URI'                   => '0';
+requires 'JSON'                  => '0';
+requires 'Encode'                => '0';
+requires 'Getopt::Long'          => '0';
+requires 'Pod::Usage'            => '0';
+requires 'XML::Bare'             => '0';
+requires 'Readonly'              => '0';
+requires 'Try::Tiny'             => '0';
+requires 'Perl::Critic'          => '0';
+requires 'Parse::Syslog'         => '0';
+requires 'DBD::SQLite'           => '0';
+requires 'Date::Calc'            => '0';
+requires 'Time::Local'           => '0';
 
-if ( $OSNAME eq "MSWin32" )
-{
+if ( $OSNAME eq "MSWin32" ) {
 	requires 'Win32::OLE' => '0';
 }
 

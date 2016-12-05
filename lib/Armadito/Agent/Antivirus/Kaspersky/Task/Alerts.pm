@@ -14,11 +14,9 @@ sub run {
 	$class->require();
 	my $osclass = $class->new( logger => $self->{logger} );
 
-	my $alerts = {
-		alerts => $osclass->getAlerts()
-	};
-	
-    my $n_alerts = @{ $alerts->{alerts} };
+	my $alerts = { alerts => $osclass->getAlerts() };
+
+	my $n_alerts = @{ $alerts->{alerts} };
 	$self->{logger}->info( $n_alerts . " alert(s) found." );
 	$self->_sendAlerts($alerts);
 }
