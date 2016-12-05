@@ -3,14 +3,7 @@ package Armadito::Agent::Antivirus::Kaspersky::Task::Alerts;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Task::Alerts';
-
-use Armadito::Agent::Patterns::Matcher;
-use Armadito::Agent::XML::Parser;
-use Armadito::Agent::Tools::Dir qw(readDirectory);
-use Armadito::Agent::Tools::File qw(readFile);
 use English qw(-no_match_vars);
-use JSON;
-use Parse::Syslog;
 
 sub new {
 	my ( $class, %params ) = @_;
