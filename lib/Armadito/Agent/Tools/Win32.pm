@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use base 'Exporter';
 use utf8;
+use Data::Dumper;
 
 use Readonly;
 Readonly my $KEY_WOW64_64 => 0x100;
@@ -25,6 +26,7 @@ BEGIN {
 	}
 }
 
+use Win32::EventLog;
 use Win32::OLE;
 use Win32::OLE qw(in);
 use Win32::TieRegistry (
@@ -190,6 +192,33 @@ sub getUsersFromRegistry {
 	}
 	return $userList;
 }
+
+sub parseEventLog {
+	my ($self, $journal_name) = @_;
+
+	my $recs;
+	my $base;
+	my $hashRef;
+	my $handle = Win32::EventLog->new($journal_name, $ENV{ComputerName})
+		or die "Can't open Application EventLog\n";
+	$handle->GetNumber($recs)
+		or die "Can't get number of EventLog records\n";
+	$handle->GetOldest($base)
+		or die "Can't get number of oldest EventLog record\n";
+
+	my $x = 0;
+	while ($x < $recs) {
+		$handle->Read(EVENTLOG_FORWARDS_READ|EVENTLOG_SEEK_READ,
+								  $base+$x,
+								  $hashRef)
+				or die "Can't read EventLog entry #$x\n";
+
+		print Dumper($hashRef)."\n";
+
+		$x++;
+	}
+}
+
 1;
 __END__
 
