@@ -5,20 +5,22 @@ use warnings;
 use base 'Armadito::Agent::Task::Alerts';
 use English qw(-no_match_vars);
 
-sub new {
-	my ( $class, %params ) = @_;
-
-	my $self = $class->SUPER::new(%params);
-
-	return $self;
-}
-
 sub run {
 	my ( $self, %params ) = @_;
 
 	$self = $self->SUPER::run(%params);
 
-	return $self;
+	my $class = "Armadito::Agent::Antivirus::Kaspersky::Win32";
+	$class->require();
+	my $osclass = $class->new( logger => $self->{logger} );
+
+	my $alerts = {
+		alerts => $osclass->parseDetectsDbFile()
+	};
+	
+    my $n_alerts = @{ $alerts->{alerts} };
+	$self->{logger}->info( $n_alerts . " alert(s) found." );
+	$self->_sendAlerts($alerts);
 }
 
 1;
