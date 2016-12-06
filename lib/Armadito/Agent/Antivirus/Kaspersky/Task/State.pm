@@ -14,8 +14,6 @@ sub run {
 
 	my $dbinfo = $self->_parseUpdateIndex();
 
-	print Dumper($dbinfo) . "\n";
-
 	$self->_sendToGLPI($dbinfo);
 }
 
@@ -36,8 +34,6 @@ sub _parseUpdateIndex {
 	my $filecontent = readFile( filepath => $update_index );
 	$filecontent =~ s/(.*);.*$/$1/ms;
 	my $xml = XMLin($filecontent);
-
-	print Dumper($xml) . "\n";
 
 	return $self->_getDatabasesInfo($xml);
 }

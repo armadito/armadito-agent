@@ -7,14 +7,6 @@ use base 'Armadito::Agent::Task::State';
 use Data::Dumper;
 use JSON;
 
-sub new {
-	my ( $class, %params ) = @_;
-
-	my $self = $class->SUPER::new(%params);
-
-	return $self;
-}
-
 sub run {
 	my ( $self, %params ) = @_;
 

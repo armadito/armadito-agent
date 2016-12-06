@@ -30,6 +30,7 @@ sub run {
 	$self = $self->SUPER::run(%params);
 
 	my $dbinfo = $self->_getDatabasesInfo();
+
 	$self->_sendToGLPI($dbinfo);
 }
 
