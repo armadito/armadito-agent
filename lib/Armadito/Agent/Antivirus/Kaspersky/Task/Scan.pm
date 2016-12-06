@@ -10,14 +10,6 @@ use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 use Armadito::Agent::Patterns::Matcher;
 use Armadito::Agent::Task::Alerts;
 
-sub new {
-	my ( $class, %params ) = @_;
-
-	my $self = $class->SUPER::new(%params);
-
-	return $self;
-}
-
 # 2016-11-30 16:04:36     C:\for_eric\75c1ae242d07bb738a5d9a9766c2a7de//data0000  detected        Exploit.JS.Pdfka.flm
 # 2016-11-30 16:04:36     C:\for_eric\779cb6dc0055bdf63cbb2c9f9f3a95cc//data0000  suspicion       HEUR:Exploit.Script.Generic
 # ;  --- Statistics ---
@@ -77,7 +69,6 @@ sub run {
 	$self->sendScanResults($results);
 	$alert_task->run();
 	$alert_task->_sendAlerts($alert_jobj);
-
 }
 
 1;

@@ -8,14 +8,6 @@ use Data::Dumper;
 use JSON;
 use Armadito::Agent::HTTP::Client::ArmaditoAV;
 
-sub new {
-	my ( $class, %params ) = @_;
-
-	my $self = $class->SUPER::new(%params);
-
-	return $self;
-}
-
 sub getScanAPIMessage {
 	my ($self) = @_;
 

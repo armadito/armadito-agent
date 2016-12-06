@@ -10,14 +10,6 @@ use IPC::System::Simple qw(capture);
 use Armadito::Agent::Patterns::Matcher;
 use Armadito::Agent::Task::Alerts;
 
-sub new {
-	my ( $class, %params ) = @_;
-
-	my $self = $class->SUPER::new(%params);
-
-	return $self;
-}
-
 #name="/home/malwares/contagio-malware/jar/MALWARE_JAR_200_files/Mal_Java_64FD14CEF0026D4240A4550E6A6F9E83.jar » ZIP » a/kors.class", threat="a variant of Java/Exploit.Agent.OKJ trojan", action="action selection postponed until scan completion", info=""
 
 # Scan completed at: mer. 23 nov. 2016 15:05:32 CET
