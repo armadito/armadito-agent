@@ -27,6 +27,9 @@ sub _parseScanOutput {
 
 	my $labels = [ 'filepath', 'name', 'action', 'info' ];
 	my $pattern = '^name="(.*?)", threat="(.*?)", action="(.*?)", info="(.*?)"';
+	$parser->addExclusionPattern(', threat="is OK",');
+	$parser->addExclusionPattern(', threat="",');
+	$parser->addExclusionPattern(', threat="multiple threats",');
 	$parser->addPattern( 'alerts', $pattern, $labels );
 
 	$parser->run( $output, '\n' );
