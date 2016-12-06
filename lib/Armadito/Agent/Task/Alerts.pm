@@ -60,14 +60,6 @@ sub _sendAlerts {
 	return 1;
 }
 
-sub run {
-	my ( $self, %params ) = @_;
-
-	$self = $self->SUPER::run(%params);
-
-	return $self;
-}
-
 1;
 
 __END__

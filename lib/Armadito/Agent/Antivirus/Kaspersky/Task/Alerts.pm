@@ -18,6 +18,7 @@ sub run {
 
 	my $n_alerts = @{ $alerts->{alerts} };
 	$self->{logger}->info( $n_alerts . " alert(s) found." );
+
 	$self->_sendAlerts($alerts);
 }
 

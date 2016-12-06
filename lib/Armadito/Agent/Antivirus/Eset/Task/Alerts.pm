@@ -11,14 +11,6 @@ use English qw(-no_match_vars);
 use JSON;
 use Parse::Syslog;
 
-sub new {
-	my ( $class, %params ) = @_;
-
-	my $self = $class->SUPER::new(%params);
-
-	return $self;
-}
-
 sub _getSystemLogs {
 	my ($self) = @_;
 

@@ -5,14 +5,6 @@ use warnings;
 use base 'Armadito::Agent::Task::Alerts';
 use English qw(-no_match_vars);
 
-sub new {
-	my ( $class, %params ) = @_;
-
-	my $self = $class->SUPER::new(%params);
-
-	return $self;
-}
-
 sub run {
 	my ( $self, %params ) = @_;
 
