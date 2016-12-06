@@ -154,7 +154,7 @@ sub getProgramDataPath {
 sub getDataPath {
 	my ($self) = @_;
 
-	return $self->getProgramDataPath()."\\Data\\";
+	return $self->getProgramDataPath() . "\\Data\\";
 }
 
 1;

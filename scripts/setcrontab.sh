@@ -5,10 +5,8 @@ VERSION=0.1
 USER=armaditoagent
 AGENT=/usr/local/bin/armadito-agent
 LOG_FILE=/tmp/armadito-agent.log
-ALERTDIR=/home/vhamon/workspace/armadito-av/build/linux/out/install/armadito-av/var/spool/armadito
-MAX_ALERTS_BY_ROUND=10
 
-ALERT='01,11,21,31,41,51 * * * *    '$USER'    '$AGENT' -t "Alerts" --alert-dir '$ALERTDIR' --max-alerts '$MAX_ALERTS_BY_ROUND' >>'$LOG_FILE' 2>&1'
+ALERT='01,11,21,31,41,51 * * * *    '$USER'    '$AGENT' -t "Alerts" >>'$LOG_FILE' 2>&1'
 STATE='00,20,40 * * * *    '$USER'    '$AGENT' -t "State" >>'$LOG_FILE' 2>&1'
 GETJOBS='* * * * *    '$USER'    '$AGENT' -t "Getjobs" >>'$LOG_FILE' 2>&1'
 

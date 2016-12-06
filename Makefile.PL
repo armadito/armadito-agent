@@ -21,7 +21,7 @@ requires 'JSON'                  => '0';
 requires 'Encode'                => '0';
 requires 'Getopt::Long'          => '0';
 requires 'Pod::Usage'            => '0';
-requires 'XML::Bare'             => '0';
+requires 'XML::Simple'           => '0';
 requires 'Readonly'              => '0';
 requires 'Try::Tiny'             => '0';
 requires 'Perl::Critic'          => '0';
@@ -31,8 +31,7 @@ requires 'Date::Calc'            => '0';
 requires 'Time::Local'           => '0';
 requires 'File::Stat'            => '0';
 
-if ( $OSNAME eq "MSWin32" )
-{
+if ( $OSNAME eq "MSWin32" ) {
 	requires 'Win32::OLE' => '0';
 }
 

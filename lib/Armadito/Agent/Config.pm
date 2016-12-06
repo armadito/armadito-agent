@@ -28,10 +28,7 @@ my $default = {
 	'user'                 => undef,
 	'password'             => undef,
 	'stdout'               => undef,
-	'antivirus'            => undef,
-	'alert-dir'            => undef,
-	'max-alerts'           => 10,
-	'no-rm-alerts'         => undef
+	'antivirus'            => undef
 };
 
 my $deprecated = {};

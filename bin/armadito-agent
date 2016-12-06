@@ -34,10 +34,7 @@ GetOptions(
     'server|s=s',
     'task|t=s',
     'antivirus|av=s',
-    'alert-dir=s',
     'job-priority=i',
-    'max-alerts=i',
-    'no-rm-alerts',
     'conf-file=s',
     'conf-reload-interval=i',
     'config=s',
@@ -161,9 +158,6 @@ armadito-agent --server <server> --task <task>
 	--list-tasks           List supported tasks
 
   Specific task options:
-	--alert-dir            Directory where AV alerts are stored
-	--max-alerts           Maximum alerts processed by execution
-	--no-rm-alerts         Do not remove alerts after processing
 	--job-priority         Specify Job priority for RunJobs task
 
   Antivirus selection options:
@@ -193,7 +187,7 @@ armadito-agent --server <server> --task <task>
 	% armadito-agent --task "State"
 	% armadito-agent --task "GetJobs"
 	% armadito-agent --task "RunJobs" --job-priority 0
-	% armadito-agent --task "Alerts" --alert-dir /var/spool/armadito --max-alerts 10
+	% armadito-agent --task "Alerts"
 
 =head1 DESCRIPTION
 
