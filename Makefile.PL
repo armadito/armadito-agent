@@ -31,7 +31,8 @@ requires 'Date::Calc'            => '0';
 requires 'Time::Local'           => '0';
 requires 'File::Stat'            => '0';
 
-if ( $OSNAME eq "MSWin32" ) {
+if ( $OSNAME eq "MSWin32" )
+{
 	requires 'Win32::OLE' => '0';
 }
 
