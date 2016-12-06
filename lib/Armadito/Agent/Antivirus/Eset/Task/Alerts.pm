@@ -32,6 +32,7 @@ sub _parseLogs {
 	my $labels = [ 'detection_time', 'filepath', 'name', 'action', 'info' ];
 	my $pattern = 'timestamp="(.*?)".*?name="(.*?)", virus="(.*?)", action="(.*?)", info="(.*?)",';
 	$parser->addPattern( "alerts", $pattern, $labels );
+	$parser->addExclusionPattern(', avstatus="not scanned"');
 	$parser->run( $logs, '\n' );
 
 	return $parser->getResults();

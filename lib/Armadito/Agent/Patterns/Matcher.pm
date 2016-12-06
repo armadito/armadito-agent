@@ -10,8 +10,9 @@ sub new {
 
 	my %patterns;
 	my $self = {
-		patterns => \%patterns,
-		logger   => $params{logger}
+		patterns           => \%patterns,
+		logger             => $params{logger},
+		exclusion_patterns => []
 	};
 
 	bless $self, $class;
@@ -77,14 +78,40 @@ sub addPattern {
 	${ $self->{patterns} }{$name} = $pattern;
 }
 
+sub addExclusionPattern {
+	my ( $self, $pattern ) = @_;
+
+	push( @{ $self->{exclusion_patterns} }, $pattern );
+}
+
+sub addExclusionPatterns {
+	my ( $self, $patterns ) = @_;
+
+	$self->{exclusion_patterns} = $patterns;
+}
+
 sub run {
 	my ( $self, $input, $separator ) = @_;
 
 	my @substrings = split( /$separator/, $input );
 
 	foreach my $substring (@substrings) {
-		$self->_parseSubString($substring);
+		if ( !$self->_isExcluded($substring) ) {
+			$self->_parseSubString($substring);
+		}
 	}
+}
+
+sub _isExcluded {
+	my ( $self, $substring ) = @_;
+
+	foreach my $pattern ( @{ $self->{exclusion_patterns} } ) {
+		if ( $substring =~ m/$pattern/ms ) {
+			return 1;
+		}
+	}
+
+	return 0;
 }
 
 sub _parseSubString {
