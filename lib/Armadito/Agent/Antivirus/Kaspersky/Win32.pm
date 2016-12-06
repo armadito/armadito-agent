@@ -91,7 +91,7 @@ sub getAlerts {
 		my $alert = {
 			name           => $self->getThreatName( $threat_id, $dbh ),
 			filepath       => $self->getFilePath( $threat_id,   $dbh ),
-			detection_time => msFiletimeToUnix($filetime_ts) + 3600
+			detection_time => msFiletimeToUnix($filetime_ts)
 		};
 
 		push( @$alerts, $alert );
@@ -145,10 +145,16 @@ sub getVerdictId {
 	return $row[0];
 }
 
-sub getDatabasesPath {
+sub getProgramDataPath {
 	my ($self) = @_;
 
-	return "C:\\ProgramData\\Kaspersky Lab\\AVP17.0.0\\Bases";
+	return "C:\\ProgramData\\Kaspersky Lab\\AVP17.0.0";
+}
+
+sub getDataPath {
+	my ($self) = @_;
+
+	return $self->getProgramDataPath()."\\Data\\";
 }
 
 1;
