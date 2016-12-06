@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Task::State';
 use Armadito::Agent::Tools::File qw(readFile);
-use Data::Dumper;
 use XML::Simple;
 use Time::Local;
 

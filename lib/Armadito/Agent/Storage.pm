@@ -2,12 +2,10 @@ package Armadito::Agent::Storage;
 
 use strict;
 use warnings;
-
 use Config;
-use English qw(-no_match_vars);
 use File::Path qw(mkpath);
+use English qw(-no_match_vars);
 use Storable;
-
 use Armadito::Agent::Logger;
 
 sub new {
@@ -20,7 +18,7 @@ sub new {
 	}
 
 	my $self = {
-		logger => $params{logger} || Armadito::Agent::Logger->new(),
+		logger    => $params{logger},
 		directory => $params{directory}
 	};
 

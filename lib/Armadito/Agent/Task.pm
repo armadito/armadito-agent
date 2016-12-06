@@ -2,11 +2,8 @@ package Armadito::Agent::Task;
 
 use strict;
 use warnings;
-
 use Armadito::Agent;
-use Armadito::Agent::Logger;
 use Armadito::Agent::HTTP::Client::ArmaditoGLPI;
-use Data::Dumper;
 
 sub run {
 	my ( $self, %params ) = @_;
@@ -51,8 +48,6 @@ sub new {
 		agent_version => $Armadito::Agent::VERSION,
 		task          => ""
 	};
-
-	$self->{logger}->debug( "Armadito agent Id : " . $self->{agent}->{agent_id} );
 
 	bless $self, $class;
 	return $self;

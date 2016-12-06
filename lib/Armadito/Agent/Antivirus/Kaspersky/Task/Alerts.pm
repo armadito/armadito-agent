@@ -3,7 +3,6 @@ package Armadito::Agent::Antivirus::Kaspersky::Task::Alerts;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Task::Alerts';
-use English qw(-no_match_vars);
 
 sub run {
 	my ( $self, %params ) = @_;

@@ -3,9 +3,6 @@ package Armadito::Agent::Antivirus::Eset::Task::Scan;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Task::Scan';
-
-use Try::Tiny;
-use MIME::Base64;
 use IPC::System::Simple qw(capture);
 use Armadito::Agent::Patterns::Matcher;
 use Armadito::Agent::Task::Alerts;

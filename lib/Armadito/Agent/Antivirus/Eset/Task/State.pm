@@ -3,9 +3,6 @@ package Armadito::Agent::Antivirus::Eset::Task::State;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Task::State';
-
-use Data::Dumper;
-use JSON;
 use Armadito::Agent::Tools::File qw( readFile );
 use Armadito::Agent::Patterns::Matcher;
 

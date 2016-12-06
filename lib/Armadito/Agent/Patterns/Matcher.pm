@@ -2,9 +2,7 @@ package Armadito::Agent::Patterns::Matcher;
 
 use strict;
 use warnings;
-use English qw(-no_match_vars);
 use UNIVERSAL::require;
-
 require Exporter;
 
 sub new {

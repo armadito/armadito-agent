@@ -4,9 +4,6 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Task::State';
 
-use Data::Dumper;
-use JSON;
-
 sub run {
 	my ( $self, %params ) = @_;
 

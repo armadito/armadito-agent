@@ -3,9 +3,6 @@ package Armadito::Agent::Antivirus::Armadito::Task::Scan;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Task::Scan';
-
-use Data::Dumper;
-use JSON;
 use Armadito::Agent::HTTP::Client::ArmaditoAV;
 
 sub getScanAPIMessage {
