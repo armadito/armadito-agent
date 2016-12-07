@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Armadito::Agent;
 use Armadito::Agent::HTTP::Client::ArmaditoGLPI;
+use Armadito::Agent::Tools::Inventory qw(getUUID);
 
 sub run {
 	my ( $self, %params ) = @_;
@@ -46,6 +47,7 @@ sub new {
 	$self->{jobj} = {
 		agent_id      => $self->{agent}->{agent_id},
 		agent_version => $Armadito::Agent::VERSION,
+		uuid          => getUUID(),
 		task          => ""
 	};
 

@@ -3,8 +3,6 @@ package Armadito::Agent::Task::Enrollment;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Task';
-
-use Armadito::Agent::Tools::Inventory qw(getUUID);
 use Data::Dumper;
 use JSON;
 
@@ -23,7 +21,6 @@ sub new {
 	};
 
 	$self->{jobj}->{task} = $task;
-	$self->{jobj}->{uuid} = getUUID();
 
 	return $self;
 }
