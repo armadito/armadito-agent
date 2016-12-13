@@ -54,6 +54,7 @@ sub run {
 	$results->{suspicious_count} = 0;
 	$results->{progress}         = 100;
 	$results->{job_id}           = $self->{job}->{job_id};
+	$results->{duration}[0]      = "0".$results->{duration}[0];
 
 	my $alert_task = Armadito::Agent::Task::Alerts->new( agent => $self->{agent} );
 	my $alert_jobj = { "alerts" => $results->{alerts} };
