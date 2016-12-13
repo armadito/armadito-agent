@@ -6,6 +6,7 @@ use base 'Armadito::Agent::Task::Scan';
 use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 use Armadito::Agent::Patterns::Matcher;
 use Armadito::Agent::Task::Alerts;
+use Armadito::Agent::Tools::Time qw(computeDuration);
 
 # 2016-11-30 16:04:36     C:\for_eric\75c1ae242d07bb738a5d9a9766c2a7de//data0000  detected        Exploit.JS.Pdfka.flm
 # 2016-11-30 16:04:36     C:\for_eric\779cb6dc0055bdf63cbb2c9f9f3a95cc//data0000  suspicion       HEUR:Exploit.Script.Generic
@@ -58,6 +59,8 @@ sub run {
 	my $results = $self->_parseScanOutput($output);
 	$results->{progress} = 100;
 	$results->{job_id}   = $self->{job}->{job_id};
+	$results->{duration} = computeDuration( start => $results->{start_time}[0],
+								            end => $results->{end_time}[0]);
 
 	my $alert_task = Armadito::Agent::Task::Alerts->new( agent => $self->{agent} );
 	my $alert_jobj = { "alerts" => $results->{alerts} };
