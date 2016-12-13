@@ -16,7 +16,7 @@ sub new {
 	}
 
 	my $task = {
-		name      => "Alerts",
+		name      => "AVConfig",
 		antivirus => $self->{agent}->{antivirus}->getJobj()
 	};
 
