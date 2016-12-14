@@ -16,10 +16,19 @@ our @EXPORT_OK = qw(
 	writeFile
 	getFileHandle
 	canRun
+	rmFile
 );
 
 if ( $OSNAME ne 'MSWin32' ) {
 	memoize('canRun');
+}
+
+sub rmFile {
+	my (%params) = @_;
+
+	if(-f $params{filepath}){
+		unlink ($params{filepath});
+	}
 }
 
 sub readFile {
@@ -169,4 +178,14 @@ The string to use, as an alternative to the command
 =head2 canRun($binary)
 
 Returns true if given binary can be executed.
+
+=head2 rmFile(%params)
+
+Remove a file if it exists.
+
+=over
+
+=item I<filepath>
+
+Path of the file to remove.
 
