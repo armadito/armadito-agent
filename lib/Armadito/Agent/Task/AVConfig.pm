@@ -21,8 +21,8 @@ sub new {
 	};
 
 	$self->{jobj}->{task} = $task;
-	$self->{glpi_url} = $self->{agent}->{config}->{server}[0];
-	$self->{avconfig} = [];
+	$self->{glpi_url}     = $self->{agent}->{config}->{server}[0];
+	$self->{avconfig}     = [];
 
 	return $self;
 }
@@ -38,20 +38,20 @@ sub _handleError {
 }
 
 sub _addConfEntry {
-	my ($self, $attr, $value) = @_;
+	my ( $self, $attr, $value ) = @_;
 
 	$attr =~ s/^://;
 
 	my $conf_entry = {
-		attr => $attr,
+		attr  => $attr,
 		value => $value
 	};
 
-	push( @{$self->{avconfig}}, $conf_entry );
+	push( @{ $self->{avconfig} }, $conf_entry );
 }
 
 sub _sendToGLPI {
-	my ( $self ) = @_;
+	my ($self) = @_;
 
 	$self->{jobj}->{task}->{obj} = $self->{avconfig};
 

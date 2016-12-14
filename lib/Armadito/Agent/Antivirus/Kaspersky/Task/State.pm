@@ -12,14 +12,14 @@ sub run {
 	$self = $self->SUPER::run(%params);
 
 	$self->{data} = {
-		dbinfo => {},
+		dbinfo    => {},
 		avdetails => []
 	};
 
 	$self->_parseUpdateIndex();
 	$self->_parseProfilesFile();
 
-	$self->_sendToGLPI($self->{data});
+	$self->_sendToGLPI( $self->{data} );
 }
 
 sub _getUpdateIndexPath {
@@ -137,26 +137,26 @@ sub _parseProfilesFile {
 	my ($self) = @_;
 
 	my $config_file = $self->_getProfilesFilePath();
-	my $parser = XML::LibXML->new();
-    my $doc    = $parser->parse_file($config_file);
+	my $parser      = XML::LibXML->new();
+	my $doc         = $parser->parse_file($config_file);
 
-	my ($profiles)  = $doc->findnodes('/propertiesmap/key');
-	$self->_parseKeyNode($profiles, "");
+	my ($profiles) = $doc->findnodes('/propertiesmap/key');
+	$self->_parseKeyNode( $profiles, "" );
 }
 
 sub _parseKeyNode {
-	my ($self, $node, $path) = @_;
+	my ( $self, $node, $path ) = @_;
 
-	foreach ($node->findnodes('./key')) {
-		$self->_parseKeyNode($_, $path.":".$_->getAttribute('name'));
+	foreach ( $node->findnodes('./key') ) {
+		$self->_parseKeyNode( $_, $path . ":" . $_->getAttribute('name') );
 	}
 
-	foreach ($node->findnodes('./tDWORD')) {
-		$self->_addAVDetail($path.":".$_->getAttribute('name'), $_->to_literal);
+	foreach ( $node->findnodes('./tDWORD') ) {
+		$self->_addAVDetail( $path . ":" . $_->getAttribute('name'), $_->to_literal );
 	}
 
-	foreach ($node->findnodes('./tSTRING')) {
-		$self->_addAVDetail($path.":".$_->getAttribute('name'), $_->to_literal);
+	foreach ( $node->findnodes('./tSTRING') ) {
+		$self->_addAVDetail( $path . ":" . $_->getAttribute('name'), $_->to_literal );
 	}
 }
 

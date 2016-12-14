@@ -53,7 +53,7 @@ sub getProgramPath {
 sub getDataPath {
 	my ($self) = @_;
 
-	my $class = "Armadito::Agent::Antivirus::Kaspersky::". $self->{os_info}->{libpath};
+	my $class = "Armadito::Agent::Antivirus::Kaspersky::" . $self->{os_info}->{libpath};
 	$class->require();
 	my $osclass = $class->new( logger => $self->{logger} );
 

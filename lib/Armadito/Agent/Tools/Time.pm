@@ -16,33 +16,32 @@ our @EXPORT_OK = qw(
 
 sub computeDuration {
 	my (%params) = @_;
-	
-	print "Start [".$params{start}."]\n";
-	print "End [".$params{end}."]\n";
+
+	print "Start [" . $params{start} . "]\n";
+	print "End [" . $params{end} . "]\n";
 	my $format = '%Y-%m-%d %H:%M:%S';
 
-	my $diff = Time::Piece->strptime($params{end}, $format)
-         - Time::Piece->strptime($params{start}, $format);
-	
-	return _secondsToDuration($diff->seconds);
+	my $diff = Time::Piece->strptime( $params{end}, $format ) - Time::Piece->strptime( $params{start}, $format );
+
+	return _secondsToDuration( $diff->seconds );
 }
 
 sub _secondsToDuration {
-    my $totalsecs = shift;
-	my ($hours, $mins, $secs, $leftover) = (0,0,0,0);
+	my $totalsecs = shift;
+	my ( $hours, $mins, $secs, $leftover ) = ( 0, 0, 0, 0 );
 
 	$leftover = $totalsecs;
-	if ($totalsecs >= 3600){
-		$hours = $totalsecs/3600;
-		$leftover = $totalsecs%3600;
+	if ( $totalsecs >= 3600 ) {
+		$hours    = $totalsecs / 3600;
+		$leftover = $totalsecs % 3600;
 	}
 
-	if ($leftover >= 60){
-		$mins = $leftover/60;
-		$leftover = $leftover%60;
+	if ( $leftover >= 60 ) {
+		$mins     = $leftover / 60;
+		$leftover = $leftover % 60;
 	}
 
-	return "PT".$hours."H".$mins."M".$leftover."S";
+	return "PT" . $hours . "H" . $mins . "M" . $leftover . "S";
 }
 
 1;

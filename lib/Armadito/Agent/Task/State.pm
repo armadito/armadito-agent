@@ -48,18 +48,17 @@ sub _sendToGLPI {
 }
 
 sub _addAVDetail {
-	my ($self, $attr, $value) = @_;
+	my ( $self, $attr, $value ) = @_;
 
 	$attr =~ s/^://;
 
 	my $avdetail = {
-		attr => $attr,
+		attr  => $attr,
 		value => $value
 	};
 
-	push( @{$self->{data}->{avdetails}}, $avdetail );
+	push( @{ $self->{data}->{avdetails} }, $avdetail );
 }
-
 
 sub _handleError {
 	my ( $self, $response ) = @_;

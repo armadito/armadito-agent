@@ -26,8 +26,8 @@ if ( $OSNAME ne 'MSWin32' ) {
 sub rmFile {
 	my (%params) = @_;
 
-	if(-f $params{filepath}){
-		unlink ($params{filepath});
+	if ( -f $params{filepath} ) {
+		unlink( $params{filepath} );
 	}
 }
 
