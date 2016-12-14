@@ -18,6 +18,7 @@ sub run {
 
 	if($self->_exportSettings($export_path) == 0){
 		$self->_parseSettings($export_path);
+		$self->_sendToGLPI();
 	}
 }
 
@@ -37,8 +38,43 @@ sub _exportSettings {
 sub _parseSettings {
 	my ( $self, $export_path ) = @_;
 
-	# TODO
+	my $parser = XML::LibXML->new();
+    my $doc    = $parser->parse_file($export_path);
+
+	my ($ondemand_settings)        = $doc->findnodes('/root/ekaSettings/on_demand_tasks');
+	my ($monitoring_settings)      = $doc->findnodes('/root/ekaSettings/monitoring_tasks');
+	my ($services_settings)        = $doc->findnodes('/root/ekaSettings/services');
+	my ($persistent_data_settings) = $doc->findnodes('/root/persistentData');
+
+	$self->_parseItemNode($ondemand_settings, "On_demand");
+	$self->_parseItemNode($monitoring_settings, "Monitoring");
+	$self->_parseItemNode($services_settings, "Services");
+	$self->_parseItemNode($persistent_data_settings, "PersistentData");
 }
+
+sub _parseItemNode {
+	my ($self, $node, $path) = @_;
+
+	foreach ($node->findnodes('./item')) {
+		$self->_parseSubNode($_, $path.":".$_->getAttribute('name'));
+	}
+}
+
+sub _parseSubNode {
+	my ($self, $node, $path) = @_;
+
+	foreach ($node->findnodes('./*'))
+	{
+		my $nodeName = $_->nodeName;
+		my @attributes = $_->attributes;
+		foreach my $attr (@attributes) {
+			$self->_addConfEntry($path.":".$nodeName.":".$attr->nodeName, $attr->value);
+		}
+
+		$self->_parseSubNode($_, $path.":".$nodeName);
+	}
+}
+
 1;
 
 __END__
