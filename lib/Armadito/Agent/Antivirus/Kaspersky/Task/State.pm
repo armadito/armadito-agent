@@ -11,9 +11,15 @@ sub run {
 	my ( $self, %params ) = @_;
 	$self = $self->SUPER::run(%params);
 
-	my $dbinfo = $self->_parseUpdateIndex();
+	$self->{data} = {
+		dbinfo => {},
+		avdetails => []
+	};
 
-	$self->_sendToGLPI($dbinfo);
+	$self->_parseUpdateIndex();
+	$self->_parseProfilesFile();
+
+	$self->_sendToGLPI($self->{data});
 }
 
 sub _getUpdateIndexPath {
@@ -34,7 +40,7 @@ sub _parseUpdateIndex {
 	$filecontent =~ s/(.*);.*$/$1/ms;
 	my $xml = XMLin($filecontent);
 
-	return $self->_getDatabasesInfo($xml);
+	$self->{data}->{dbinfo} = $self->_getDatabasesInfo($xml);
 }
 
 sub _getDatabasesInfo {
@@ -115,6 +121,43 @@ sub _toTimestamp {
 	}
 
 	return 0;
+}
+
+sub _getProfilesFilePath {
+	my ($self) = @_;
+
+	my $class = "Armadito::Agent::Antivirus::Kaspersky::Win32";
+	$class->require();
+	my $osclass = $class->new( logger => $self->{logger} );
+
+	return $osclass->getDataPath() . "profiles.xml";
+}
+
+sub _parseProfilesFile {
+	my ($self) = @_;
+
+	my $config_file = $self->_getProfilesFilePath();
+	my $parser = XML::LibXML->new();
+    my $doc    = $parser->parse_file($config_file);
+
+	my ($profiles)  = $doc->findnodes('/propertiesmap/key');
+	$self->_parseKeyNode($profiles, "");
+}
+
+sub _parseKeyNode {
+	my ($self, $node, $path) = @_;
+
+	foreach ($node->findnodes('./key')) {
+		$self->_parseKeyNode($_, $path.":".$_->getAttribute('name'));
+	}
+
+	foreach ($node->findnodes('./tDWORD')) {
+		$self->_addAVDetail($path.":".$_->getAttribute('name'), $_->to_literal);
+	}
+
+	foreach ($node->findnodes('./tSTRING')) {
+		$self->_addAVDetail($path.":".$_->getAttribute('name'), $_->to_literal);
+	}
 }
 
 1;
