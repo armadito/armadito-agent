@@ -40,6 +40,8 @@ sub _validateScanObj {
 	if ( $scanobj->{scan_options} ne "" ) {
 		$scanobj->{scan_options} = decode_base64( $scanobj->{scan_options} );
 	}
+
+	$scanobj->{scan_path} = decode_base64( $scanobj->{scan_path} );
 }
 
 sub _handleError {

@@ -2,13 +2,13 @@ package Armadito::Agent::Antivirus::Armadito::Task::Scan;
 
 use strict;
 use warnings;
+use MIME::Base64;
 use base 'Armadito::Agent::Task::Scan';
 use Armadito::Agent::HTTP::Client::ArmaditoAV;
 
 sub getScanAPIMessage {
 	my ($self) = @_;
-
-	return "{ 'path' : '" . $self->{job}->{obj}->{scan_path} . "' }";
+	return "{ 'path' : '" . decode_base64($self->{job}->{obj}->{scan_path}) . "' }";
 }
 
 sub run {
