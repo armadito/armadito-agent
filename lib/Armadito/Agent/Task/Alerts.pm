@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Task';
 use JSON;
+use Data::Dumper;
 
 sub new {
 	my ( $class, %params ) = @_;
