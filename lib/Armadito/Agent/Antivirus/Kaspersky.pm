@@ -59,7 +59,7 @@ sub getOSClass {
 
 	my $class = "Armadito::Agent::Antivirus::Kaspersky::" . $self->{os_info}->{libpath};
 	$class->require();
-	my $osclass = $class->new( logger => $self->{logger} );
+	my $osclass = $class->new( logger => $self->{logger}, antivirus => $self );
 
 	return $osclass;
 }
