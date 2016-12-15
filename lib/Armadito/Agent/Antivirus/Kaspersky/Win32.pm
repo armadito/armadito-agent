@@ -94,7 +94,9 @@ sub getAlerts {
 			detection_time => msFiletimeToUnix($filetime_ts)
 		};
 
-		push( @$alerts, $alert );
+		if($alert->{name} ne ""){
+			push( @$alerts, $alert );
+		}
 	}
 
 	$dbh->disconnect();
