@@ -10,9 +10,10 @@ sub new {
 
 	my %patterns;
 	my $self = {
-		patterns           => \%patterns,
-		logger             => $params{logger},
-		exclusion_patterns => []
+		patterns              => \%patterns,
+		logger                => $params{logger},
+		exclusion_patterns 	  => [],
+		substitutions 	      => []
 	};
 
 	bless $self, $class;
@@ -90,6 +91,17 @@ sub addExclusionPatterns {
 	$self->{exclusion_patterns} = $patterns;
 }
 
+sub addSubstitution {
+	my ( $self, $pattern, $replace ) = @_;
+
+	my $substitution = {
+		pattern => $pattern,
+		replace => $replace
+	};
+
+	push( @{ $self->{substitutions} }, $substitution);
+}
+
 sub run {
 	my ( $self, $input, $separator ) = @_;
 
@@ -97,6 +109,7 @@ sub run {
 
 	foreach my $substring (@substrings) {
 		if ( !$self->_isExcluded($substring) ) {
+			$substring = $self->_runSubstitutions($substring);
 			$self->_parseSubString($substring);
 		}
 	}
@@ -112,6 +125,18 @@ sub _isExcluded {
 	}
 
 	return 0;
+}
+
+sub _runSubstitutions {
+	my ( $self, $substring ) = @_;
+
+	foreach my $substitution ( @{ $self->{substitutions} } ) {
+		my $pattern = $substitution->{pattern};
+		my $replace = $substitution->{replace};
+		$substring =~ s/$pattern/$replace/ee;
+	}
+
+	return $substring;
 }
 
 sub _parseSubString {
