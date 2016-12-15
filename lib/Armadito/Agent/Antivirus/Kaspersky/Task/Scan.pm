@@ -37,6 +37,9 @@ sub _parseScanOutput {
 	my $pattern = '^(\d{4,}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+(.*)\s+detected\s+([\w\.:]+)';
 	$parser->addPattern( 'alerts', $pattern, $labels );
 
+	$pattern = '^(\d{4,}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+(.*)\s+suspicion\s+([\w\.:]+)';
+	$parser->addPattern( 'alerts', $pattern, $labels );
+
 	$parser->run( $output, '\n' );
 
 	return $parser->getResults();
