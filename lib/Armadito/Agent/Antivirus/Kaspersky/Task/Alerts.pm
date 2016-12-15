@@ -9,10 +9,7 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 
-	my $class = "Armadito::Agent::Antivirus::Kaspersky::Win32";
-	$class->require();
-	my $osclass = $class->new( logger => $self->{logger} );
-
+	my $osclass = $self->{agent}->{antivirus}->getOSClass();
 	my $alerts = { alerts => $osclass->getAlerts() };
 
 	my $n_alerts = @{ $alerts->{alerts} };

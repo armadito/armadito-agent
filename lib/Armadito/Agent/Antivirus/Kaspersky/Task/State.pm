@@ -25,10 +25,7 @@ sub run {
 sub _getUpdateIndexPath {
 	my ($self) = @_;
 
-	my $class = "Armadito::Agent::Antivirus::Kaspersky::Win32";
-	$class->require();
-	my $osclass = $class->new( logger => $self->{logger} );
-
+	my $osclass = $self->{agent}->{antivirus}->getOSClass();
 	return $osclass->getDataPath() . "u1313g.xml";
 }
 
@@ -126,10 +123,7 @@ sub _toTimestamp {
 sub _getProfilesFilePath {
 	my ($self) = @_;
 
-	my $class = "Armadito::Agent::Antivirus::Kaspersky::Win32";
-	$class->require();
-	my $osclass = $class->new( logger => $self->{logger} );
-
+	my $osclass = $self->{agent}->{antivirus}->getOSClass();
 	return $osclass->getDataPath() . "profiles.xml";
 }
 
