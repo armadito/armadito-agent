@@ -5,6 +5,7 @@ use warnings;
 use base 'Armadito::Agent::Task::AVConfig';
 use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 use Armadito::Agent::Tools::File qw(rmFile);
+use Armadito::Agent::Tools qw(getOSTempDir);
 use XML::LibXML;
 use Data::Dumper;
 
@@ -13,7 +14,7 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 
-	my $export_path = "C:\\Temp\\exported_settings.xml";
+	my $export_path = getOSTempDir()."exported_settings.xml";
 	rmFile( filepath => $export_path );
 
 	if ( $self->_exportSettings($export_path) == 0 ) {
