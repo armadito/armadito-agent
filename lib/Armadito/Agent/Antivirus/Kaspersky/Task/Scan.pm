@@ -65,7 +65,8 @@ sub run {
 	);
 
 	my $alert_task = Armadito::Agent::Task::Alerts->new( agent => $self->{agent} );
-	my $alert_jobj = { "alerts" => $results->{alerts} };
+	my $alert_jobj = { alerts => $results->{alerts},
+					   job_id => $self->{job}->{job_id} };
 
 	delete( $results->{alerts} );
 	$self->sendScanResults($results);
