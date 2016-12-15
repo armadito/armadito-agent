@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Task::State';
 use Armadito::Agent::Tools::File qw(readFile);
-use XML::Simple;
+use XML::LibXML;
 use Time::Local;
 
 sub run {
@@ -18,7 +18,6 @@ sub run {
 
 	$self->_parseUpdateIndex();
 	$self->_parseProfilesFile();
-
 	$self->_sendToGLPI( $self->{data} );
 }
 
@@ -35,41 +34,46 @@ sub _parseUpdateIndex {
 	my $update_index = $self->_getUpdateIndexPath();
 	my $filecontent = readFile( filepath => $update_index );
 	$filecontent =~ s/(.*);.*$/$1/ms;
-	my $xml = XMLin($filecontent);
 
-	$self->{data}->{dbinfo} = $self->_getDatabasesInfo($xml);
+	my $parser      = XML::LibXML->new();
+	my $doc         = $parser->parse_string($filecontent);
+
+	$self->{data}->{dbinfo} = $self->_getDatabasesInfo($doc);
 }
 
 sub _getDatabasesInfo {
-	my ( $self, $xml ) = @_;
+	my ( $self, $doc ) = @_;
+
+	my ($node)  = $doc->findnodes('/Update');
+	my $date    = $node->getAttribute('Date');
 
 	my $dbinfo = {
-		global_update_timestamp => $self->_toTimestamp( $xml->{Date} ),
-		modules                 => $self->_getModulesInfo($xml)
+		global_update_timestamp => $self->_toTimestamp($date),
+		modules                 => $self->_getModulesInfo($node)
 	};
 
 	return $dbinfo;
 }
 
 sub _getModulesInfo {
-	my ( $self, $xml ) = @_;
+	my ( $self, $node ) = @_;
 
-	my @mod_simple    = $self->_getModulesSimpleIndexes($xml);
-	my @mod_multiple  = $self->_getModulesMultipleIndexes($xml);
+	my @mod_simple    = $self->_getModulesSimpleIndexes($node);
+	my @mod_multiple  = $self->_getModulesMultipleIndexes($node);
 	my @modules_infos = ( @mod_simple, @mod_multiple );
 
 	return \@modules_infos;
 }
 
 sub _getModulesSimpleIndexes {
-	my ( $self, $xml ) = @_;
+	my ( $self, $node ) = @_;
 
 	my @modules = ();
-	foreach ( @{ $xml->{Index} } ) {
+	foreach ( $node->findnodes('./Index') ) {
 		my $module_info = {
-			name                 => $_->{Name},
+			name                 => $_->getAttribute('Name'),
 			mod_status           => "up-to-date",
-			mod_update_timestamp => $self->_toTimestamp( $_->{Date} ),
+			mod_update_timestamp => $self->_toTimestamp($_->getAttribute('Date')),
 			bases                => []
 		};
 
@@ -80,12 +84,12 @@ sub _getModulesSimpleIndexes {
 }
 
 sub _getModulesMultipleIndexes {
-	my ( $self, $xml ) = @_;
+	my ( $self, $node ) = @_;
 
 	my @modules = ();
-	foreach ( @{ $xml->{Indexes} } ) {
-		my @itemkeys = split( ';', $_->{Item} );
-		my @list     = split( ';', $_->{List} );
+	foreach ( $node->findnodes('./Indexes')  ) {
+		my @itemkeys = split( ';', $_->getAttribute('Item') );
+		my @list     = split( ';', $_->getAttribute('List') );
 
 		foreach my $module (@list) {
 			my @items = split( '\|', $module );
