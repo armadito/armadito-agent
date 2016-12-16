@@ -35,8 +35,8 @@ sub _parseUpdateIndex {
 	my $filecontent = readFile( filepath => $update_index );
 	$filecontent =~ s/(.*);.*$/$1/ms;
 
-	my $parser      = XML::LibXML->new();
-	my $doc         = $parser->parse_string($filecontent);
+	my $parser = XML::LibXML->new();
+	my $doc    = $parser->parse_string($filecontent);
 
 	$self->{data}->{dbinfo} = $self->_getDatabasesInfo($doc);
 }
@@ -44,8 +44,8 @@ sub _parseUpdateIndex {
 sub _getDatabasesInfo {
 	my ( $self, $doc ) = @_;
 
-	my ($node)  = $doc->findnodes('/Update');
-	my $date    = $node->getAttribute('Date');
+	my ($node) = $doc->findnodes('/Update');
+	my $date = $node->getAttribute('Date');
 
 	my $dbinfo = {
 		global_update_timestamp => $self->_toTimestamp($date),
@@ -73,7 +73,7 @@ sub _getModulesSimpleIndexes {
 		my $module_info = {
 			name                 => $_->getAttribute('Name'),
 			mod_status           => "up-to-date",
-			mod_update_timestamp => $self->_toTimestamp($_->getAttribute('Date')),
+			mod_update_timestamp => $self->_toTimestamp( $_->getAttribute('Date') ),
 			bases                => []
 		};
 
@@ -87,7 +87,7 @@ sub _getModulesMultipleIndexes {
 	my ( $self, $node ) = @_;
 
 	my @modules = ();
-	foreach ( $node->findnodes('./Indexes')  ) {
+	foreach ( $node->findnodes('./Indexes') ) {
 		my @itemkeys = split( ';', $_->getAttribute('Item') );
 		my @list     = split( ';', $_->getAttribute('List') );
 

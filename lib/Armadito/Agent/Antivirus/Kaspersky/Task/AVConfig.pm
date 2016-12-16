@@ -14,7 +14,7 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 
-	my $export_path = getOSTempDir()."exported_settings.xml";
+	my $export_path = getOSTempDir() . "exported_settings.xml";
 	rmFile( filepath => $export_path );
 
 	if ( $self->_exportSettings($export_path) == 0 ) {

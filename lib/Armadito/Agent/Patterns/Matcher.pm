@@ -10,10 +10,10 @@ sub new {
 
 	my %patterns;
 	my $self = {
-		patterns              => \%patterns,
-		logger                => $params{logger},
-		exclusion_patterns 	  => [],
-		substitutions 	      => []
+		patterns           => \%patterns,
+		logger             => $params{logger},
+		exclusion_patterns => [],
+		substitutions      => []
 	};
 
 	bless $self, $class;
@@ -99,7 +99,7 @@ sub addSubstitution {
 		replace => $replace
 	};
 
-	push( @{ $self->{substitutions} }, $substitution);
+	push( @{ $self->{substitutions} }, $substitution );
 }
 
 sub run {

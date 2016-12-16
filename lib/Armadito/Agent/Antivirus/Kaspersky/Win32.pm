@@ -11,7 +11,7 @@ use DBD::SQLite::Constants qw/:file_open/;
 sub new {
 	my ( $class, %params ) = @_;
 
-	my $self = { logger => $params{logger}, antivirus => $params{antivirus}};
+	my $self = { logger => $params{logger}, antivirus => $params{antivirus} };
 
 	bless $self, $class;
 	return $self;
@@ -62,7 +62,7 @@ sub _isProgramInDir {
 sub getAlerts {
 	my ($self) = @_;
 
-	my $dbfile = $self->getDataPath()."detects.db";
+	my $dbfile = $self->getDataPath() . "detects.db";
 	if ( !-r $dbfile ) {
 		die "Unreadable detects.db file : $dbfile\n";
 	}
@@ -94,7 +94,7 @@ sub getAlerts {
 			detection_time => msFiletimeToUnix($filetime_ts)
 		};
 
-		if($alert->{name} ne ""){
+		if ( $alert->{name} ne "" ) {
 			push( @$alerts, $alert );
 		}
 	}
@@ -150,7 +150,7 @@ sub getVerdictId {
 sub getProgramDataPath {
 	my ($self) = @_;
 
-	return "C:\\ProgramData\\Kaspersky Lab\\AVP".$self->{antivirus}->{version};
+	return "C:\\ProgramData\\Kaspersky Lab\\AVP" . $self->{antivirus}->{version};
 }
 
 sub getDataPath {

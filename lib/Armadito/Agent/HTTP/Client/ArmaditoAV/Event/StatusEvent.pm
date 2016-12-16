@@ -36,7 +36,12 @@ sub _sendToGLPI {
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self->{taskobj}->{jobj}->{task}->{obj} = $self->{jobj};
+	my $obj = {
+		dbinfo    => $self->{jobj},
+		avdetails => []
+	};
+
+	$self->{taskobj}->{jobj}->{task}->{obj} = $obj;
 	my $json_text = to_json( $self->{taskobj}->{jobj} );
 	print "JSON formatted str : \n" . $json_text . "\n";
 
