@@ -93,7 +93,8 @@ sub run {
 
 sub _runJob {
 	my ( $self, $job ) = @_;
-	my $config = ();
+	my $config     = ();
+	my $start_time = time;
 
 	try {
 		my $antivirus = $self->{jobj}->{task}->{antivirus}->{name};
@@ -111,18 +112,20 @@ sub _runJob {
 	catch {
 		$self->{logger}->error($_);
 		$self->{jobj}->{task}->{obj} = {
-			code    => 1,
-			message => encode_base64($_),
-			job_id  => $job->{job_id}
+			code       => 1,
+			message    => encode_base64($_),
+			job_id     => $job->{job_id},
+			start_time => $start_time
 		};
 
 		return $self;
 	};
 
 	$self->{jobj}->{task}->{obj} = {
-		code    => 0,
-		message => "runJob successful",
-		job_id  => $job->{job_id}
+		code       => 0,
+		message    => "runJob successful",
+		job_id     => $job->{job_id},
+		start_time => $start_time
 	};
 
 	return $self;

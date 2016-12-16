@@ -2,7 +2,7 @@
 
 VERSION=0.1
 
-USER=armaditoagent
+USER=root
 AGENT=/usr/local/bin/armadito-agent
 LOG_FILE=/tmp/armadito-agent.log
 
