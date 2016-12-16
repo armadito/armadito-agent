@@ -115,7 +115,8 @@ sub _runJob {
 			code       => 1,
 			message    => encode_base64($_),
 			job_id     => $job->{job_id},
-			start_time => $start_time
+			start_time => $start_time,
+			end_time   => time
 		};
 
 		return $self;
@@ -125,7 +126,8 @@ sub _runJob {
 		code       => 0,
 		message    => "runJob successful",
 		job_id     => $job->{job_id},
-		start_time => $start_time
+		start_time => $start_time,
+		end_time   => time
 	};
 
 	return $self;
