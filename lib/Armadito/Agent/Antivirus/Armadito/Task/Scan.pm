@@ -8,7 +8,8 @@ use Armadito::Agent::HTTP::Client::ArmaditoAV;
 
 sub getScanAPIMessage {
 	my ($self) = @_;
-	return "{ 'path' : '" . decode_base64( $self->{job}->{obj}->{scan_path} ) . "' }";
+
+	return "{ 'path' : '" . $self->{job}->{obj}->{scan_path} . "' }";
 }
 
 sub run {
