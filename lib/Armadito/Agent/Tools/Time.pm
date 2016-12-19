@@ -17,10 +17,7 @@ our @EXPORT_OK = qw(
 sub computeDuration {
 	my (%params) = @_;
 
-	print "Start [" . $params{start} . "]\n";
-	print "End [" . $params{end} . "]\n";
 	my $format = '%Y-%m-%d %H:%M:%S';
-
 	my $diff = Time::Piece->strptime( $params{end}, $format ) - Time::Piece->strptime( $params{start}, $format );
 
 	return _secondsToDuration( $diff->seconds );
