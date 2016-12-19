@@ -84,3 +84,7 @@ Returns the duration at ISO8601 format.
 =item I<dirpath>
 
 Path of the directory to read.
+
+=head2 msFiletimeToUnix($msfiletime)
+
+Converts from Microsoft FileTime format to Unix timestamp.
