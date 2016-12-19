@@ -17,8 +17,7 @@ use UNIVERSAL::require;
 use English qw(-no_match_vars);
 use File::Temp qw(:seekable tempfile);
 use File::Basename qw(basename);
-use Date::Calc 'Add_Delta_DHMS';
-use Time::Local;
+use File::Basename qw(basename);
 
 BEGIN {
 	if ( $OSNAME ne "MSWin32" ) {
@@ -41,7 +40,6 @@ our @EXPORT_OK = qw(
 	getRegistryValue
 	getRegistryKey
 	getWMIObjects
-	msFiletimeToUnix
 );
 
 Win32::OLE->Option( CP => Win32::OLE::CP_UTF8 );
@@ -218,25 +216,6 @@ sub parseEventLog {
 
 		$x++;
 	}
-}
-
-sub msFiletimeToUnix {
-	my ($vt_filetime) = @_;
-
-	# Disregard the 100 nanosecond units (but you could save them for later)
-	$vt_filetime = substr( $vt_filetime, 0, 11 );
-
-	my $days = int( $vt_filetime / ( 24 * 60 * 60 ) );
-	my $hours = int( ( $vt_filetime % ( 24 * 60 * 60 ) ) / ( 60 * 60 ) );
-	my $mins  = int( ( $vt_filetime % ( 60 * 60 ) ) / 60 );
-	my $secs  = $vt_filetime % 60;
-
-	my @date = Add_Delta_DHMS( 1601, 1, 1, 0, 0, 0, $days, $hours, $mins, $secs );
-
-	my ( $year, $mon, $mday, $hour, $min, $sec )
-		= ( $date[0], $date[1], $date[2], $date[3], $date[4], $date[5] );
-
-	return timelocal( $sec, $min, $hour, $mday, $mon - 1, $year );
 }
 
 1;

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 use Armadito::Agent::Tools::Dir qw( readDirectory );
-use Armadito::Agent::Tools::Win32 qw( msFiletimeToUnix );
+use Armadito::Agent::Tools::Time qw( msFiletimeToUnix );
 use DBD::SQLite;
 use DBD::SQLite::Constants qw/:file_open/;
 
