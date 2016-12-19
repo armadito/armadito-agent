@@ -6,7 +6,7 @@ use base 'Armadito::Agent::Task::Scan';
 use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 use Armadito::Agent::Patterns::Matcher;
 use Armadito::Agent::Task::Alerts;
-use Armadito::Agent::Tools::Time qw(computeDuration);
+use Armadito::Agent::Tools::Time qw(computeDuration iso8601ToUnixTimestamp);
 
 # 2016-11-30 16:04:36     C:\for_eric\75c1ae242d07bb738a5d9a9766c2a7de//data0000  detected        Exploit.JS.Pdfka.flm
 # 2016-11-30 16:04:36     C:\for_eric\779cb6dc0055bdf63cbb2c9f9f3a95cc//data0000  suspicion       HEUR:Exploit.Script.Generic
@@ -41,7 +41,11 @@ sub _parseScanOutput {
 	$parser->addPattern( 'alerts', $pattern, $labels );
 
 	$parser->run( $output, '\n' );
+
 	$parser->addHookForLabel('filepath', \&formatFilePath );
+	$parser->addHookForLabel('detection_time', \&LocalToTimestamp );
+	$parser->addHookForLabel('start_time', \&LocalToTimestamp );
+	$parser->addHookForLabel('end_time', \&LocalToTimestamp );
 
 	return $parser->getResults();
 }
@@ -52,6 +56,12 @@ sub formatFilePath {
 	$match =~ s/\/\/data(\d{4})/\\\\data$1/ms;
 
 	return $match;
+}
+
+sub LocalToTimestamp {
+	my ($match) = @_;
+
+	return iso8601ToUnixTimestamp($match, "Local");
 }
 
 sub run {

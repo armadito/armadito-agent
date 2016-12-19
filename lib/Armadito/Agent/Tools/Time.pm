@@ -10,7 +10,8 @@ use Time::Local;
 
 our @EXPORT_OK = qw(
 	computeDuration
-	msFiletimeToUnix
+	msFiletimeToUnixTimestamp
+	iso8601ToUnixTimestamp
 );
 
 # ; Time Start:   2016-11-30 16:04:34
@@ -43,8 +44,8 @@ sub _secondsToDuration {
 	return "PT" . $hours . "H" . $mins . "M" . $leftover . "S";
 }
 
-sub msFiletimeToUnix {
-	my ($vt_filetime) = @_;
+sub msFiletimeToUnixTimestamp {
+	my ($vt_filetime, $time_zone) = @_;
 
 	# Disregard the 100 nanosecond units (but you could save them for later)
 	$vt_filetime = substr( $vt_filetime, 0, 11 );
@@ -59,7 +60,28 @@ sub msFiletimeToUnix {
 	my ( $year, $mon, $mday, $hour, $min, $sec )
 		= ( $date[0], $date[1], $date[2], $date[3], $date[4], $date[5] );
 
-	return timelocal( $sec, $min, $hour, $mday, $mon - 1, $year );
+	if($time_zone eq "Local") {
+		return timelocal($sec, $min, $hour, $mday, $mon-1, $year);
+	}
+	elsif($time_zone eq "UTC") {
+		return timegm($sec, $min, $hour, $mday, $mon-1, $year);
+	}
+}
+
+sub iso8601ToUnixTimestamp {
+	my ($vt_iso8601, $time_zone) = @_;
+
+	if($vt_iso8601 =~ /(\d{4,})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/ms){
+		my ( $year, $mon, $mday, $hour, $min, $sec )
+		 = ( $1, $2, $3, $4, $5, $6 );
+
+		if($time_zone eq "Local") {
+			return timelocal($sec, $min, $hour, $mday, $mon-1, $year);
+		}
+		elsif($time_zone eq "UTC") {
+			return timegm($sec, $min, $hour, $mday, $mon-1, $year);
+		}
+	}
 }
 
 1;
@@ -85,6 +107,10 @@ Returns the duration at ISO8601 format.
 
 Path of the directory to read.
 
-=head2 msFiletimeToUnix($msfiletime)
+=head2 msFiletimeToUnixTimestamp($msfiletime)
 
 Converts from Microsoft FileTime format to Unix timestamp.
+
+=head2 iso8601ToUnixTimestamp($iso8601datetime)
+
+Converts from ISO8601 Date time format to Unix timestamp.

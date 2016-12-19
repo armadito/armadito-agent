@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use English qw(-no_match_vars);
 use Armadito::Agent::Tools::Dir qw( readDirectory );
-use Armadito::Agent::Tools::Time qw( msFiletimeToUnix );
+use Armadito::Agent::Tools::Time qw( msFiletimeToUnixTimestamp );
 use DBD::SQLite;
 use DBD::SQLite::Constants qw/:file_open/;
 
@@ -92,7 +92,7 @@ sub getAlerts {
 		my $alert = {
 			name            => $threat->{verdict}->{name},
 			filepath        => $self->getFilePath($threat_id, $dbh),
-			detection_time  => msFiletimeToUnix($filetime_ts),
+			detection_time  => msFiletimeToUnixTimestamp($filetime_ts, "UTC"),
 			action          => $threat->{scanaction},
 			impact_severity => $threat->{verdict}->{danger},
 			info            => "status=".$threat->{verdict}->{status}
