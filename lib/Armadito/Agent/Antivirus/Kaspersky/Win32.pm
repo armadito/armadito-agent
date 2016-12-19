@@ -88,10 +88,14 @@ sub getAlerts {
 		my $threat_id   = $row[1];
 		my $filetime_ts = $row[2];
 
+		my $threat = $self->getThreat($threat_id, $dbh);
 		my $alert = {
-			name           => $self->getThreatName( $threat_id, $dbh ),
-			filepath       => $self->getFilePath( $threat_id,   $dbh ),
-			detection_time => msFiletimeToUnix($filetime_ts)
+			name            => $threat->{verdict}->{name},
+			filepath        => $self->getFilePath($threat_id, $dbh),
+			detection_time  => msFiletimeToUnix($filetime_ts),
+			action          => $threat->{scanaction},
+			impact_severity => $threat->{verdict}->{danger},
+			info            => "status=".$threat->{verdict}->{status}
 		};
 
 		if ( $alert->{name} ne "" ) {
@@ -117,12 +121,25 @@ sub getFilePath {
 	return $row[0];
 }
 
-sub getThreatName {
+sub getThreat {
 	my ( $self, $threat_id, $dbh ) = @_;
 
-	my $verdict_id = $self->getVerdictId( $threat_id, $dbh );
+	my $threat = $self->getThreatFromDB( $threat_id, $dbh );
+	$threat->{verdict} = $self->getVerdictFromDB( $threat->{verdictid}, $dbh );
 
-	my $stmt = qq(SELECT Name FROM verdicts WHERE Id=?;);
+	return $threat;
+}
+
+sub getVerdictFromDB {
+	my ( $self, $verdict_id, $dbh ) = @_;
+
+	my $verdict = {
+		name => "",
+		danger => "",
+		status => ""
+	};
+
+	my $stmt = qq(SELECT Name, Danger, Status FROM verdicts WHERE Id=?;);
 	my $sth  = $dbh->prepare($stmt);
 	my $rv   = $sth->execute($verdict_id) or die $DBI::errstr;
 	if ( $rv < 0 ) {
@@ -130,13 +147,23 @@ sub getThreatName {
 	}
 
 	my @row = $sth->fetchrow_array();
-	return $row[0];
+	$verdict->{name} = $row[0];
+	$verdict->{danger} = $row[1];
+	$verdict->{status} = $row[2];
+
+	return $verdict;
 }
 
-sub getVerdictId {
+sub getThreatFromDB {
 	my ( $self, $threat_id, $dbh ) = @_;
 
-	my $stmt = qq(SELECT Verdict FROM threats WHERE Id=?;);
+	my $threat = {
+		verdictid => "",
+		scanaction => "",
+		verdict => {}
+	};
+
+	my $stmt = qq(SELECT Verdict, ScanAction FROM threats WHERE Id=?;);
 	my $sth  = $dbh->prepare($stmt);
 	my $rv   = $sth->execute($threat_id) or die $DBI::errstr;
 	if ( $rv < 0 ) {
@@ -144,7 +171,10 @@ sub getVerdictId {
 	}
 
 	my @row = $sth->fetchrow_array();
-	return $row[0];
+	$threat->{verdictid}  = $row[0];
+	$threat->{scanaction} = $self->_actionToString($row[1]);
+
+	return $threat;
 }
 
 sub getProgramDataPath {
@@ -157,6 +187,20 @@ sub getDataPath {
 	my ($self) = @_;
 
 	return $self->getProgramDataPath() . "\\Data\\";
+}
+
+sub _actionToString {
+	my ($self, $action) = @_;
+
+	my $string  = $action."(unknown)";
+
+	if($action == 1){
+		$string = "quarantine";
+	} elsif($action == 4) {
+		$string = "unrepaired";
+	}
+
+	return $string;
 }
 
 1;
