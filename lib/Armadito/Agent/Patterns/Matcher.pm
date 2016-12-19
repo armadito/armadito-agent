@@ -13,7 +13,7 @@ sub new {
 		patterns           => \%patterns,
 		logger             => $params{logger},
 		exclusion_patterns => [],
-		substitutions      => []
+		hooks              => []
 	};
 
 	bless $self, $class;
@@ -51,6 +51,7 @@ sub getResultsForPattern {
 		else {
 			foreach my $label ( @{ $pattern->{labels} } ) {
 				$match_results->{$label} = $pattern->{matches}[$i][$j];
+				$match_results->{$label} = $self->runHooksForLabel($label, $match_results->{$label});
 				$j++;
 			}
 		}
@@ -91,15 +92,29 @@ sub addExclusionPatterns {
 	$self->{exclusion_patterns} = $patterns;
 }
 
-sub addSubstitution {
-	my ( $self, $pattern, $replace ) = @_;
+sub addHookForLabel {
+	my ( $self, $label, $funcref ) = @_;
 
-	my $substitution = {
-		pattern => $pattern,
-		replace => $replace
+	my $hook = {
+		label => $label,
+		function => $funcref
 	};
 
-	push( @{ $self->{substitutions} }, $substitution );
+	push( @{ $self->{hooks} }, $hook );
+}
+
+sub runHooksForLabel {
+	my ( $self, $label, $match ) = @_;
+
+	foreach my $hook (@{ $self->{hooks} })
+	{
+		if($hook->{label} eq $label)
+		{
+			return $hook->{function}->($match);
+		}
+	}
+
+	return $match;
 }
 
 sub run {
@@ -109,7 +124,6 @@ sub run {
 
 	foreach my $substring (@substrings) {
 		if ( !$self->_isExcluded($substring) ) {
-			$substring = $self->_runSubstitutions($substring);
 			$self->_parseSubString($substring);
 		}
 	}
@@ -125,18 +139,6 @@ sub _isExcluded {
 	}
 
 	return 0;
-}
-
-sub _runSubstitutions {
-	my ( $self, $substring ) = @_;
-
-	foreach my $substitution ( @{ $self->{substitutions} } ) {
-		my $pattern = $substitution->{pattern};
-		my $replace = $substitution->{replace};
-		$substring =~ s/$pattern/$replace/ee;
-	}
-
-	return $substring;
 }
 
 sub _parseSubString {

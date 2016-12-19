@@ -40,11 +40,18 @@ sub _parseScanOutput {
 	$pattern = '^(\d{4,}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+(.*)\s+suspicion\s+([\w\.:]+)';
 	$parser->addPattern( 'alerts', $pattern, $labels );
 
-	$parser->addSubstitution( '\/\/data(\d{4})(\s{1})', '"\\\\\\\\data$1$2"' );
-
 	$parser->run( $output, '\n' );
+	$parser->addHookForLabel('filepath', \&formatFilePath );
 
 	return $parser->getResults();
+}
+
+sub formatFilePath {
+	my ($match) = @_;
+
+	$match =~ s/\/\/data(\d{4})/\\\\data$1/ms;
+
+	return $match;
 }
 
 sub run {
