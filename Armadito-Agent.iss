@@ -34,7 +34,9 @@ OutputManifestFile=package-manifest.txt
 PrivilegesRequired=admin
 SolidCompression=yes
 SetupIconFile=res\armadito_192x192.ico
+UninstallDisplayIcon={app}\armadito_192x192.ico
 SetupLogging=yes
+
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -44,6 +46,7 @@ Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
+Source: "res\*.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "lib\*"; DestDir: "{app}\share\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "etc\*"; DestDir: "{app}\etc"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs
