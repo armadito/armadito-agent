@@ -29,6 +29,7 @@ AlwaysRestart=no
 SetupLogging=yes
 PrivilegesRequired=admin
 SetupIconFile=res\armadito_192x192.ico
+MinVersion=0,6.1
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
