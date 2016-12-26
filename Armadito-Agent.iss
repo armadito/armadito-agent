@@ -38,19 +38,32 @@ SetupIconFile=res\armadito_192x192.ico
 UninstallDisplayIcon={app}\armadito_192x192.ico
 SetupLogging=yes
 
+[CustomMessages]
+InstallPerlMessage=Install Strawberry perl distribution
+InstallPerlDeps=Install missing Perl dependencies
+
+[Components]
+Name: "main"; Description: "Main Files"; Types: full custom; Flags: fixed
+Name: "perl"; Description: "Perl distribution and/or dependencies"; Types: full
+
+[Types]
+Name: "full"; Description: "Full installation"
+Name: "custom"; Description: "Custom installation"; Flags: iscustom
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 
 [Tasks]
-Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
+Name: "installstrawberry"; Description: "{cm:InstallPerlMessage}";  Components: perl; Flags: checkedonce
+Name: "installperldeps"; Description: "{cm:InstallPerlDeps}";  Components: perl;
 
 [Files]
-Source: "res\*.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "lib\*"; DestDir: "{app}\share\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "etc\*"; DestDir: "{app}\etc"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "res\*.ico"; DestDir: "{app}"; Flags: ignoreversion; Components: main
+Source: "lib\*"; DestDir: "{app}\share\lib"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
+Source: "etc\*"; DestDir: "{app}\etc"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
+Source: "bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
+Source: "Makefile.PL"; DestDir: "{app}"; Flags: ignoreversion; Tasks: installperldeps
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\System\{#MyAppExeName}"; AppUserModelID: "TeclibSAS.ArmaditoAgent-F7E3EA05-C681-4087-940D-147654171532"     
