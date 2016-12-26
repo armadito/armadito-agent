@@ -21,5 +21,5 @@ _build/
 cover_db/
 inc/
 nytprof.out
-/Output/
+/out/
 /bin/armadito-agent.bat

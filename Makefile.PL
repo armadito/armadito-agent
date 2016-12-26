@@ -101,7 +101,7 @@ sub constants {
 
 	if ( $OSNAME eq "MSWin32" ) {
 		%Variables = (
-			PREFIX               => 'C:\\Program Files\\Armadito Agent',
+			PREFIX               => 'C:\\Program Files\\Armadito-Agent',
 			INSTALLSCRIPT        => '$(PREFIX)\\bin',
 			INSTALLSITESCRIPT    => '$(PREFIX)\\bin',
 			INSTALLVENDORSCRIPT  => '$(PREFIX)\\bin',

@@ -18,20 +18,22 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\{#MyAppName}
-DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 AllowRootDirectory=no
 AllowUNCPath=no
 AlwaysRestart=no
-OutputBaseFilename=Armadito-Agent-{#MyAppVersion}
-Compression=lzma
-SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64
-SetupLogging=yes
-PrivilegesRequired=admin
-SetupIconFile=res\armadito_192x192.ico
+Compression=lzma
+DefaultDirName={pf}\{#MyAppName}
+DefaultGroupName={#MyAppName}
+LicenseFile=COPYING
 MinVersion=0,6.1
+OutputBaseFilename=Armadito-Agent-{#MyAppVersion}
+Outputdir=out
+PrivilegesRequired=admin
+SolidCompression=yes
+SetupIconFile=res\armadito_192x192.ico
+SetupLogging=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
