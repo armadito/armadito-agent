@@ -45,14 +45,3 @@ Source: "bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs creat
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\System\{#MyAppExeName}"; AppUserModelID: "TeclibSAS.ArmaditoAgent-F7E3EA05-C681-4087-940D-147654171532"     
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-
-[Registry]
-;Root: HKCR; Subkey: "Directory\shell\Armadito"; ValueType: string; ValueName: "icon"; ValueData: """{app}\System\{#MyAppExeName}"""; Flags: uninsdeletekey
-
-[Run]
-Filename: "{app}\installboot.bat"; Flags: runascurrentuser waituntilterminated runhidden;
-Filename: "{app}\launchagent.bat"; Flags: nowait runhidden;
-
-[UninstallRun]
-Filename: "{app}\stopagent.bat"; Flags: nowait runhidden;
-Filename: "{app}\uninstallagent.bat"; Flags: runhidden;
