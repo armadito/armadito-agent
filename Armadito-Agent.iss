@@ -30,6 +30,7 @@ LicenseFile=COPYING
 MinVersion=0,6.1
 OutputBaseFilename=Armadito-Agent-{#MyAppVersion}
 Outputdir=out
+OutputManifestFile=package-manifest.txt
 PrivilegesRequired=admin
 SolidCompression=yes
 SetupIconFile=res\armadito_192x192.ico
