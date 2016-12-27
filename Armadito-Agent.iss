@@ -42,28 +42,23 @@ SetupLogging=yes
 [CustomMessages]
 InstallPerlMessage=Install Strawberry perl distribution
 InstallPerlDeps=Install missing Perl dependencies
-
-[Components]
-Name: "main"; Description: "Main Files"; Types: full custom; Flags: fixed
-Name: "perl"; Description: "Perl distribution and/or dependencies"; Types: full
-
-[Types]
-Name: "full"; Description: "Full installation"
-Name: "custom"; Description: "Custom installation"; Flags: iscustom
+InstallPerlDepsStatus=Installing Perl dependencies...
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 
 [Tasks]
-Name: "installstrawberry"; Description: "{cm:InstallPerlMessage}";  Components: perl; Flags: checkedonce
-Name: "installperldeps"; Description: "{cm:InstallPerlDeps}";  Components: perl;
+Name: "installperldeps"; Description: "{cm:InstallPerlDeps}";
+
+[Run]
+Filename: "C:\\strawberry\\perl\\bin\\cpanm.bat"; WorkingDir: "{app}"; StatusMsg: "{cm:InstallPerlDepsStatus}"; Tasks: installperldeps; Parameters: "--installdeps --notest . > ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilidle
 
 [Files]
-Source: "res\*.ico"; DestDir: "{app}"; Flags: ignoreversion; Components: main
-Source: "lib\*"; DestDir: "{app}\share\lib"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
-Source: "etc\*"; DestDir: "{app}\etc"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
-Source: "bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
+Source: "res\*.ico"; DestDir: "{app}"; Flags: ignoreversion;
+Source: "lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs;
+Source: "etc\*"; DestDir: "{app}\etc"; Flags: ignoreversion recursesubdirs createallsubdirs;
+Source: "bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs;
 Source: "Makefile.PL"; DestDir: "{app}"; Flags: ignoreversion; Tasks: installperldeps
 
 [Icons]
