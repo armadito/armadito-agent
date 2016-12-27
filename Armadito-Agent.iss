@@ -43,6 +43,7 @@ SetupLogging=yes
 InstallPerlMessage=Install Strawberry perl distribution
 InstallPerlDeps=Install missing Perl dependencies
 InstallPerlDepsStatus=Installing Perl dependencies...
+InstallPerlCpanM=Installing CpanMinus...
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -52,7 +53,8 @@ Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Name: "installperldeps"; Description: "{cm:InstallPerlDeps}";
 
 [Run]
-Filename: "C:\\strawberry\\perl\\bin\\cpanm.bat"; WorkingDir: "{app}"; StatusMsg: "{cm:InstallPerlDepsStatus}"; Tasks: installperldeps; Parameters: "--installdeps --notest . > ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilidle
+Filename: "{code:GetPerlPath}\bin\cpan.bat"; WorkingDir: "{app}"; StatusMsg: "{cm:InstallPerlCpanM}"; Tasks: installperldeps; Parameters: "App::cpanminus > ""{app}\installcpanm.log"" 2>&1"; Flags: runhidden waituntilidle
+Filename: "{code:GetPerlPath}\site\bin\cpanm.bat"; WorkingDir: "{app}"; StatusMsg: "{cm:InstallPerlDepsStatus}"; Tasks: installperldeps; Parameters: "--installdeps --notest . > ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilidle
 
 [Files]
 Source: "res\*.ico"; DestDir: "{app}"; Flags: ignoreversion;
@@ -66,7 +68,14 @@ Name: "{group}\{#MyAppName}"; Filename: "{app}\System\{#MyAppExeName}"; AppUserM
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
 
+[Registry]
+Root: HKCU; Subkey: "Software\Armadito-Agent"; Flags: uninsdeletekeyifempty
+Root: HKCU; Subkey: "Software\Armadito-Agent"; ValueType: string; ValueName: "PerlPath"; ValueData: "{code:GetPerlPath}"
+
 [Code]
+var
+  PerlPathPage: TInputDirWizardPage;
+
 procedure AboutButtonOnClick(Sender: TObject);
 var
   ErrorCode: Integer;
@@ -110,45 +119,22 @@ begin
   URLLabel.Left := AboutButton.Left + AboutButton.Width + ScaleX(20);
 end;
 
-procedure ButtonOnClick(Sender: TObject);
-begin
-  MsgBox('You clicked the button!', mbInformation, mb_Ok);
-end;
-
-
-procedure CreateTheWizardPages;
-var
-  Page: TInputDirWizardPage;
-  DataDir: String;
-begin
-
-  Page := CreateInputDirPage(wpLicense,
-   'Select an Installed Perl distribution', 'Perl > 5.8 is required',
-   'Armadito-Agent requires perl to be installed. '#13#10#13#10 +
-   'Please, select a path of an existing perl distribution :',
-   False, 'New Folder');
-
-   Page.Add('Examples: C:\strawberry\perl or C:\ActivePerl');
-
-   Page.Values[0] := ExpandConstant('C:\');
-
-   DataDir := Page.Values[0];
-
-   { If can't find bin/cpan in DataDir, show Error Dialog}
-   { If can't find bin/cpanm in DataDir, try to install it with bin/cpan}
-   { if everything is fine, then write DataDir in registry}
-end;
-
 procedure InitializeWizard();
 var
   BackgroundBitmapImage: TBitmapImage;
   BackgroundBitmapText: TNewStaticText;
 begin
+  { Custom pages }
+  PerlPathPage := CreateInputDirPage(wpLicense,
+  'Select an Installed Perl distribution', 'Perl > 5.8 is required',
+  'Armadito-Agent requires perl to be installed. '#13#10#13#10 +
+  'Please, select a path of an existing perl distribution :',
+  False, 'New Folder');
 
-  CreateTheWizardPages;
+  PerlPathPage.Add('Examples: C:\Perl, C:\ActivePerl, C:\strawberry\perl, etc');
+  PerlPathPage.Values[0] := GetPreviousData('PerlPath', 'C:\');
 
   { Custom controls }
-
   CreateAboutButtonAndURLLabel(WizardForm, WizardForm.CancelButton);
 
   BackgroundBitmapImage := TBitmapImage.Create(MainForm);
@@ -165,4 +151,43 @@ begin
   BackgroundBitmapText.Font.Color := clWhite;
   BackgroundBitmapText.Parent := MainForm;
 
+end;
+
+procedure RegisterPreviousData(PreviousDataKey: Integer);
+begin
+  SetPreviousData(PreviousDataKey, 'PerlPath', PerlPathPage.Values[0]);
+end;
+
+function SetPerlPath(PerlPath: String): Boolean;
+begin
+  if FileExists(PerlPath + '\bin\cpan.bat') then begin
+    Result := True;
+  end else if FileExists(PerlPath + '\perl\bin\cpan.bat') then begin
+    PerlPathPage.Values[0] := PerlPath + '\perl';
+    Result := True;
+  end else begin
+    Result := False;
+  end;
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+var
+  I: Integer;
+begin
+  if CurPageID = PerlPathPage.ID then begin
+    if not SetPerlPath(PerlPathPage.Values[0]) then begin
+      MsgBox('You must enter a valid perl distribution path', mbError, MB_OK);
+      Result := False;
+    end else begin
+      Result := True;
+    end;
+  end else begin
+    Result := True;
+  end;
+end;
+
+function GetPerlPath(Param: String): String;
+begin
+  { Return the selected PerlPath}
+  Result := PerlPathPage.Values[0];
 end;
