@@ -23,6 +23,7 @@ AllowRootDirectory=no
 AllowUNCPath=no
 AlwaysRestart=no
 AlwaysShowComponentsList=yes
+AlwaysUsePersonalGroup=yes
 ArchitecturesInstallIn64BitMode=x64
 Compression=lzma
 DefaultDirName={pf}\{#MyAppName}
