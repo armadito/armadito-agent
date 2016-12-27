@@ -64,3 +64,105 @@ Source: "Makefile.PL"; DestDir: "{app}"; Flags: ignoreversion; Tasks: installper
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\System\{#MyAppExeName}"; AppUserModelID: "TeclibSAS.ArmaditoAgent-F7E3EA05-C681-4087-940D-147654171532"     
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
+
+
+[Code]
+procedure AboutButtonOnClick(Sender: TObject);
+var
+  ErrorCode: Integer;
+begin
+  ShellExecAsOriginalUser('open', 'http://armadito-glpi.readthedocs.io/en/dev', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+end;
+
+procedure URLLabelOnClick(Sender: TObject);
+var
+  ErrorCode: Integer;
+begin
+  ShellExecAsOriginalUser('open', 'http://www.armadito.com/', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+end;
+
+procedure CreateAboutButtonAndURLLabel(ParentForm: TSetupForm; CancelButton: TNewButton);
+var
+  AboutButton: TNewButton;
+  URLLabel: TNewStaticText;
+begin
+  AboutButton := TNewButton.Create(ParentForm);
+  AboutButton.Left := ParentForm.ClientWidth - CancelButton.Left - CancelButton.Width;
+  AboutButton.Top := CancelButton.Top;
+  AboutButton.Width := CancelButton.Width;
+  AboutButton.Height := CancelButton.Height;
+  AboutButton.Caption := '&About...';
+  AboutButton.OnClick := @AboutButtonOnClick;
+  AboutButton.Parent := ParentForm;
+
+  URLLabel := TNewStaticText.Create(ParentForm);
+  URLLabel.Caption := 'www.armadito.com';
+  URLLabel.Cursor := crHand;
+  URLLabel.OnClick := @URLLabelOnClick;
+  URLLabel.Parent := ParentForm;
+  { Alter Font *after* setting Parent so the correct defaults are inherited first }
+  URLLabel.Font.Style := URLLabel.Font.Style + [fsUnderline];
+  if GetWindowsVersion >= $040A0000 then   { Windows 98 or later? }
+    URLLabel.Font.Color := clHotLight
+  else
+    URLLabel.Font.Color := clBlue;
+  URLLabel.Top := AboutButton.Top + AboutButton.Height - URLLabel.Height - 2;
+  URLLabel.Left := AboutButton.Left + AboutButton.Width + ScaleX(20);
+end;
+
+procedure ButtonOnClick(Sender: TObject);
+begin
+  MsgBox('You clicked the button!', mbInformation, mb_Ok);
+end;
+
+
+procedure CreateTheWizardPages;
+var
+  Page: TInputDirWizardPage;
+  DataDir: String;
+begin
+
+  Page := CreateInputDirPage(wpLicense,
+   'Select an Installed Perl distribution', 'Perl > 5.8 is required',
+   'Armadito-Agent requires perl to be installed. '#13#10#13#10 +
+   'Please, select a path of an existing perl distribution :',
+   False, 'New Folder');
+
+   Page.Add('Examples: C:\strawberry\perl or C:\ActivePerl');
+
+   Page.Values[0] := ExpandConstant('C:\');
+
+   DataDir := Page.Values[0];
+
+   { If can't find bin/cpan in DataDir, show Error Dialog}
+   { If can't find bin/cpanm in DataDir, try to install it with bin/cpan}
+   { if everything is fine, then write DataDir in registry}
+end;
+
+procedure InitializeWizard();
+var
+  BackgroundBitmapImage: TBitmapImage;
+  BackgroundBitmapText: TNewStaticText;
+begin
+
+  CreateTheWizardPages;
+
+  { Custom controls }
+
+  CreateAboutButtonAndURLLabel(WizardForm, WizardForm.CancelButton);
+
+  BackgroundBitmapImage := TBitmapImage.Create(MainForm);
+  BackgroundBitmapImage.Left := 50;
+  BackgroundBitmapImage.Top := 90;
+  BackgroundBitmapImage.AutoSize := True;
+  BackgroundBitmapImage.Bitmap := WizardForm.WizardBitmapImage.Bitmap;
+  BackgroundBitmapImage.Parent := MainForm;
+
+  BackgroundBitmapText := TNewStaticText.Create(MainForm);
+  BackgroundBitmapText.Left := BackgroundBitmapImage.Left;
+  BackgroundBitmapText.Top := BackgroundBitmapImage.Top + BackgroundBitmapImage.Height + ScaleY(8);
+  BackgroundBitmapText.Caption := 'TBitmapImage';
+  BackgroundBitmapText.Font.Color := clWhite;
+  BackgroundBitmapText.Parent := MainForm;
+
+end;
