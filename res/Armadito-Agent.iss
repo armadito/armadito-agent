@@ -68,18 +68,38 @@ Source: "..\bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs cr
 Source: "..\Makefile.PL"; DestDir: "{app}"; Flags: ignoreversion; Tasks: installperldeps
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\System\{#MyAppExeName}"; AppUserModelID: "TeclibSAS.ArmaditoAgent-F7E3EA05-C681-4087-940D-147654171532"     
+Name: "{group}\{#MyAppName}"; Filename: "{app}\System\{#MyAppExeName}"; \
+    AppUserModelID: "TeclibSAS.ArmaditoAgent-F7E3EA05-C681-4087-940D-147654171532"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
 [Registry]
 Root: HKCU; Subkey: "Software\Armadito-Agent"; Flags: uninsdeletekeyifempty
 Root: HKCU; Subkey: "Software\Armadito-Agent"; ValueType: string; ValueName: "PerlPath"; ValueData: "{code:GetPerlPath}"
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; \
+    ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}\bin"; \
+    Check: NeedsAddPath('{app}\bin')
 
 [Code]
 var
   PerlPathPage: TInputDirWizardPage;
   CpanURLEdit: TNewEdit;
   CpanProxyEdit: TNewEdit;
+
+function NeedsAddPath(Param: string): boolean;
+var
+  OrigPath: string;
+begin
+  if not RegQueryStringValue(HKEY_LOCAL_MACHINE,
+    'SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
+    'Path', OrigPath)
+  then begin
+    Result := True;
+    exit;
+  end;
+  { look for the path with leading and trailing semicolon }
+  { Pos() returns 0 if not found }
+  Result := Pos(';' + Param + ';', ';' + OrigPath + ';') = 0;
+end;
 
 procedure AboutButtonOnClick(Sender: TObject);
 var
