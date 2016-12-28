@@ -244,6 +244,7 @@ begin
       CpanURL := GetCpanURL();
 	  if not AddCpanMirror(CpanURL) then begin
 		  Result := False;
+		  Exit;
       end;
       Result := True;
     end;
