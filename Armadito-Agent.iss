@@ -210,10 +210,12 @@ begin
 
   if (CompareStr(CpanURL, 'http://') = 0) or (CompareStr(CpanURL, '') = 0) then begin
     Result := True;
+	Exit;
   end;
 
   Filename := ExpandConstant('{localappdata}') + '\.cpan\CPAN\MyConfig.pm';
   if not LoadStringsFromFile(Filename, CpanConfigLines) then begin
+    MsgBox('Error when trying to read CPAN Configuration file.', mbError, MB_OK);
     Result := False;
   end;
 
