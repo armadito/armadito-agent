@@ -242,6 +242,5 @@ end;
 
 function GetPerlPath(Param: String): String;
 begin
-  { Return the selected PerlPath}
   Result := PerlPathPage.Values[0];
 end;
