@@ -253,7 +253,7 @@ begin
   end;
 end;
 
-function GetPerlPath(Param: String): String;
+function GetPerlPath(): String;
 begin
   Result := PerlPathPage.Values[0];
 end;
