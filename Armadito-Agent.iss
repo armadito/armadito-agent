@@ -75,6 +75,7 @@ Root: HKCU; Subkey: "Software\Armadito-Agent"; ValueType: string; ValueName: "Pe
 [Code]
 var
   PerlPathPage: TInputDirWizardPage;
+  CpanURLEdit: TNewEdit;
 
 procedure AboutButtonOnClick(Sender: TObject);
 var
@@ -123,16 +124,28 @@ procedure InitializeWizard();
 var
   BackgroundBitmapImage: TBitmapImage;
   BackgroundBitmapText: TNewStaticText;
+  StaticText: TNewStaticText;
 begin
   { Custom pages }
   PerlPathPage := CreateInputDirPage(wpLicense,
   'Select an Installed Perl distribution', 'Perl > 5.8 is required',
-  'Armadito-Agent requires perl to be installed. '#13#10#13#10 +
   'Please, select a path of an existing perl distribution :',
   False, 'New Folder');
 
   PerlPathPage.Add('Examples: C:\Perl, C:\ActivePerl, C:\strawberry\perl, etc');
   PerlPathPage.Values[0] := GetPreviousData('PerlPath', 'C:\');
+
+  StaticText := TNewStaticText.Create(PerlPathPage);
+  StaticText.Top := PerlPathPage.SurfaceHeight div 2 - ScaleX(8);
+  StaticText.Caption := 'Mirror CPAN URL (optional):';
+  StaticText.AutoSize := True;
+  StaticText.Parent := PerlPathPage.Surface;
+
+  CpanURLEdit := TNewEdit.Create(PerlPathPage);
+  CpanURLEdit.Top := PerlPathPage.SurfaceHeight div 2 + ScaleX(8);
+  CpanURLEdit.Width := PerlPathPage.SurfaceWidth div 2 - ScaleX(8);
+  CpanURLEdit.Text := 'http://';
+  CpanURLEdit.Parent := PerlPathPage.Surface;
 
   { Custom controls }
   CreateAboutButtonAndURLLabel(WizardForm, WizardForm.CancelButton);
@@ -170,15 +183,56 @@ begin
   end;
 end;
 
+function GetCpanURL(): String;
+begin
+  Result := CpanURLEdit.Text;
+end;
+
+function AddCpanMirror(CpanURL: String): Boolean;
+var
+  CpanConfigLines: TArrayOfString;
+  Filename: String;
+  I: Integer;
+  LineCount: Integer;
+  NewConfig: String;
+begin
+
+  if (CompareStr(CpanURL, 'http://') = 0) or (CompareStr(CpanURL, '') = 0) then begin
+    Result := True;
+  end;
+
+  Filename := ExpandConstant('{localappdata}') + '\.cpan\CPAN\MyConfig.pm';
+  if not LoadStringsFromFile(Filename, CpanConfigLines) then begin
+    Result := False;
+  end;
+
+  LineCount := GetArrayLength(CpanConfigLines);
+  for I:= 0 to LineCount - 1 do begin
+    StringChangeEx(CpanConfigLines[I], '''urllist'' => [', '''urllist'' => [q['+CpanURL+'], ', True);
+	NewConfig := NewConfig + #13#10 + CpanConfigLines[I];
+  end;
+
+  if not SaveStringToFile(Filename, NewConfig, False) then begin
+    MsgBox('Error when trying to overwrite CPAN Configuration file.', mbError, MB_OK);
+    Result := False;
+  end;
+  Result := True;
+end;
+
 function NextButtonClick(CurPageID: Integer): Boolean;
 var
   I: Integer;
+  CpanURL: String;
 begin
   if CurPageID = PerlPathPage.ID then begin
     if not SetPerlPath(PerlPathPage.Values[0]) then begin
       MsgBox('You must enter a valid perl distribution path', mbError, MB_OK);
       Result := False;
     end else begin
+      CpanURL := GetCpanURL();
+	  if not AddCpanMirror(CpanURL) then begin
+		  Result := False;
+      end;
       Result := True;
     end;
   end else begin
