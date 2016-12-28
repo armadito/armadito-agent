@@ -28,15 +28,15 @@ ArchitecturesInstallIn64BitMode=x64
 Compression=lzma
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
-LicenseFile=COPYING
+LicenseFile=..\COPYING
 MinVersion=0,6.1
 OutputBaseFilename=Armadito-Agent-{#MyAppVersion}-Setup
-Outputdir=out
+Outputdir=..\out
 OutputManifestFile=package-manifest.txt
 PrivilegesRequired=admin
 SolidCompression=yes
-SetupIconFile=res\armadito_192x192.ico
-UninstallDisplayIcon={app}\armadito_192x192.ico
+SetupIconFile=armadito_192x192.ico
+UninstallDisplayIcon={app}\res\armadito_192x192.ico
 SetupLogging=yes
 
 [CustomMessages]
@@ -57,16 +57,15 @@ Filename: "{code:GetPerlPath}\bin\cpan.bat"; WorkingDir: "{app}"; StatusMsg: "{c
 Filename: "{code:GetPerlPath}\site\bin\cpanm.bat"; WorkingDir: "{app}"; StatusMsg: "{cm:InstallPerlDepsStatus}"; Tasks: installperldeps; Parameters: "--installdeps --notest . > ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilidle
 
 [Files]
-Source: "res\*.ico"; DestDir: "{app}"; Flags: ignoreversion;
-Source: "lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs;
-Source: "etc\*"; DestDir: "{app}\etc"; Flags: ignoreversion recursesubdirs createallsubdirs;
-Source: "bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs;
-Source: "Makefile.PL"; DestDir: "{app}"; Flags: ignoreversion; Tasks: installperldeps
+Source: "..\res\*.ico"; DestDir: "{app}\res"; Flags: ignoreversion;
+Source: "..\lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs;
+Source: "..\etc\*"; DestDir: "{app}\etc"; Flags: ignoreversion recursesubdirs createallsubdirs;
+Source: "..\bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs;
+Source: "..\Makefile.PL"; DestDir: "{app}"; Flags: ignoreversion; Tasks: installperldeps
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\System\{#MyAppExeName}"; AppUserModelID: "TeclibSAS.ArmaditoAgent-F7E3EA05-C681-4087-940D-147654171532"     
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-
 
 [Registry]
 Root: HKCU; Subkey: "Software\Armadito-Agent"; Flags: uninsdeletekeyifempty
