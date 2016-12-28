@@ -120,13 +120,12 @@ begin
   URLLabel.Left := AboutButton.Left + AboutButton.Width + ScaleX(20);
 end;
 
-procedure InitializeWizard();
+
+procedure CreatePerlPathPage();
 var
-  BackgroundBitmapImage: TBitmapImage;
-  BackgroundBitmapText: TNewStaticText;
   StaticText: TNewStaticText;
 begin
-  { Custom pages }
+
   PerlPathPage := CreateInputDirPage(wpLicense,
   'Select an Installed Perl distribution', 'Perl > 5.8 is required',
   'Please, select a path of an existing perl distribution :',
@@ -147,7 +146,14 @@ begin
   CpanURLEdit.Text := 'http://';
   CpanURLEdit.Parent := PerlPathPage.Surface;
 
-  { Custom controls }
+end;
+
+procedure CreateBottomPanel();
+var
+  BackgroundBitmapImage: TBitmapImage;
+  BackgroundBitmapText: TNewStaticText;
+begin
+
   CreateAboutButtonAndURLLabel(WizardForm, WizardForm.CancelButton);
 
   BackgroundBitmapImage := TBitmapImage.Create(MainForm);
@@ -163,7 +169,12 @@ begin
   BackgroundBitmapText.Caption := 'TBitmapImage';
   BackgroundBitmapText.Font.Color := clWhite;
   BackgroundBitmapText.Parent := MainForm;
+end;
 
+procedure InitializeWizard();
+begin
+  CreatePerlPathPage();
+  CreateBottomPanel();
 end;
 
 procedure RegisterPreviousData(PreviousDataKey: Integer);
