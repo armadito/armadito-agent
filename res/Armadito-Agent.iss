@@ -53,8 +53,12 @@ Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Name: "installperldeps"; Description: "{cm:InstallPerlDeps}";
 
 [Run]
-Filename: "{code:GetPerlPath}\bin\cpan.bat"; WorkingDir: "{app}"; StatusMsg: "{cm:InstallPerlCpanM}"; Tasks: installperldeps; Parameters: "App::cpanminus > ""{app}\installcpanm.log"" 2>&1"; Flags: runhidden waituntilidle
-Filename: "{code:GetPerlPath}\site\bin\cpanm.bat"; WorkingDir: "{app}"; StatusMsg: "{cm:InstallPerlDepsStatus}"; Tasks: installperldeps; Parameters: "--installdeps --notest . > ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilidle
+Filename: "{code:GetPerlPath}\bin\cpan.bat"; WorkingDir: "{app}"; \
+    StatusMsg: "{cm:InstallPerlCpanM}"; Tasks: installperldeps; \
+    Parameters: "App::cpanminus > ""{app}\installcpanm.log"" 2>&1"; Flags: runhidden waituntilidle
+Filename: "{code:GetPerlPath}\site\bin\cpanm.bat"; WorkingDir: "{app}"; \
+    StatusMsg: "{cm:InstallPerlDepsStatus}"; Tasks: installperldeps; \
+    Parameters: "--installdeps --notest . > ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilidle
 
 [Files]
 Source: "..\res\*.ico"; DestDir: "{app}\res"; Flags: ignoreversion;
@@ -119,7 +123,6 @@ begin
   URLLabel.Top := AboutButton.Top + AboutButton.Height - URLLabel.Height - 2;
   URLLabel.Left := AboutButton.Left + AboutButton.Width + ScaleX(20);
 end;
-
 
 procedure CreatePerlPathPage();
 var
