@@ -64,8 +64,7 @@ if ($options->{version}) {
 my $prefix = ".\/";
 if($OSNAME eq "MSWin32"){
 	$prefix  = abs_path($0);
-	$prefix  =~ s/(.*)\\armadito-agent\.bat$/$1/;
-	$prefix .= "\\..\\";
+	$prefix  =~ s/(.*\/)bin\/armadito-agent.*$/$1/;
 }
 
 my %setup = (

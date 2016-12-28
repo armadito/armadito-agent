@@ -77,7 +77,10 @@ Root: HKCU; Subkey: "Software\Armadito-Agent"; Flags: uninsdeletekeyifempty
 Root: HKCU; Subkey: "Software\Armadito-Agent"; ValueType: string; ValueName: "PerlPath"; ValueData: "{code:GetPerlPath}"
 Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; \
     ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}\bin"; \
-    Check: NeedsAddPath('{app}\bin')
+    Check: NeedsAddEnvVariable('{app}\bin', 'Path')
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; \
+    ValueType: expandsz; ValueName: "PERL5LIB"; ValueData: "{olddata};{app}\lib"; \
+    Check: NeedsAddEnvVariable('{app}\lib', 'PERL5LIB')
 
 [Code]
 var
@@ -85,16 +88,18 @@ var
   CpanURLEdit: TNewEdit;
   CpanProxyEdit: TNewEdit;
 
-function NeedsAddPath(Param: string): boolean;
+function NeedsAddEnvVariable(Param: String; EnvVar: String): Boolean;
 var
-  OrigPath: string;
+  OrigPath: String;
 begin
+  Param := ExpandConstant(Param);
+
   if not RegQueryStringValue(HKEY_LOCAL_MACHINE,
     'SYSTEM\CurrentControlSet\Control\Session Manager\Environment',
-    'Path', OrigPath)
+    EnvVar, OrigPath)
   then begin
     Result := True;
-    exit;
+    Exit;
   end;
   { look for the path with leading and trailing semicolon }
   { Pos() returns 0 if not found }
