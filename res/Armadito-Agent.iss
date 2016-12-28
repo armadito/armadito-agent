@@ -75,6 +75,7 @@ Root: HKCU; Subkey: "Software\Armadito-Agent"; ValueType: string; ValueName: "Pe
 var
   PerlPathPage: TInputDirWizardPage;
   CpanURLEdit: TNewEdit;
+  CpanProxyEdit: TNewEdit;
 
 procedure AboutButtonOnClick(Sender: TObject);
 var
@@ -122,7 +123,8 @@ end;
 
 procedure CreatePerlPathPage();
 var
-  StaticText: TNewStaticText;
+  CpanURLText: TNewStaticText;
+  CpanProxyText: TNewStaticText;
 begin
 
   PerlPathPage := CreateInputDirPage(wpLicense,
@@ -133,17 +135,29 @@ begin
   PerlPathPage.Add('Examples: C:\Perl, C:\ActivePerl, C:\strawberry\perl, etc');
   PerlPathPage.Values[0] := GetPreviousData('PerlPath', 'C:\');
 
-  StaticText := TNewStaticText.Create(PerlPathPage);
-  StaticText.Top := PerlPathPage.SurfaceHeight div 2 - ScaleX(8);
-  StaticText.Caption := 'Mirror CPAN URL (optional):';
-  StaticText.AutoSize := True;
-  StaticText.Parent := PerlPathPage.Surface;
+  CpanURLText := TNewStaticText.Create(PerlPathPage);
+  CpanURLText.Top := PerlPathPage.SurfaceHeight * 3/5 - ScaleX(8);
+  CpanURLText.Caption := 'Mirror CPAN URL (optional):';
+  CpanURLText.AutoSize := True;
+  CpanURLText.Parent := PerlPathPage.Surface;
 
   CpanURLEdit := TNewEdit.Create(PerlPathPage);
-  CpanURLEdit.Top := PerlPathPage.SurfaceHeight div 2 + ScaleX(8);
+  CpanURLEdit.Top := PerlPathPage.SurfaceHeight * 3/5 + ScaleX(8);
   CpanURLEdit.Width := PerlPathPage.SurfaceWidth div 2 - ScaleX(8);
   CpanURLEdit.Text := 'http://';
   CpanURLEdit.Parent := PerlPathPage.Surface;
+
+  CpanProxyText := TNewStaticText.Create(PerlPathPage);
+  CpanProxyText.Top := PerlPathPage.SurfaceHeight * 4/5 - ScaleX(8);
+  CpanProxyText.Caption := 'CPAN Proxy (optional):';
+  CpanProxyText.AutoSize := True;
+  CpanProxyText.Parent := PerlPathPage.Surface;
+
+  CpanProxyEdit := TNewEdit.Create(PerlPathPage);
+  CpanProxyEdit.Top := PerlPathPage.SurfaceHeight * 4/5 + ScaleX(8);
+  CpanProxyEdit.Width := PerlPathPage.SurfaceWidth div 2 - ScaleX(8);
+  CpanProxyEdit.Text := 'http://';
+  CpanProxyEdit.Parent := PerlPathPage.Surface;
 
 end;
 
@@ -193,12 +207,26 @@ begin
   end;
 end;
 
-function GetCpanURL(): String;
+function GetCpanURL(Param: String): String;
 begin
   Result := CpanURLEdit.Text;
 end;
 
-function AddCpanMirror(CpanURL: String): Boolean;
+function GetCpanProxy(Param: String): String;
+begin
+  Result := CpanProxyEdit.Text;
+end;
+
+function ShouldReplaceURL(URL: String): Boolean;
+begin
+  if (CompareStr(URL, 'http://') = 0) or (CompareStr(URL, '') = 0) then begin
+    Result := False;
+  end else begin
+    Result := True;
+  end;
+end;
+
+function UpdateCpanConfig(CpanURL: String; CpanProxy: String): Boolean;
 var
   CpanConfigLines: TArrayOfString;
   Filename: String;
@@ -206,11 +234,6 @@ var
   LineCount: Integer;
   NewConfig: String;
 begin
-
-  if (CompareStr(CpanURL, 'http://') = 0) or (CompareStr(CpanURL, '') = 0) then begin
-    Result := True;
-	Exit;
-  end;
 
   Filename := ExpandConstant('{localappdata}') + '\.cpan\CPAN\MyConfig.pm';
   if not LoadStringsFromFile(Filename, CpanConfigLines) then begin
@@ -220,7 +243,15 @@ begin
 
   LineCount := GetArrayLength(CpanConfigLines);
   for I:= 0 to LineCount - 1 do begin
-    StringChangeEx(CpanConfigLines[I], '''urllist'' => [', '''urllist'' => [q['+CpanURL+'], ', True);
+
+    if (Pos('''urllist'' =>', CpanConfigLines[I]) > 0) and (ShouldReplaceURL(CpanURL)) then begin
+		StringChangeEx(CpanConfigLines[I], '''urllist'' => [', '''urllist'' => [q['+CpanURL+'], ', True);
+	end;
+
+	if (Pos('''http_proxy'' =>', CpanConfigLines[I]) > 0) and (ShouldReplaceURL(CpanProxy)) then begin
+		 CpanConfigLines[I] := '  ''http_proxy'' => q['+CpanProxy+'], ';
+	end;
+
 	NewConfig := NewConfig + #13#10 + CpanConfigLines[I];
   end;
 
@@ -235,14 +266,16 @@ function NextButtonClick(CurPageID: Integer): Boolean;
 var
   I: Integer;
   CpanURL: String;
+  CpanProxy: String;
 begin
   if CurPageID = PerlPathPage.ID then begin
     if not SetPerlPath(PerlPathPage.Values[0]) then begin
       MsgBox('You must enter a valid perl distribution path', mbError, MB_OK);
       Result := False;
     end else begin
-      CpanURL := GetCpanURL();
-	  if not AddCpanMirror(CpanURL) then begin
+      CpanURL := GetCpanURL('');
+	  CpanProxy := GetCpanProxy('');
+	  if not UpdateCpanConfig(CpanURL, CpanProxy) then begin
 		  Result := False;
 		  Exit;
       end;
@@ -253,7 +286,7 @@ begin
   end;
 end;
 
-function GetPerlPath(): String;
+function GetPerlPath(Param: String): String;
 begin
   Result := PerlPathPage.Values[0];
 end;
