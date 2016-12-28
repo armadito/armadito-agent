@@ -255,7 +255,7 @@ begin
 	NewConfig := NewConfig + #13#10 + CpanConfigLines[I];
   end;
 
-  if not SaveStringToFile(Filename, NewConfig, False) then begin
+  if not SaveStringToFile(Filename, Trim(NewConfig), False) then begin
     MsgBox('Error when trying to overwrite CPAN Configuration file.', mbError, MB_OK);
     Result := False;
   end;
