@@ -28,7 +28,6 @@ Minimum perl version: 5.8
 
 On ubuntu :
   sudo apt-get install cpanminus libmodule-install-perl libreadonly-perl libxml2
-  cpan install inc::Module::Install
   cpanm --quiet --installdeps --notest .
 
 On Windows :
