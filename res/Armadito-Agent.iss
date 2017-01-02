@@ -61,11 +61,18 @@ Filename: "{code:GetPerlPath}\site\bin\cpanm.bat"; WorkingDir: "{app}"; \
     Parameters: "--installdeps --notest . > ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilidle
 
 [Files]
-Source: "..\res\*.ico"; DestDir: "{app}\res"; Flags: ignoreversion;
-Source: "..\lib\*"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs;
-Source: "..\etc\*"; DestDir: "{app}\etc"; Flags: ignoreversion recursesubdirs createallsubdirs;
-Source: "..\bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs createallsubdirs;
-Source: "..\Makefile.PL"; DestDir: "{app}"; Flags: ignoreversion; Tasks: installperldeps
+Source: "..\res\*.ico"; DestDir: "{app}\res"; \
+    Flags: ignoreversion;
+Source: "..\lib\*"; DestDir: "{app}\lib"; \
+    Flags: ignoreversion recursesubdirs createallsubdirs;
+Source: "..\etc\agent.cfg"; DestDir: "{app}\etc"; DestName: "agent.cfg.new"; Check: IsConfExisting(); \
+    Flags: ignoreversion recursesubdirs createallsubdirs;
+Source: "..\etc\agent.cfg";  DestDir: "{app}\etc"; DestName: "agent.cfg"; Check: IsConfNotExisting(); \
+    Flags: ignoreversion recursesubdirs createallsubdirs;
+Source: "..\bin\*"; DestDir: "{app}\bin"; \
+    Flags: ignoreversion recursesubdirs createallsubdirs;
+Source: "..\Makefile.PL"; DestDir: "{app}"; \
+    Flags: ignoreversion; Tasks: installperldeps
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\System\{#MyAppExeName}"; \
@@ -74,7 +81,8 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
 [Registry]
 Root: HKCU; Subkey: "Software\Armadito-Agent"; Flags: uninsdeletekeyifempty
-Root: HKCU; Subkey: "Software\Armadito-Agent"; ValueType: string; ValueName: "PerlPath"; ValueData: "{code:GetPerlPath}"
+Root: HKCU; Subkey: "Software\Armadito-Agent"; \
+    ValueType: string; ValueName: "PerlPath"; ValueData: "{code:GetPerlPath}"
 Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; \
     ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}\bin"; \
     Check: NeedsAddEnvVariable('{app}\bin', 'Path')
@@ -104,6 +112,26 @@ begin
   { look for the path with leading and trailing semicolon }
   { Pos() returns 0 if not found }
   Result := Pos(';' + Param + ';', ';' + OrigPath + ';') = 0;
+end;
+
+function IsConfExisting(): Boolean;
+var
+  ConfFile: String;
+begin
+  ConfFile := ExpandConstant('{app}\etc\agent.cfg');
+
+  if FileExists(ConfFile)
+  then begin
+    Result := True;
+    Exit;
+  end;
+
+  Result := False;
+end;
+
+function IsConfNotExisting(): Boolean;
+begin
+  Result := not IsConfExisting();
 end;
 
 procedure AboutButtonOnClick(Sender: TObject);
