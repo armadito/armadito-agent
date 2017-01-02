@@ -195,6 +195,11 @@ begin
   PerlPathPage.Add('Examples: C:\Perl, C:\ActivePerl, C:\strawberry\perl, etc');
   PerlPathPage.Values[0] := GetPreviousData('PerlPath', 'C:\');
 
+  if ExpandConstant('{param:PERLPATH|false}') <> 'false' then
+  begin
+    PerlPathPage.Values[0] := ExpandConstant('{param:PERLPATH}');
+  end;
+
   CpanURLText := TNewStaticText.Create(PerlPathPage);
   CpanURLText.Top := PerlPathPage.SurfaceHeight * 3/5 - ScaleX(8);
   CpanURLText.Caption := 'Mirror CPAN URL (optional):';
