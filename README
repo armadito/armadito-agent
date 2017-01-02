@@ -27,7 +27,7 @@ Minimum perl version: 5.8
 ## Dependencies
 
 On ubuntu :
-  sudo apt-get install cpanminus libmodule-install-perl libreadonly-perl libxml2
+  sudo apt-get install cpanminus libmodule-install-perl libreadonly-perl libxml2-dev
   cpanm --quiet --installdeps --notest .
 
 On Windows :
