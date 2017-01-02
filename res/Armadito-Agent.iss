@@ -90,6 +90,15 @@ Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environmen
     ValueType: expandsz; ValueName: "PERL5LIB"; ValueData: "{olddata};{app}\lib"; \
     Check: NeedsAddEnvVariable('{app}\lib', 'PERL5LIB')
 
+[UninstallDelete]
+Type: files; Name: "{app}\Makefile"
+Type: files; Name: "{app}\MYMETA.*"
+Type: files; Name: "{app}\META.yml"
+Type: files; Name: "{app}\installcpanm.log"
+Type: files; Name: "{app}\installdeps.log"
+Type: filesandordirs; Name: "{app}\inc"
+Type: dirifempty; Name: "{app}\var"
+
 [Code]
 var
   PerlPathPage: TInputDirWizardPage;
