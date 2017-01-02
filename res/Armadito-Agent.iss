@@ -67,7 +67,7 @@ Source: "..\lib\*"; DestDir: "{app}\lib"; \
     Flags: ignoreversion recursesubdirs createallsubdirs;
 Source: "..\etc\agent.cfg"; DestDir: "{app}\etc"; DestName: "agent.cfg.new"; Check: IsConfExisting(); \
     Flags: ignoreversion recursesubdirs createallsubdirs;
-Source: "..\etc\agent.cfg";  DestDir: "{app}\etc"; DestName: "agent.cfg"; Check: IsConfNotExisting(); \
+Source: "..\etc\agent.cfg";  DestDir: "{app}\etc"; DestName: "agent.cfg"; Check: not IsConfExisting(); \
     Flags: ignoreversion recursesubdirs createallsubdirs;
 Source: "..\bin\*"; DestDir: "{app}\bin"; \
     Flags: ignoreversion recursesubdirs createallsubdirs;
@@ -127,11 +127,6 @@ begin
   end;
 
   Result := False;
-end;
-
-function IsConfNotExisting(): Boolean;
-begin
-  Result := not IsConfExisting();
 end;
 
 procedure AboutButtonOnClick(Sender: TObject);
