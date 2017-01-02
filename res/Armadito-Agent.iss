@@ -68,7 +68,7 @@ Source: "..\lib\*"; DestDir: "{app}\lib"; \
 Source: "..\etc\agent.cfg"; DestDir: "{app}\etc"; DestName: "agent.cfg.new"; Check: IsConfExisting(); \
     Flags: ignoreversion recursesubdirs createallsubdirs;
 Source: "..\etc\agent.cfg";  DestDir: "{app}\etc"; DestName: "agent.cfg"; Check: not IsConfExisting(); \
-    Flags: ignoreversion recursesubdirs createallsubdirs;
+    Flags: ignoreversion recursesubdirs createallsubdirs uninsneveruninstall;
 Source: "..\bin\*"; DestDir: "{app}\bin"; \
     Flags: ignoreversion recursesubdirs createallsubdirs;
 Source: "..\Makefile.PL"; DestDir: "{app}"; \
