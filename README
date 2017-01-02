@@ -27,12 +27,14 @@ Minimum perl version: 5.8
 ## Dependencies
 
 On ubuntu :
-  sudo apt-get install cpanminus libmodule-install-perl libreadonly-perl
+  sudo apt-get install cpanminus libmodule-install-perl libreadonly-perl libxml2
+  cpan install inc::Module::Install
   cpanm --quiet --installdeps --notest .
 
 On Windows :
+  cpan install App::cpanminus
   cpan install inc::Module::Install
-  cpan install -f Authen::Simple (https://rt.cpan.org/Public/Bug/Display.html?id=100750)
+  cpanm --quiet --installdeps --notest .  
 
 ## Author(s)
 
