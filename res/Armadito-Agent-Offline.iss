@@ -62,6 +62,8 @@ Filename: "{code:GetPerlPath}\site\bin\cpanm.bat"; WorkingDir: "{app}"; \
     Parameters: "--installdeps --notest . > ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilidle
 
 [Files]
+Source: "..\scripts\strawberry-perl.msi"; DestDir: "{tmp}"; \
+    Flags: ignoreversion;
 Source: "..\res\*.ico"; DestDir: "{app}\res"; \
     Flags: ignoreversion;
 Source: "..\lib\*"; DestDir: "{app}\lib"; \
