@@ -274,12 +274,22 @@ end;
 
 function GetCpanURL(Param: String): String;
 begin
-  Result := CpanURLEdit.Text;
+  if ExpandConstant('{param:CPANURL|false}') <> 'false' then
+  begin
+    Result := ExpandConstant('{param:CPANURL}');
+  end else begin
+    Result := CpanURLEdit.Text;
+  end;
 end;
 
 function GetCpanProxy(Param: String): String;
 begin
-  Result := CpanProxyEdit.Text;
+  if ExpandConstant('{param:CPANPROXY|false}') <> 'false' then
+  begin
+    Result := ExpandConstant('{param:CPANPROXY}');
+  end else begin
+    Result := CpanProxyEdit.Text;
+  end;
 end;
 
 function ShouldReplaceURL(URL: String): Boolean;
