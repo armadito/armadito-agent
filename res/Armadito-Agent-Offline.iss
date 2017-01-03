@@ -54,16 +54,11 @@ Name: "installperl"; Description: "{cm:InstallPerlMessage}";
 Name: "installperldeps"; Description: "{cm:InstallPerlDeps}";
 
 [Run]
-Filename: "{code:GetPerlPath}\bin\cpan.bat"; WorkingDir: "{app}"; \
-    StatusMsg: "{cm:InstallPerlCpanM}"; Tasks: installperldeps; \
-    Parameters: "App::cpanminus > ""{app}\installcpanm.log"" 2>&1"; Flags: runhidden waituntilidle
-Filename: "{code:GetPerlPath}\site\bin\cpanm.bat"; WorkingDir: "{app}"; \
-    StatusMsg: "{cm:InstallPerlDepsStatus}"; Tasks: installperldeps; \
-    Parameters: "--installdeps --notest . > ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilidle
+Filename: "msiexec"; WorkingDir: "{app}"; \
+    StatusMsg: "{cm:InstallPerlDepsStatus}"; Tasks: installperl; \
+    Parameters: " /i ""{app}\strawberry-perl.msi"" /log ""{app}\installperl.log"" /quiet"; Flags: waituntilterminated
 
 [Files]
-Source: "..\scripts\strawberry-perl.msi"; DestDir: "{tmp}"; \
-    Flags: ignoreversion;
 Source: "..\res\*.ico"; DestDir: "{app}\res"; \
     Flags: ignoreversion;
 Source: "..\lib\*"; DestDir: "{app}\lib"; \
@@ -76,7 +71,9 @@ Source: "..\bin\*"; DestDir: "{app}\bin"; \
     Flags: ignoreversion recursesubdirs createallsubdirs;
 Source: "..\Makefile.PL"; DestDir: "{app}"; \
     Flags: ignoreversion; Tasks: installperldeps
-    
+Source: "..\res\strawberry-perl.msi"; DestDir: "{app}"; \
+    Flags: ignoreversion; Tasks: installperl
+
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\System\{#MyAppExeName}"; \
     AppUserModelID: "TeclibSAS.ArmaditoAgent-F7E3EA05-C681-4087-940D-147654171532"
@@ -105,8 +102,6 @@ Type: dirifempty; Name: "{app}\var"
 [Code]
 var
   PerlPathPage: TInputDirWizardPage;
-  CpanURLEdit: TNewEdit;
-  CpanProxyEdit: TNewEdit;
 
 function NeedsAddEnvVariable(Param: String; EnvVar: String): Boolean;
 var
@@ -185,47 +180,19 @@ begin
 end;
 
 procedure CreatePerlPathPage();
-var
-  CpanURLText: TNewStaticText;
-  CpanProxyText: TNewStaticText;
 begin
 
-  PerlPathPage := CreateInputDirPage(wpLicense,
-  'Select an Installed Perl distribution', 'Perl > 5.8 is required',
-  'Please, select a path of an existing perl distribution :',
-  False, 'New Folder');
+  PerlPathPage := CreateInputDirPage(wpSelectTasks,
+  'Select a path where perl will be installed', 'Strawberry Perl installation',
+  '', False, 'New Folder');
 
-  PerlPathPage.Add('Examples: C:\Perl, C:\ActivePerl, C:\strawberry\perl, etc');
-  PerlPathPage.Values[0] := GetPreviousData('PerlPath', 'C:\');
+  PerlPathPage.Add('Select an existing or new directory :');
+  PerlPathPage.Values[0] := GetPreviousData('PerlPath', 'C:\Perl');
 
   if ExpandConstant('{param:PERLPATH|false}') <> 'false' then
   begin
     PerlPathPage.Values[0] := ExpandConstant('{param:PERLPATH}');
   end;
-
-  CpanURLText := TNewStaticText.Create(PerlPathPage);
-  CpanURLText.Top := PerlPathPage.SurfaceHeight * 3/5 - ScaleX(8);
-  CpanURLText.Caption := 'Mirror CPAN URL (optional):';
-  CpanURLText.AutoSize := True;
-  CpanURLText.Parent := PerlPathPage.Surface;
-
-  CpanURLEdit := TNewEdit.Create(PerlPathPage);
-  CpanURLEdit.Top := PerlPathPage.SurfaceHeight * 3/5 + ScaleX(8);
-  CpanURLEdit.Width := PerlPathPage.SurfaceWidth div 2 - ScaleX(8);
-  CpanURLEdit.Text := 'http://';
-  CpanURLEdit.Parent := PerlPathPage.Surface;
-
-  CpanProxyText := TNewStaticText.Create(PerlPathPage);
-  CpanProxyText.Top := PerlPathPage.SurfaceHeight * 4/5 - ScaleX(8);
-  CpanProxyText.Caption := 'CPAN Proxy (optional):';
-  CpanProxyText.AutoSize := True;
-  CpanProxyText.Parent := PerlPathPage.Surface;
-
-  CpanProxyEdit := TNewEdit.Create(PerlPathPage);
-  CpanProxyEdit.Top := PerlPathPage.SurfaceHeight * 4/5 + ScaleX(8);
-  CpanProxyEdit.Width := PerlPathPage.SurfaceWidth div 2 - ScaleX(8);
-  CpanProxyEdit.Text := 'http://';
-  CpanProxyEdit.Parent := PerlPathPage.Surface;
 
 end;
 
@@ -263,100 +230,24 @@ begin
   SetPreviousData(PreviousDataKey, 'PerlPath', PerlPathPage.Values[0]);
 end;
 
-function SetPerlPath(PerlPath: String): Boolean;
+function isPerlInstalled(PerlPath: String): Boolean;
 begin
   if FileExists(PerlPath + '\bin\cpan.bat') then begin
     Result := True;
   end else if FileExists(PerlPath + '\perl\bin\cpan.bat') then begin
-    PerlPathPage.Values[0] := PerlPath + '\perl';
     Result := True;
   end else begin
     Result := False;
   end;
-end;
-
-function GetCpanURL(Param: String): String;
-begin
-  if ExpandConstant('{param:CPANURL|false}') <> 'false' then
-  begin
-    Result := ExpandConstant('{param:CPANURL}');
-  end else begin
-    Result := CpanURLEdit.Text;
-  end;
-end;
-
-function GetCpanProxy(Param: String): String;
-begin
-  if ExpandConstant('{param:CPANPROXY|false}') <> 'false' then
-  begin
-    Result := ExpandConstant('{param:CPANPROXY}');
-  end else begin
-    Result := CpanProxyEdit.Text;
-  end;
-end;
-
-function ShouldReplaceURL(URL: String): Boolean;
-begin
-  if (CompareStr(URL, 'http://') = 0) or (CompareStr(URL, '') = 0) then begin
-    Result := False;
-  end else begin
-    Result := True;
-  end;
-end;
-
-function UpdateCpanConfig(CpanURL: String; CpanProxy: String): Boolean;
-var
-  CpanConfigLines: TArrayOfString;
-  Filename: String;
-  I: Integer;
-  LineCount: Integer;
-  NewConfig: String;
-begin
-
-  Filename := ExpandConstant('{localappdata}') + '\.cpan\CPAN\MyConfig.pm';
-  if not LoadStringsFromFile(Filename, CpanConfigLines) then begin
-    MsgBox('Error when trying to read CPAN Configuration file.', mbError, MB_OK);
-    Result := False;
-  end;
-
-  LineCount := GetArrayLength(CpanConfigLines);
-  for I:= 0 to LineCount - 1 do begin
-
-    if (Pos('''urllist'' =>', CpanConfigLines[I]) > 0) and (ShouldReplaceURL(CpanURL)) then begin
-		StringChangeEx(CpanConfigLines[I], '''urllist'' => [', '''urllist'' => [q['+CpanURL+'], ', True);
-	end;
-
-	if (Pos('''http_proxy'' =>', CpanConfigLines[I]) > 0) and (ShouldReplaceURL(CpanProxy)) then begin
-		 CpanConfigLines[I] := '  ''http_proxy'' => q['+CpanProxy+'], ';
-	end;
-
-	NewConfig := NewConfig + #13#10 + CpanConfigLines[I];
-  end;
-
-  if not SaveStringToFile(Filename, Trim(NewConfig), False) then begin
-    MsgBox('Error when trying to overwrite CPAN Configuration file.', mbError, MB_OK);
-    Result := False;
-  end;
-  Result := True;
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
-var
-  I: Integer;
-  CpanURL: String;
-  CpanProxy: String;
 begin
   if CurPageID = PerlPathPage.ID then begin
-    if not SetPerlPath(PerlPathPage.Values[0]) then begin
-      MsgBox('You must enter a valid perl distribution path', mbError, MB_OK);
+    if isPerlInstalled(PerlPathPage.Values[0]) then begin
+      MsgBox('Perl already installed in '+ PerlPathPage.Values[0], mbError, MB_OK);
       Result := False;
     end else begin
-      CpanURL := GetCpanURL('');
-	  CpanProxy := GetCpanProxy('');
-	  if not UpdateCpanConfig(CpanURL, CpanProxy) then begin
-		  Result := False;
-		  Exit;
-      end;
       Result := True;
     end;
   end else begin
