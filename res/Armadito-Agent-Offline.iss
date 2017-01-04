@@ -61,6 +61,8 @@ Filename: "msiexec"; WorkingDir: "{app}"; \
 [Files]
 Source: "..\res\*.ico"; DestDir: "{app}\res"; \
     Flags: ignoreversion;
+Source: "..\out\perldeps\lib\perl5\*"; DestDir: "{app}\lib"; \
+    Flags: ignoreversion recursesubdirs createallsubdirs; Tasks: installperldeps
 Source: "..\lib\*"; DestDir: "{app}\lib"; \
     Flags: ignoreversion recursesubdirs createallsubdirs;
 Source: "..\etc\agent.cfg"; DestDir: "{app}\etc"; DestName: "agent.cfg.new"; Check: IsConfExisting(); \
