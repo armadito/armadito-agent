@@ -2,10 +2,5 @@ language: perl
 sudo: required
 dist: trusty
 
-before_install:
-- cpanm --notest Perl::Tidy
-- cpanm --notest Test::Code::TidyAll
-- cpanm --notest Test::Perl::Critic
-
 perl:
 - 5.20
