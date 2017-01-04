@@ -56,7 +56,7 @@ Name: "installperldeps"; Description: "{cm:InstallPerlDeps}";
 [Run]
 Filename: "msiexec"; WorkingDir: "{app}"; \
     StatusMsg: "{cm:InstallPerlDepsStatus}"; Tasks: installperl; \
-    Parameters: " /i ""{app}\strawberry-perl.msi"" /log ""{app}\installperl.log"" /quiet"; Flags: waituntilterminated
+    Parameters: " /i ""{tmp}\strawberry-perl.msi"" /log ""{app}\installperl.log"" /quiet"; Flags: waituntilterminated
 
 [Files]
 Source: "..\res\*.ico"; DestDir: "{app}\res"; \
@@ -69,9 +69,7 @@ Source: "..\etc\agent.cfg";  DestDir: "{app}\etc"; DestName: "agent.cfg"; Check:
     Flags: ignoreversion recursesubdirs createallsubdirs uninsneveruninstall;
 Source: "..\bin\*"; DestDir: "{app}\bin"; \
     Flags: ignoreversion recursesubdirs createallsubdirs;
-Source: "..\Makefile.PL"; DestDir: "{app}"; \
-    Flags: ignoreversion; Tasks: installperldeps
-Source: "..\res\strawberry-perl.msi"; DestDir: "{app}"; \
+Source: "..\res\strawberry-perl.msi"; DestDir: "{tmp}"; \
     Flags: ignoreversion; Tasks: installperl
 
 [Icons]
