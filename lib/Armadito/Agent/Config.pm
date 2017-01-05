@@ -39,7 +39,12 @@ sub new {
 	bless $self, $class;
 
 	$self->_loadDefaults();
-	$self->_loadFromBackend( $params{options}->{'conf-file'}, $params{options}->{'config'}, $params{confdir} );
+	$self->_loadFromFile(
+		{
+			file      => $params{options}->{'conf-file'},
+			directory => $params{confdir},
+		}
+	);
 	$self->_overrideWithArgs(%params);
 	$self->_checkContent();
 
@@ -61,79 +66,6 @@ sub _loadDefaults {
 
 	foreach my $key ( keys %$default ) {
 		$self->{$key} = $default->{$key};
-	}
-}
-
-sub _loadFromBackend {
-	my ( $self, $confFile, $config, $confdir ) = @_;
-
-	my $backend
-		= $confFile ? 'file'
-		: $config   ? $config
-		:             'file';
-
-SWITCH: {
-		if ( $backend eq 'registry' ) {
-			die "Unavailable configuration backend\n"
-				unless $OSNAME eq 'MSWin32';
-			$self->_loadFromRegistry();
-			last SWITCH;
-		}
-
-		if ( $backend eq 'file' ) {
-			$self->_loadFromFile(
-				{
-					file      => $confFile,
-					directory => $confdir,
-				}
-			);
-			last SWITCH;
-		}
-
-		if ( $backend eq 'none' ) {
-			last SWITCH;
-		}
-
-		die "Unknown configuration backend '$backend'\n";
-	}
-}
-
-sub _loadFromRegistry {    # TOBETESTED
-	my ($self) = @_;
-
-	my $Registry;
-	Win32::TieRegistry->require();
-	Win32::TieRegistry->import(
-		Delimiter   => '/',
-		ArrayValues => 0,
-		TiedRef     => \$Registry
-	);
-
-	my $machKey = $Registry->Open(
-		'LMachine',
-		{
-			Access => Win32::TieRegistry::KEY_READ()
-		}
-	) or die "Can't open HKEY_LOCAL_MACHINE key: $EXTENDED_OS_ERROR";
-
-	my $settings = $machKey->{"SOFTWARE/Armadito-Agent"};
-
-	foreach my $rawKey ( keys %$settings ) {
-		next unless $rawKey =~ /^\/(\S+)/;
-		my $key = lc($1);
-		my $val = $settings->{$rawKey};
-
-		# Remove the quotes
-		$val =~ s/\s+$//;
-		$val =~ s/^'(.*)'$/$1/;
-		$val =~ s/^"(.*)"$/$1/;
-
-		if ( exists $default->{$key} ) {
-			$self->{$key} = $val;
-		}
-		else {
-			warn "unknown configuration directive $key";
-		}
 	}
 }
 
