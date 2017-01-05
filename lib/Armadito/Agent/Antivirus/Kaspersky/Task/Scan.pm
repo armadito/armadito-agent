@@ -42,10 +42,10 @@ sub _parseScanOutput {
 
 	$parser->run( $output, '\n' );
 
-	$parser->addHookForLabel('filepath', \&formatFilePath );
-	$parser->addHookForLabel('detection_time', \&LocalToTimestamp );
-	$parser->addHookForLabel('start_time', \&LocalToTimestamp );
-	$parser->addHookForLabel('end_time', \&LocalToTimestamp );
+	$parser->addHookForLabel( 'filepath',       \&formatFilePath );
+	$parser->addHookForLabel( 'detection_time', \&LocalToTimestamp );
+	$parser->addHookForLabel( 'start_time',     \&LocalToTimestamp );
+	$parser->addHookForLabel( 'end_time',       \&LocalToTimestamp );
 
 	return $parser->getResults();
 }
@@ -61,7 +61,7 @@ sub formatFilePath {
 sub LocalToTimestamp {
 	my ($match) = @_;
 
-	return iso8601ToUnixTimestamp($match, "Local");
+	return iso8601ToUnixTimestamp( $match, "Local" );
 }
 
 sub run {

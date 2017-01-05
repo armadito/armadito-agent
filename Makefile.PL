@@ -37,10 +37,10 @@ if ( $OSNAME eq "MSWin32" ) {
 	requires 'Win32::OLE' => '0';
 }
 
-test_requires 'XML::TreePP'         => '0';
-test_requires 'Test::Compile'       => '0';
-test_requires 'Test::More'          => '0';
-test_requires 'Test::Perl::Critic'  => '0';
+test_requires 'XML::TreePP'        => '0';
+test_requires 'Test::Compile'      => '0';
+test_requires 'Test::More'         => '0';
+test_requires 'Test::Perl::Critic' => '0';
 
 install_script 'bin/armadito-agent';
 

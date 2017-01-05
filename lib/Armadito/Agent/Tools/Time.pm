@@ -45,7 +45,7 @@ sub _secondsToDuration {
 }
 
 sub msFiletimeToUnixTimestamp {
-	my ($vt_filetime, $time_zone) = @_;
+	my ( $vt_filetime, $time_zone ) = @_;
 
 	# Disregard the 100 nanosecond units (but you could save them for later)
 	$vt_filetime = substr( $vt_filetime, 0, 11 );
@@ -60,26 +60,25 @@ sub msFiletimeToUnixTimestamp {
 	my ( $year, $mon, $mday, $hour, $min, $sec )
 		= ( $date[0], $date[1], $date[2], $date[3], $date[4], $date[5] );
 
-	if($time_zone eq "Local") {
-		return timelocal($sec, $min, $hour, $mday, $mon-1, $year);
+	if ( $time_zone eq "Local" ) {
+		return timelocal( $sec, $min, $hour, $mday, $mon - 1, $year );
 	}
-	elsif($time_zone eq "UTC") {
-		return timegm($sec, $min, $hour, $mday, $mon-1, $year);
+	elsif ( $time_zone eq "UTC" ) {
+		return timegm( $sec, $min, $hour, $mday, $mon - 1, $year );
 	}
 }
 
 sub iso8601ToUnixTimestamp {
-	my ($vt_iso8601, $time_zone) = @_;
+	my ( $vt_iso8601, $time_zone ) = @_;
 
-	if($vt_iso8601 =~ /(\d{4,})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/ms){
-		my ( $year, $mon, $mday, $hour, $min, $sec )
-		 = ( $1, $2, $3, $4, $5, $6 );
+	if ( $vt_iso8601 =~ /(\d{4,})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/ms ) {
+		my ( $year, $mon, $mday, $hour, $min, $sec ) = ( $1, $2, $3, $4, $5, $6 );
 
-		if($time_zone eq "Local") {
-			return timelocal($sec, $min, $hour, $mday, $mon-1, $year);
+		if ( $time_zone eq "Local" ) {
+			return timelocal( $sec, $min, $hour, $mday, $mon - 1, $year );
 		}
-		elsif($time_zone eq "UTC") {
-			return timegm($sec, $min, $hour, $mday, $mon-1, $year);
+		elsif ( $time_zone eq "UTC" ) {
+			return timegm( $sec, $min, $hour, $mday, $mon - 1, $year );
 		}
 	}
 }

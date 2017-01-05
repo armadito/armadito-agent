@@ -51,7 +51,7 @@ sub getResultsForPattern {
 		else {
 			foreach my $label ( @{ $pattern->{labels} } ) {
 				$match_results->{$label} = $pattern->{matches}[$i][$j];
-				$match_results->{$label} = $self->runHooksForLabel($label, $match_results->{$label});
+				$match_results->{$label} = $self->runHooksForLabel( $label, $match_results->{$label} );
 				$j++;
 			}
 		}
@@ -96,7 +96,7 @@ sub addHookForLabel {
 	my ( $self, $label, $funcref ) = @_;
 
 	my $hook = {
-		label => $label,
+		label    => $label,
 		function => $funcref
 	};
 
@@ -106,10 +106,8 @@ sub addHookForLabel {
 sub runHooksForLabel {
 	my ( $self, $label, $match ) = @_;
 
-	foreach my $hook (@{ $self->{hooks} })
-	{
-		if($hook->{label} eq $label)
-		{
+	foreach my $hook ( @{ $self->{hooks} } ) {
+		if ( $hook->{label} eq $label ) {
 			return $hook->{function}->($match);
 		}
 	}

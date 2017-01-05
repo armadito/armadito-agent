@@ -88,14 +88,14 @@ sub getAlerts {
 		my $threat_id   = $row[1];
 		my $filetime_ts = $row[2];
 
-		my $threat = $self->getThreat($threat_id, $dbh);
+		my $threat = $self->getThreat( $threat_id, $dbh );
 		my $alert = {
 			name            => $threat->{verdict}->{name},
-			filepath        => $self->getFilePath($threat_id, $dbh),
-			detection_time  => msFiletimeToUnixTimestamp($filetime_ts, "UTC"),
+			filepath        => $self->getFilePath( $threat_id, $dbh ),
+			detection_time  => msFiletimeToUnixTimestamp( $filetime_ts, "UTC" ),
 			action          => $threat->{scanaction},
 			impact_severity => $threat->{verdict}->{danger},
-			info            => "status=".$threat->{verdict}->{status}
+			info            => "status=" . $threat->{verdict}->{status}
 		};
 
 		if ( $alert->{name} ne "" ) {
@@ -134,7 +134,7 @@ sub getVerdictFromDB {
 	my ( $self, $verdict_id, $dbh ) = @_;
 
 	my $verdict = {
-		name => "",
+		name   => "",
 		danger => "",
 		status => ""
 	};
@@ -147,7 +147,7 @@ sub getVerdictFromDB {
 	}
 
 	my @row = $sth->fetchrow_array();
-	$verdict->{name} = $row[0];
+	$verdict->{name}   = $row[0];
 	$verdict->{danger} = $row[1];
 	$verdict->{status} = $row[2];
 
@@ -158,9 +158,9 @@ sub getThreatFromDB {
 	my ( $self, $threat_id, $dbh ) = @_;
 
 	my $threat = {
-		verdictid => "",
+		verdictid  => "",
 		scanaction => "",
-		verdict => {}
+		verdict    => {}
 	};
 
 	my $stmt = qq(SELECT Verdict, ScanAction FROM threats WHERE Id=?;);
@@ -172,7 +172,7 @@ sub getThreatFromDB {
 
 	my @row = $sth->fetchrow_array();
 	$threat->{verdictid}  = $row[0];
-	$threat->{scanaction} = $self->_actionToString($row[1]);
+	$threat->{scanaction} = $self->_actionToString( $row[1] );
 
 	return $threat;
 }
@@ -190,13 +190,14 @@ sub getDataPath {
 }
 
 sub _actionToString {
-	my ($self, $action) = @_;
+	my ( $self, $action ) = @_;
 
-	my $string  = $action."(unknown)";
+	my $string = $action . "(unknown)";
 
-	if($action == 1){
+	if ( $action == 1 ) {
 		$string = "quarantine";
-	} elsif($action == 4) {
+	}
+	elsif ( $action == 4 ) {
 		$string = "unrepaired";
 	}
 
