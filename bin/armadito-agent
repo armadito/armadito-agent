@@ -152,7 +152,6 @@ armadito-agent --server <server> --task <task>
 	--list-avs             List supported antiviruses
 
   Configuration options:
-    --conf-file=FILE                   configuration file
     --conf-reload-interval=<SECONDS>   number of seconds between two
                                          configuration reloadings
   Network options:
@@ -235,10 +234,6 @@ See option I<--list-avs> for the list of available antiviruses.
 =head2 Configuration options
 
 =over
-
-=item B<--conf-file>=I<FILE>
-
-Use I<FILE> as configuration file.
 
 =item B<--conf-reload-interval>=I<SECONDS>
 

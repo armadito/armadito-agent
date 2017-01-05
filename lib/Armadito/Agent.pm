@@ -36,32 +36,17 @@ sub new {
 	return $self;
 }
 
-sub _validateConfiguration {
-	my ( $self, %params ) = @_;
-
-	$self->isAVSupported( $self->{config}->{antivirus} )
-		or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
-
-	if ( $params{options}->{task} ) {
-		$self->isTaskSupported( $params{options}->{task} )
-			or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
-	}
-}
-
 sub init {
 	my ( $self, %params ) = @_;
 
-	$self->{config} = Armadito::Agent::Config->new(
-		confdir => $self->{confdir},
-		options => $params{options}
-	);
+	$self->_loadAgentConfiguration(%params);
 
 	my $verbosity
 		= $self->{config}->{debug} && $self->{config}->{debug} == 1 ? LOG_DEBUG
 		: $self->{config}->{debug} && $self->{config}->{debug} == 2 ? LOG_DEBUG2
 		:                                                             LOG_INFO;
 
-	$self->_validateConfiguration(%params);
+	$self->_validateOptions(%params);
 
 	$self->{logger} = Armadito::Agent::Logger->new(
 		config    => $self->{config},
@@ -83,6 +68,28 @@ sub init {
 	my $class = "Armadito::Agent::Antivirus::$self->{config}->{antivirus}";
 	$class->require();
 	$self->{antivirus} = $class->new( logger => $self->{logger} );
+}
+
+sub _loadAgentConfiguration {
+	my ( $self, %params ) = @_;
+
+	$self->{config} = Armadito::Agent::Config->new();
+	$self->{config}->loadDefaults();
+	$self->{config}->loadFromFile( $self->{confdir} . "/agent.cfg" );
+	$self->{config}->overrideWithArgs(%params);
+	$self->{config}->checkContent();
+}
+
+sub _validateOptions {
+	my ( $self, %params ) = @_;
+
+	$self->isAVSupported( $self->{config}->{antivirus} )
+		or die "Unsupported Antivirus. Use --list-avs to see which antiviruses are supported.";
+
+	if ( $params{options}->{task} ) {
+		$self->isTaskSupported( $params{options}->{task} )
+			or die "Unsupported Task. Use --list-tasks to see which tasks are supported.";
+	}
 }
 
 sub _getArmaditoIds {

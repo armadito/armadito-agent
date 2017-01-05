@@ -7,29 +7,6 @@ use English qw(-no_match_vars);
 use File::Spec;
 use UNIVERSAL::require;
 
-my $default = {
-	'ca-cert-dir'          => undef,
-	'ca-cert-file'         => undef,
-	'color'                => undef,
-	'conf-reload-interval' => 0,
-	'debug'                => undef,
-	'force'                => undef,
-	'html'                 => undef,
-	'local'                => undef,
-	'logger'               => 'Stderr',
-	'logfile'              => undef,
-	'logfacility'          => 'LOG_USER',
-	'logfile-maxsize'      => undef,
-	'no-ssl-check'         => undef,
-	'proxy'                => undef,
-	'server'               => undef,
-	'timeout'              => 180,
-	'user'                 => undef,
-	'password'             => undef,
-	'stdout'               => undef,
-	'antivirus'            => undef
-};
-
 my $deprecated = {};
 
 sub new {
@@ -38,41 +15,42 @@ sub new {
 	my $self = {};
 	bless $self, $class;
 
-	$self->_loadDefaults();
-	$self->_loadFromFile(
-		{
-			file      => $params{options}->{'conf-file'},
-			directory => $params{confdir},
-		}
-	);
-	$self->_overrideWithArgs(%params);
-	$self->_checkContent();
-
 	return $self;
 }
 
-sub _overrideWithArgs {
-	my ( $self, %params ) = @_;
-
-	foreach my $key ( keys %{$self} ) {
-		if ( defined( $params{options}->{$key} ) && $params{options}->{$key} ne "" ) {
-			$self->{$key} = $params{options}->{$key};
-		}
-	}
-}
-
-sub _loadDefaults {
+sub loadDefaults {
 	my ($self) = @_;
+
+	my $default = {
+		'ca-cert-dir'          => undef,
+		'ca-cert-file'         => undef,
+		'color'                => undef,
+		'conf-reload-interval' => 0,
+		'debug'                => undef,
+		'force'                => undef,
+		'html'                 => undef,
+		'local'                => undef,
+		'logger'               => 'Stderr',
+		'logfile'              => undef,
+		'logfacility'          => 'LOG_USER',
+		'logfile-maxsize'      => undef,
+		'no-ssl-check'         => undef,
+		'proxy'                => undef,
+		'server'               => undef,
+		'timeout'              => 180,
+		'user'                 => undef,
+		'password'             => undef,
+		'stdout'               => undef,
+		'antivirus'            => undef
+	};
 
 	foreach my $key ( keys %$default ) {
 		$self->{$key} = $default->{$key};
 	}
 }
 
-sub _loadFromFile {
-	my ( $self, $params ) = @_;
-
-	my $file = $self->getConfFilePath($params);
+sub loadFromFile {
+	my ( $self, $file ) = @_;
 
 	if ($file) {
 		die "non-existing file $file" unless -f $file;
@@ -96,7 +74,7 @@ sub _loadFromFile {
 			$val =~ s/^'(.*)'$/$1/;
 			$val =~ s/^"(.*)"$/$1/;
 
-			if ( exists $default->{$key} ) {
+			if ( exists $self->{$key} ) {
 				$self->{$key} = $val;
 			}
 			else {
@@ -107,17 +85,17 @@ sub _loadFromFile {
 	close $handle;
 }
 
-sub getConfFilePath {
-	my ( $self, $params ) = @_;
+sub overrideWithArgs {
+	my ( $self, %params ) = @_;
 
-	if ( $params->{file} ) {
-		return $params->{file};
+	foreach my $key ( keys %{$self} ) {
+		if ( defined( $params{options}->{$key} ) && $params{options}->{$key} ne "" ) {
+			$self->{$key} = $params{options}->{$key};
+		}
 	}
-
-	return $params->{directory} . "/agent.cfg";
 }
 
-sub _checkContent {
+sub checkContent {
 	my ($self) = @_;
 
 	# check for deprecated options
@@ -243,3 +221,21 @@ the configuration directory.
 additional options override.
 
 =back
+
+=head2 loadDefaults()
+
+Load default configuration from in-code predefined variable $default.
+
+=head2 loadFromFile()
+
+Load configuration from given file (i.e. agent.cfg or scheduler.cfg file path)
+
+=head2 overrideWithArgs()
+
+Override loaded configuration by given command line arguments.
+
+=head2 checkContent()
+
+Check if loaded configuration is valid.
+
+
