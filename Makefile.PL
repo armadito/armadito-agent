@@ -203,13 +203,8 @@ sub install {
 	my ($self) = @_;
 	my $install = $self->SUPER::install(@_);
 
-	# add dependency on data and configuration installation targets, and remove
-	# dependency on perlocal installation target
-	# depending on MakeMaker version, the line to match changes
 	$install =~ s/install :: pure_install doc_install/install :: pure_install config_install data_install/;
 	$install =~ s/install :: all pure_install doc_install/install :: all pure_install config_install data_install/;
-
-	# suppress all lines related to packlist file installation
 	$install =~ s/.*\.packlist \\\n//g;
 
 	if ( $OSNAME eq "MSWin32" ) {
