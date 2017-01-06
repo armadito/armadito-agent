@@ -39,6 +39,7 @@ GetOptions(
     'config=s',
     'setup',
     'wait|w=i',
+    'wait-rand|wr=i',
     'list-tasks',
     'list-avs',
     'ca-cert-dir=s',
@@ -94,6 +95,10 @@ if ($options->{'list-avs'}) {
 
 if ($options->{"wait"}) {
     sleep $options->{"wait"};
+}
+
+if ($options->{"wait-rand"}) {
+    sleep int(rand($options->{"wait-rand"}));
 }
 
 try {
