@@ -36,7 +36,7 @@ sub readFile {
 	my $fh;
 
 	if ( !open( $fh, "<", $params{filepath} ) ) {
-		warn "Error io $params{filepath} : $!";
+		die "Error io $params{filepath} : $!";
 		return "";
 	}
 
@@ -48,7 +48,7 @@ sub writeFile {
 	my $fh;
 
 	if ( !open( $fh, $params{mode}, $params{filepath} ) ) {
-		warn "Error io $params{filepath} : $!";
+		die "Error io $params{filepath} : $!";
 		return 0;
 	}
 
