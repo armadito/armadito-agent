@@ -41,7 +41,8 @@ sub loadDefaults {
 		'user'                 => undef,
 		'password'             => undef,
 		'stdout'               => undef,
-		'antivirus'            => undef
+		'antivirus'            => undef,
+		'scheduler'            => undef
 	};
 
 	foreach my $key ( keys %$default ) {
