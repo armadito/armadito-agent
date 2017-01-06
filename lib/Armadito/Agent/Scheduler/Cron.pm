@@ -40,9 +40,6 @@ sub run {
 	$self = $self->SUPER::run(%params);
 	$self->loadConf();
 
-	print Dumper( $self->{config} ) . "\n";
-	print $self->_getConfPath() . "\n";
-
 	return $self;
 }
 
