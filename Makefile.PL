@@ -230,6 +230,7 @@ sub getLinuxInstall {
 config_install :
     install -d -m 755 $(SYSCONFDIR)
 ' . installLinuxConfFile("agent.cfg") . '
+' . installLinuxConfFile("scheduler-cron.cfg") . '
 
 data_install :
 	install -d -m 755 $(DATADIR)
@@ -242,6 +243,7 @@ sub getWin32Install {
 config_install :
     if not exist "$(SYSCONFDIR)" mkdir "$(SYSCONFDIR)"
 ' . installWin32ConfFile("agent.cfg") . '
+' . installLinuxConfFile("scheduler-win32native.cfg") . '
 
 data_install :
 	if not exist "$(DATADIR)" mkdir "$(DATADIR)"
