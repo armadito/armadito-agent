@@ -227,7 +227,9 @@ sub install {
 sub getLinuxInstall {
 
 	return '
-config_install :' . installLinuxConfFile() . '
+config_install :
+    install -d -m 755 $(SYSCONFDIR)
+' . installLinuxConfFile("agent.cfg") . '
 
 data_install :
 	install -d -m 755 $(DATADIR)
@@ -237,7 +239,9 @@ data_install :
 sub getWin32Install {
 
 	return '
-config_install :' . installWin32ConfFile() . '
+config_install :
+    if not exist "$(SYSCONFDIR)" mkdir "$(SYSCONFDIR)"
+' . installWin32ConfFile("agent.cfg") . '
 
 data_install :
 	if not exist "$(DATADIR)" mkdir "$(DATADIR)"
@@ -247,24 +251,24 @@ data_install :
 }
 
 sub installWin32ConfFile {
+	my ($conf_file) = @_;
 
 	return '
-    if not exist "$(SYSCONFDIR)" mkdir "$(SYSCONFDIR)"
-	if exist "$(SYSCONFDIR)\\agent.cfg" ( \
-	    copy "etc\\agent.cfg" "$(SYSCONFDIR)\\agent.cfg.new"; \
+	if exist "$(SYSCONFDIR)\\' . $conf_file . '" ( \
+	    copy "etc\\' . $conf_file . '" "$(SYSCONFDIR)\\' . $conf_file . '.new"; \
 	) else ( \
-	    copy "etc\\agent.cfg" "$(SYSCONFDIR)\\agent.cfg"; \
+	    copy "etc\\' . $conf_file . '" "$(SYSCONFDIR)\\' . $conf_file . '"; \
 	)';
 }
 
 sub installLinuxConfFile {
+	my ($conf_file) = @_;
 
 	return '
-    install -d -m 755 $(SYSCONFDIR)
-	if [ -f $(SYSCONFDIR)/agent.cfg ]; then \
-	    install -m 644 etc/agent.cfg $(SYSCONFDIR)/agent.cfg.new; \
+	if [ -f $(SYSCONFDIR)/' . $conf_file . ' ]; then \
+	    install -m 644 etc/' . $conf_file . ' $(SYSCONFDIR)/' . $conf_file . '.new; \
 	else \
-	    install -m 644 etc/agent.cfg $(SYSCONFDIR)/agent.cfg; \
+	    install -m 644 etc/' . $conf_file . ' $(SYSCONFDIR)/' . $conf_file . '; \
 	fi';
 }
 
