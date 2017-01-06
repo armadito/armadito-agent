@@ -7,11 +7,13 @@ use English qw(-no_match_vars);
 use Time::Piece;
 use Date::Calc 'Add_Delta_DHMS';
 use Time::Local;
+use POSIX qw(strftime);
 
 our @EXPORT_OK = qw(
 	computeDuration
 	msFiletimeToUnixTimestamp
 	iso8601ToUnixTimestamp
+	nowToISO8601
 );
 
 # ; Time Start:   2016-11-30 16:04:34
@@ -83,6 +85,17 @@ sub iso8601ToUnixTimestamp {
 	}
 }
 
+sub nowToISO8601 {
+	my ($time_zone) = @_;
+
+	if ( $time_zone eq "Local" ) {
+		return strftime "%Y-%m-%d  %H:%M:%S", localtime;
+	}
+	elsif ( $time_zone eq "UTC" ) {
+		return strftime "%Y-%m-%d %H:%M:%S", gmtime;
+	}
+}
+
 1;
 __END__
 
@@ -113,3 +126,8 @@ Converts from Microsoft FileTime format to Unix timestamp.
 =head2 iso8601ToUnixTimestamp($iso8601datetime)
 
 Converts from ISO8601 Date time format to Unix timestamp.
+
+=head2 nowToISO8601($timezone)
+
+Return ISO8601 formatted string for now for a specified timezone (Local or UTC).
+
