@@ -60,8 +60,6 @@ sub init {
 		directory => $self->{vardir}
 	);
 
-	$self->{job_priority} = $params{options}->{job_priority} ? $params{options}->{job_priority} : -1;
-
 	$self->{agent_id}     = 0;
 	$self->{scheduler_id} = 0;
 	$self->_getArmaditoIds();

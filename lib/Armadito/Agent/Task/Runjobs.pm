@@ -137,11 +137,9 @@ sub _runJobs {
 	my ($self) = @_;
 
 	foreach my $job ( @{ $self->{jobs} } ) {
-		if ( $job->{job_priority} == $self->{agent}->{job_priority} || $self->{agent}->{job_priority} == -1 ) {
-			$self->_runJob($job);
-			$self->_sendStatus();
-			$self->_rmJobFromStorage( $job->{job_id} );
-		}
+		$self->_runJob($job);
+		$self->_sendStatus();
+		$self->_rmJobFromStorage( $job->{job_id} );
 	}
 
 	return $self;

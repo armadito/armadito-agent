@@ -34,7 +34,6 @@ GetOptions(
     'server|s=s',
     'task|t=s',
     'antivirus|av=s',
-    'job-priority=i',
     'conf-file=s',
     'conf-reload-interval=i',
     'config=s',
@@ -144,9 +143,6 @@ armadito-agent --server <server> --task <task>
     --task task            Task to be executed
 	--list-tasks           List supported tasks
 
-  Specific task options:
-	--job-priority         Specify Job priority for RunJobs task
-
   Antivirus selection options:
     --antivirus antivirus  Antivirus to be managed
 	--list-avs             List supported antiviruses
@@ -171,7 +167,7 @@ armadito-agent --server <server> --task <task>
 	% armadito-agent --task "Enrollment"
 	% armadito-agent --task "State"
 	% armadito-agent --task "GetJobs"
-	% armadito-agent --task "RunJobs" --job-priority 0
+	% armadito-agent --task "RunJobs" -w 5
 	% armadito-agent --task "Alerts"
 
 =head1 DESCRIPTION
