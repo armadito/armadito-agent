@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Task::Scheduler';
 
-use Rex::Commands::Cron;
 use Armadito::Agent::Config;
 use Data::Dumper;
 

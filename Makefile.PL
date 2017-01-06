@@ -32,7 +32,6 @@ requires 'Time::Local'           => '0';
 requires 'File::Stat'            => '0';
 requires 'Time::Piece'           => '0';
 requires 'IPC::System::Simple'   => '0';
-requires 'Rex::Commands::Cron'   => '0';
 
 if ( $OSNAME eq "MSWin32" ) {
 	requires 'Win32::OLE' => '0';
