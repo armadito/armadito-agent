@@ -212,48 +212,60 @@ sub install {
 	# suppress all lines related to packlist file installation
 	$install =~ s/.*\.packlist \\\n//g;
 
-	if ( $OSNAME ne "MSWin32" ) {
+	if ( $OSNAME eq "MSWin32" ) {
 		$install .= getWin32Install();
 	}
 	else {
 		$install .= getLinuxInstall();
 	}
 
+	$install =~ s/[ ]{4}/\t/msg;
+
 	return $install;
 }
 
-sub getWin32Install {
+sub getLinuxInstall {
 
 	return '
-config_install :
-	install -d -m 755 $(SYSCONFDIR)
-	if [ -f $(SYSCONFDIR)/agent.cfg ]; then \
-	    install -m 644 etc/agent.cfg $(SYSCONFDIR)/agent.cfg.new; \
-	else \
-	    install -m 644 etc/agent.cfg $(SYSCONFDIR)/agent.cfg; \
-	fi
+config_install :' . installLinuxConfFile() . '
 
 data_install :
 	install -d -m 755 $(DATADIR)
 	install -d -m 775 $(LOCALSTATEDIR)';
 }
 
-sub getLinuxInstall {
+sub getWin32Install {
 
 	return '
-config_install :
-	if not exist "$(SYSCONFDIR)" mkdir "$(SYSCONFDIR)"
-	if exist "$(SYSCONFDIR)\\agent.cfg" ( \
-	    copy "etc\\agent.cfg" "$(SYSCONFDIR)\\agent.cfg.new"; \
-	) else ( \
-	    copy "etc\\agent.cfg" "$(SYSCONFDIR)\\agent.cfg"; \
-	)
+config_install :' . installWin32ConfFile() . '
 
 data_install :
 	if not exist "$(DATADIR)" mkdir "$(DATADIR)"
 	if not exist "$(INSTALLSCRIPT)" mkdir "$(INSTALLSCRIPT)"
 	if exist "$(INSTALLSCRIPT)\\armadito-agent" @erase "$(INSTALLSCRIPT)\\armadito-agent"
 	copy "bin\\armadito-agent" "$(INSTALLSCRIPT)\\armadito-agent"';
+}
+
+sub installWin32ConfFile {
+
+	return '
+    if not exist "$(SYSCONFDIR)" mkdir "$(SYSCONFDIR)"
+	if exist "$(SYSCONFDIR)\\agent.cfg" ( \
+	    copy "etc\\agent.cfg" "$(SYSCONFDIR)\\agent.cfg.new"; \
+	) else ( \
+	    copy "etc\\agent.cfg" "$(SYSCONFDIR)\\agent.cfg"; \
+	)';
+}
+
+sub installLinuxConfFile {
+
+	return '
+    install -d -m 755 $(SYSCONFDIR)
+	if [ -f $(SYSCONFDIR)/agent.cfg ]; then \
+	    install -m 644 etc/agent.cfg $(SYSCONFDIR)/agent.cfg.new; \
+	else \
+	    install -m 644 etc/agent.cfg $(SYSCONFDIR)/agent.cfg; \
+	fi';
 }
 
 # ensure binaries get modified to use configured directories (on Unix only)
