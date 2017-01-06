@@ -7,7 +7,7 @@ use base 'Armadito::Agent::Task::Scheduler';
 use Armadito::Agent::Config;
 use Data::Dumper;
 
-sub loadConf {
+sub _loadConf {
 	my ( $self, %params ) = @_;
 
 	$self->{config} = Armadito::Agent::Config->new();
@@ -28,7 +28,7 @@ sub _getConfPath {
 	return $self->{agent}->{confdir} . "/scheduler-" . lc( $self->{scheduler}->{name} ) . ".cfg";
 }
 
-sub updateScheduling {
+sub _updateCronTab {
 	my ( $self, %params ) = @_;
 
 }
@@ -37,7 +37,8 @@ sub run {
 	my ( $self, %params ) = @_;
 
 	$self = $self->SUPER::run(%params);
-	$self->loadConf();
+	$self->_loadConf();
+	$self->_updateCronTab();
 
 	return $self;
 }
@@ -56,10 +57,7 @@ This task inherits from L<Armadito::Agent::Task::Scheduler>. It allows remote ma
 
 =head1 FUNCTIONS
 
-=head2 loadConf ( $self, %params )
+=head2 run ( $self, %params )
 
 Run the task.
 
-=head2 updateScheduling ( $self, %params )
-
-Run the task.
