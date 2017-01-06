@@ -81,10 +81,10 @@ print <<EOF;
 
 Installation summary
 --------------------
-prefix: $MY::Variables{PREFIX}
-configuration installation directory: $MY::Variables{SYSCONFDIR}
-constant data installation directory: $MY::Variables{DATADIR}
-variable data installation directory: $MY::Variables{LOCALSTATEDIR}
+PREFIX : $MY::Variables{PREFIX}
+Configuration installation directory: $MY::Variables{SYSCONFDIR}
+Constant data installation directory: $MY::Variables{DATADIR}
+Variable data installation directory: $MY::Variables{LOCALSTATEDIR}
 
 $ConfigFileMessage
 EOF
@@ -95,80 +95,107 @@ use English qw(-no_match_vars);
 
 our %Variables;
 
-# force a perl-independant prefix for everything
+sub setWin32Variables {
+
+	%Variables = (
+		PREFIX               => 'C:\\Program Files\\Armadito-Agent',
+		INSTALLSCRIPT        => '$(PREFIX)\\bin',
+		INSTALLSITESCRIPT    => '$(PREFIX)\\bin',
+		INSTALLVENDORSCRIPT  => '$(PREFIX)\\bin',
+		INSTALLLIB           => '$(PREFIX)\\lib',
+		INSTALLSITELIB       => '$(PREFIX)\\lib',
+		INSTALLVENDORLIB     => '$(PREFIX)\\lib',
+		INSTALLMAN1DIR       => '$(PREFIX)\\share\\man\\man1',
+		INSTALLSITEMAN1DIR   => '$(PREFIX)\\share\\man\\man1',
+		INSTALLVENDORMAN1DIR => '$(PREFIX)\\share\\man\\man1',
+		INSTALLMAN3DIR       => '$(PREFIX)\\share\\man\\man3',
+		INSTALLSITEMAN3DIR   => '$(PREFIX)\\share\\man\\man3',
+		INSTALLVENDORMAN3DIR => '$(PREFIX)\\share\\man\\man3',
+		SYSCONFDIR           => '$(PREFIX)\\etc',
+		DATADIR              => '$(PREFIX)\\share',
+		LOCALSTATEDIR        => '$(PREFIX)\\var',
+	);
+}
+
+sub setLinuxVariables {
+
+	%Variables = (
+		PREFIX               => '/usr/local',
+		INSTALLSCRIPT        => '$(PREFIX)/bin',
+		INSTALLSITESCRIPT    => '$(PREFIX)/bin',
+		INSTALLVENDORSCRIPT  => '$(PREFIX)/bin',
+		INSTALLLIB           => '$(DATADIR)/lib',
+		INSTALLSITELIB       => '$(DATADIR)/lib',
+		INSTALLVENDORLIB     => '$(DATADIR)/lib',
+		INSTALLMAN1DIR       => '$(PREFIX)/share/man/man1',
+		INSTALLSITEMAN1DIR   => '$(PREFIX)/share/man/man1',
+		INSTALLVENDORMAN1DIR => '$(PREFIX)/share/man/man1',
+		INSTALLMAN3DIR       => '$(PREFIX)/share/man/man3',
+		INSTALLSITEMAN3DIR   => '$(PREFIX)/share/man/man3',
+		INSTALLVENDORMAN3DIR => '$(PREFIX)/share/man/man3',
+		SYSCONFDIR           => '$(PREFIX)/etc/armadito-agent',
+		DATADIR              => '$(PREFIX)/share/armadito-agent',
+		LOCALSTATEDIR        => '$(PREFIX)/var/armadito-agent',
+	);
+}
+
+sub overrideVariablesWithArgs {
+	my ($self) = @_;
+
+	foreach my $name ( keys %Variables ) {
+		$Variables{$name} = $self->{ARGS}->{$name} if $self->{ARGS}->{$name};
+	}
+}
+
+sub parseConstantDefinition {
+	my ($constant_definition) = @_;
+
+	if ( $constant_definition =~ /^\s*#/ ) {
+		return "";
+	}
+
+	if ( $constant_definition !~ /^([A-Z0-9_]+) =/ ) {
+		return "";
+	}
+
+	return $1;
+}
+
+sub updateConstants {
+	my ($self) = @_;
+
+	my @constants = split( /\n/, $self->SUPER::constants(@_) );
+
+	foreach my $constant_definition (@constants) {
+		my $constant = parseConstantDefinition($constant_definition);
+
+		if ( $constant ne ""
+			&& defined( $Variables{$constant} ) )
+		{
+			$constant_definition = "$constant = $Variables{$constant}";
+		}
+	}
+
+	foreach my $constant (qw/SYSCONFDIR DATADIR LOCALSTATEDIR/) {
+		push @constants, "$constant = $Variables{$constant}";
+	}
+
+	return join( "\n", @constants );
+}
+
 sub constants {
 	my ($self) = @_;
 
 	if ( $OSNAME eq "MSWin32" ) {
-		%Variables = (
-			PREFIX               => 'C:\\Program Files\\Armadito-Agent',
-			INSTALLSCRIPT        => '$(PREFIX)\\bin',
-			INSTALLSITESCRIPT    => '$(PREFIX)\\bin',
-			INSTALLVENDORSCRIPT  => '$(PREFIX)\\bin',
-			INSTALLLIB           => '$(PREFIX)\\lib',
-			INSTALLSITELIB       => '$(PREFIX)\\lib',
-			INSTALLVENDORLIB     => '$(PREFIX)\\lib',
-			INSTALLMAN1DIR       => '$(PREFIX)\\share\\man\\man1',
-			INSTALLSITEMAN1DIR   => '$(PREFIX)\\share\\man\\man1',
-			INSTALLVENDORMAN1DIR => '$(PREFIX)\\share\\man\\man1',
-			INSTALLMAN3DIR       => '$(PREFIX)\\share\\man\\man3',
-			INSTALLSITEMAN3DIR   => '$(PREFIX)\\share\\man\\man3',
-			INSTALLVENDORMAN3DIR => '$(PREFIX)\\share\\man\\man3',
-			SYSCONFDIR           => '$(PREFIX)\\etc',
-			DATADIR              => '$(PREFIX)\\share',
-			LOCALSTATEDIR        => '$(PREFIX)\\var',
-		);
+		setWin32Variables();
 	}
 	else {
-		# for some reason, initialising Variables from the global scope doesn't work
-		%Variables = (
-			PREFIX               => '/usr/local',
-			INSTALLSCRIPT        => '$(PREFIX)/bin',
-			INSTALLSITESCRIPT    => '$(PREFIX)/bin',
-			INSTALLVENDORSCRIPT  => '$(PREFIX)/bin',
-			INSTALLLIB           => '$(DATADIR)/lib',
-			INSTALLSITELIB       => '$(DATADIR)/lib',
-			INSTALLVENDORLIB     => '$(DATADIR)/lib',
-			INSTALLMAN1DIR       => '$(PREFIX)/share/man/man1',
-			INSTALLSITEMAN1DIR   => '$(PREFIX)/share/man/man1',
-			INSTALLVENDORMAN1DIR => '$(PREFIX)/share/man/man1',
-			INSTALLMAN3DIR       => '$(PREFIX)/share/man/man3',
-			INSTALLSITEMAN3DIR   => '$(PREFIX)/share/man/man3',
-			INSTALLVENDORMAN3DIR => '$(PREFIX)/share/man/man3',
-			SYSCONFDIR           => '$(PREFIX)/etc/armadito-agent',
-			DATADIR              => '$(PREFIX)/share/armadito-agent',
-			LOCALSTATEDIR        => '$(PREFIX)/var/armadito-agent',
-		);
+		setLinuxVariables();
 	}
 
-	# allow Variables defined on command line to override defaults
-	foreach my $name ( keys %Variables ) {
-		$Variables{$name} = $self->{ARGS}->{$name} if $self->{ARGS}->{$name};
-	}
+	overrideVariablesWithArgs($self);
 
-	# get all standard MM Variables definitions, and override them if needed
-	my @code = split( /\n/, $self->SUPER::constants(@_) );
-	foreach my $line (@code) {
-
-		# Skip comments
-		next if $line =~ /^\s*#/;
-
-		# Skip everything which isn't a var assignment.
-		next unless $line =~ /^([A-Z0-9_]+) =/;
-		my $name = $1;
-
-		# skip Variables we're not interested
-		next unless $Variables{$name};
-
-		$line = "$name = $Variables{$name}";
-	}
-
-	# add out own Variables
-	foreach my $name (qw/SYSCONFDIR DATADIR LOCALSTATEDIR/) {
-		push @code, "$name = $Variables{$name}";
-	}
-
-	return join( "\n", @code );
+	return updateConstants($self);
 }
 
 sub install {
@@ -184,10 +211,19 @@ sub install {
 	# suppress all lines related to packlist file installation
 	$install =~ s/.*\.packlist \\\n//g;
 
-	# add data and configuration installation targets
 	if ( $OSNAME ne "MSWin32" ) {
-		$install .= <<'EOF';
+		$install .= getWin32Install();
+	}
+	else {
+		$install .= getLinuxInstall();
+	}
 
+	return $install;
+}
+
+sub getWin32Install {
+
+	return '
 config_install :
 	install -d -m 755 $(SYSCONFDIR)
 	if [ -f $(SYSCONFDIR)/agent.cfg ]; then \
@@ -198,12 +234,12 @@ config_install :
 
 data_install :
 	install -d -m 755 $(DATADIR)
-	install -d -m 775 $(LOCALSTATEDIR)
-EOF
-	}
-	else {
-		$install .= <<'EOF';
+	install -d -m 775 $(LOCALSTATEDIR)';
+}
 
+sub getLinuxInstall {
+
+	return '
 config_install :
 	if not exist "$(SYSCONFDIR)" mkdir "$(SYSCONFDIR)"
 	if exist "$(SYSCONFDIR)\\agent.cfg" ( \
@@ -216,11 +252,7 @@ data_install :
 	if not exist "$(DATADIR)" mkdir "$(DATADIR)"
 	if not exist "$(INSTALLSCRIPT)" mkdir "$(INSTALLSCRIPT)"
 	if exist "$(INSTALLSCRIPT)\\armadito-agent" @erase "$(INSTALLSCRIPT)\\armadito-agent"
-	copy "bin\\armadito-agent" "$(INSTALLSCRIPT)\\armadito-agent"
-EOF
-	}
-
-	return $install;
+	copy "bin\\armadito-agent" "$(INSTALLSCRIPT)\\armadito-agent"';
 }
 
 # ensure binaries get modified to use configured directories (on Unix only)
