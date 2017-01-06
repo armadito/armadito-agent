@@ -19,31 +19,7 @@ sub new {
 }
 
 sub loadDefaults {
-	my ($self) = @_;
-
-	my $default = {
-		'ca-cert-dir'          => undef,
-		'ca-cert-file'         => undef,
-		'color'                => undef,
-		'conf-reload-interval' => 0,
-		'debug'                => undef,
-		'force'                => undef,
-		'html'                 => undef,
-		'local'                => undef,
-		'logger'               => 'Stderr',
-		'logfile'              => undef,
-		'logfacility'          => 'LOG_USER',
-		'logfile-maxsize'      => undef,
-		'no-ssl-check'         => undef,
-		'proxy'                => undef,
-		'server'               => undef,
-		'timeout'              => 180,
-		'user'                 => undef,
-		'password'             => undef,
-		'stdout'               => undef,
-		'antivirus'            => undef,
-		'scheduler'            => undef
-	};
+	my ( $self, $default ) = @_;
 
 	foreach my $key ( keys %$default ) {
 		$self->{$key} = $default->{$key};

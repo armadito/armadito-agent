@@ -75,10 +75,38 @@ sub _loadAgentConfiguration {
 	my ( $self, %params ) = @_;
 
 	$self->{config} = Armadito::Agent::Config->new();
-	$self->{config}->loadDefaults();
+	$self->{config}->loadDefaults( $self->_getDefaultConf() );
 	$self->{config}->loadFromFile( $self->{confdir} . "/agent.cfg" );
 	$self->{config}->overrideWithArgs(%params);
 	$self->{config}->checkContent();
+}
+
+sub _getDefaultConf {
+	my ($self) = @_;
+
+	return {
+		'ca-cert-dir'          => undef,
+		'ca-cert-file'         => undef,
+		'color'                => undef,
+		'conf-reload-interval' => 0,
+		'debug'                => undef,
+		'force'                => undef,
+		'html'                 => undef,
+		'local'                => undef,
+		'logger'               => 'Stderr',
+		'logfile'              => undef,
+		'logfacility'          => 'LOG_USER',
+		'logfile-maxsize'      => undef,
+		'no-ssl-check'         => undef,
+		'proxy'                => undef,
+		'server'               => undef,
+		'timeout'              => 180,
+		'user'                 => undef,
+		'password'             => undef,
+		'stdout'               => undef,
+		'antivirus'            => undef,
+		'scheduler'            => undef
+	};
 }
 
 sub _validateOptions {

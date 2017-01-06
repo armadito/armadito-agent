@@ -12,7 +12,15 @@ sub loadConf {
 	my ( $self, %params ) = @_;
 
 	$self->{config} = Armadito::Agent::Config->new();
+	$self->{config}->loadDefaults( $self->_getDefaultConf() );
 	$self->{config}->loadFromFile( $self->_getConfPath() );
+
+}
+
+sub _getDefaultConf {
+	my ($self) = @_;
+
+	return { 'user' => undef, };
 }
 
 sub _getConfPath {
@@ -33,6 +41,7 @@ sub run {
 	$self->loadConf();
 
 	print Dumper( $self->{config} ) . "\n";
+	print $self->_getConfPath() . "\n";
 
 	return $self;
 }
