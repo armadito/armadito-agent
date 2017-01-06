@@ -37,7 +37,6 @@ sub readFile {
 
 	if ( !open( $fh, "<", $params{filepath} ) ) {
 		die "Error io $params{filepath} : $!";
-		return "";
 	}
 
 	return do { local $/; <$fh> };
@@ -49,7 +48,6 @@ sub writeFile {
 
 	if ( !open( $fh, $params{mode}, $params{filepath} ) ) {
 		die "Error io $params{filepath} : $!";
-		return 0;
 	}
 
 	binmode $fh;
