@@ -70,6 +70,7 @@ sub _updateCronTab {
 	my $content   = "#\n# Cron configuration for armadito-agent\n#\n";
 
 	$content .= "# last modification by armadito-agent : " . nowToISO8601('Local') . "\n\n";
+	$content .= "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n\n";
 
 	foreach ( @{ $self->{config}->{tasks} } ) {
 		$content .= $self->_addCronTask($_);
