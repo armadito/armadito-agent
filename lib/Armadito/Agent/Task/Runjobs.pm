@@ -65,7 +65,7 @@ sub _rmJobFromStorage {
 sub _sortJobsByPriority {
 	my ($self) = @_;
 
-	@{ $self->{jobs} } = sort { $a->{job_priority} <=> $b->{job_priority} } @{ $self->{jobs} };
+	@{ $self->{jobs} } = reverse sort { $a->{job_priority} <=> $b->{job_priority} } @{ $self->{jobs} };
 
 	return $self;
 }
