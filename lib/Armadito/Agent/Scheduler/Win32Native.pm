@@ -76,17 +76,22 @@ sub _createScheduledTask {
     $self->{logger}->info("Program exited with " . $EXITVAL . "\n");
 }
 
+sub _createAllTasks {
+    my ($self) = @_;
+
+    foreach ( @{ $self->{config}->{tasks} } ) {
+        $self->_createScheduledTask($_);
+    }
+}
+
 sub run {
-	my ( $self, %params ) = @_;
+    my ( $self, %params ) = @_;
 
-	$self = $self->SUPER::run(%params);
-	$self->_loadConf();
+    $self = $self->SUPER::run(%params);
+    $self->_loadConf();
+    $self->_createAllTasks();
 
-	foreach ( @{ $self->{config}->{tasks} } ) {
-		$self->_createScheduledTask($_);
-	}
-
-	return $self;
+    return $self;
 }
 
 1;
