@@ -65,8 +65,11 @@ sub _getConfPath {
 sub _createScheduledTask {
     my ($self) = @_;
 
-	my $cmdline = "schtasks /?";
-	my $output = capture( EXIT_ANY, $cmdline );
+	my $cmdline = "schtasks /Create";
+    my $args    = "/SC MINUTE /TN ArmaditoAgentTaskEnrollment /RU SYSTEM ";
+    $args      .= "/TR \"\\\"C:\\Program Files\\Armadito-Agent\\bin\\armadito-agent.bat\\\" -t 'Enrollment'\" /F";
+
+	my $output  = capture( EXIT_ANY, $cmdline." ".$args );
 	$self->{logger}->info($output);
 	$self->{logger}->info("Program exited with " . $EXITVAL . "\n");
 }
