@@ -6,7 +6,6 @@ use base 'Armadito::Agent::Task::Scheduler';
 
 use Armadito::Agent::Tools::File qw (writeFile readFile);
 use Armadito::Agent::Tools::Time qw (nowToISO8601);
-use Armadito::Agent::Config;
 use Armadito::Agent::Patterns::Matcher;
 use Cwd 'abs_path';
 use Data::Dumper;
