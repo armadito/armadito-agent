@@ -17,25 +17,23 @@ sub _loadConf {
 }
 
 sub _parseConf {
-	my ( $self, $conf_path ) = @_;
+    my ( $self, $conf_path ) = @_;
 
-	my $conf_file = readFile( filepath => $conf_path );
+    my $conf_file = readFile( filepath => $conf_path );
 
-	my $parser = Armadito::Agent::Patterns::Matcher->new( logger => $self->{logger} );
+    my $parser = Armadito::Agent::Patterns::Matcher->new( logger => $self->{logger} );
+    $parser->addExclusionPattern('^#');
 
-	$parser->addPattern( 'logfile', 'Logfile\s*=\s*(.*)\s*$' );
-	$parser->addPattern( 'user',    'User\s*=\s*(.*)\s*$' );
+    my $labels = [ 'options', 'name', 'args' ];
+    my $pattern = '^(.*?);(.*?);(.*?)$';
+    $parser->addPattern( 'tasks', $pattern, $labels );
 
-	my $labels = [ 'freq', 'name', 'args' ];
-	my $pattern = '^([\s\*\d\/,]*?);(.*?);(.*?)$';
-	$parser->addPattern( 'tasks', $pattern, $labels );
+    $parser->run( $conf_file, '\n' );
+    $parser->addHookForLabel( 'options', \&trimSpaces );
+    $parser->addHookForLabel( 'name', \&trimSpaces );
+    $parser->addHookForLabel( 'args', \&trimSpaces );
 
-	$parser->run( $conf_file, '\n' );
-	$parser->addHookForLabel( 'freq', \&trimSpaces );
-	$parser->addHookForLabel( 'name', \&trimSpaces );
-	$parser->addHookForLabel( 'args', \&trimSpaces );
-
-	return $parser->getResults();
+    return $parser->getResults();
 }
 
 sub trimSpaces {
@@ -63,15 +61,18 @@ sub _getConfPath {
 }
 
 sub _createScheduledTask {
-    my ($self) = @_;
+    my ($self, $task) = @_;
 
-	my $cmdline = "schtasks /Create";
-    my $args    = "/SC MINUTE /TN ArmaditoAgentTaskEnrollment /RU SYSTEM ";
-    $args      .= "/TR \"\\\"C:\\Program Files\\Armadito-Agent\\bin\\armadito-agent.bat\\\" -t 'Enrollment'\" /F";
+    my $taskname = "ArmaditoAgentTask".$task->{name};
+    my $cmdline  = "schtasks /Create /F /RU SYSTEM ";
+    $cmdline    .= $task->{options}." /TN ".$taskname." ";
+    $cmdline    .= "/TR \"\\\"C:\\Program Files\\Armadito-Agent\\bin\\armadito-agent.bat\\\" -t '".$task->{name}."'\" ";
 
-	my $output  = capture( EXIT_ANY, $cmdline." ".$args );
-	$self->{logger}->info($output);
-	$self->{logger}->info("Program exited with " . $EXITVAL . "\n");
+    $self->{logger}->info($cmdline);
+
+    my $output  = capture( EXIT_ANY, $cmdline );
+    $self->{logger}->info($output);
+    $self->{logger}->info("Program exited with " . $EXITVAL . "\n");
 }
 
 sub run {
@@ -79,7 +80,10 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 	$self->_loadConf();
-    $self->_createScheduledTask();
+
+	foreach ( @{ $self->{config}->{tasks} } ) {
+		$self->_createScheduledTask($_);
+	}
 
 	return $self;
 }
