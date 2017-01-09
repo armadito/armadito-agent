@@ -23,6 +23,7 @@ sub _parseConf {
 
 	my $parser = Armadito::Agent::Patterns::Matcher->new( logger => $self->{logger} );
 
+    $parser->addExclusionPattern('^#');
 	$parser->addPattern( 'logfile', 'Logfile\s*=\s*(.*)\s*$' );
 	$parser->addPattern( 'user',    'User\s*=\s*(.*)\s*$' );
 
