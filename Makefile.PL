@@ -239,7 +239,7 @@ sub getWin32Install {
 config_install :
     if not exist "$(SYSCONFDIR)" mkdir "$(SYSCONFDIR)"
 ' . installWin32ConfFile("agent.cfg") . '
-' . installLinuxConfFile("scheduler-win32native.cfg") . '
+' . installWin32ConfFile("scheduler-win32native.cfg") . '
 
 data_install :
 	if not exist "$(DATADIR)" mkdir "$(DATADIR)"
