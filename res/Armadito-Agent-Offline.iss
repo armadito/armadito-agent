@@ -65,9 +65,11 @@ Source: "..\out\perldeps\lib\perl5\*"; DestDir: "{app}\lib"; \
     Flags: ignoreversion recursesubdirs createallsubdirs; Tasks: installperldeps
 Source: "..\lib\*"; DestDir: "{app}\lib"; \
     Flags: ignoreversion recursesubdirs createallsubdirs;
-Source: "..\etc\agent.cfg"; DestDir: "{app}\etc"; DestName: "agent.cfg.new"; Check: IsConfExisting(); \
+Source: "..\etc\agent.cfg"; DestDir: "{app}\etc"; DestName: "agent.cfg.new"; \
+    Check: FileExists(ExpandConstant('{app}\etc\agent.cfg')); \
     Flags: ignoreversion recursesubdirs createallsubdirs;
-Source: "..\etc\agent.cfg";  DestDir: "{app}\etc"; DestName: "agent.cfg"; Check: not IsConfExisting(); \
+Source: "..\etc\agent.cfg";  DestDir: "{app}\etc"; DestName: "agent.cfg"; \
+    Check: not FileExists(ExpandConstant('{app}\etc\agent.cfg')); \
     Flags: ignoreversion recursesubdirs createallsubdirs uninsneveruninstall;
 Source: "..\bin\*"; DestDir: "{app}\bin"; \
     Flags: ignoreversion recursesubdirs createallsubdirs;
@@ -119,21 +121,6 @@ begin
   { look for the path with leading and trailing semicolon }
   { Pos() returns 0 if not found }
   Result := Pos(';' + Param + ';', ';' + OrigPath + ';') = 0;
-end;
-
-function IsConfExisting(): Boolean;
-var
-  ConfFile: String;
-begin
-  ConfFile := ExpandConstant('{app}\etc\agent.cfg');
-
-  if FileExists(ConfFile)
-  then begin
-    Result := True;
-    Exit;
-  end;
-
-  Result := False;
 end;
 
 procedure AboutButtonOnClick(Sender: TObject);
