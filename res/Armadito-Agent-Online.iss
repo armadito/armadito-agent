@@ -59,6 +59,9 @@ Filename: "{code:GetPerlPath}\bin\cpan.bat"; WorkingDir: "{app}"; \
 Filename: "{code:GetPerlPath}\site\bin\cpanm.bat"; WorkingDir: "{app}"; \
     StatusMsg: "{cm:InstallPerlDepsStatus}"; Tasks: installperldeps; \
     Parameters: "--installdeps --notest . > ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilidle
+Filename: "{app}\bin\armadito-agent.bat"; WorkingDir: "{app}"; \
+    StatusMsg: "{cm:LaunchScheduler}"; Flags: postinstall waituntilterminated runhidden; \
+    Parameters: " -t ""Enrollment""";
 
 [Files]
 Source: "..\res\*.ico"; DestDir: "{app}\res"; \

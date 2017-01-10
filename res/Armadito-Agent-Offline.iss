@@ -44,6 +44,7 @@ InstallPerlMessage=Install Strawberry perl distribution
 InstallPerlDeps=Install missing Perl dependencies
 InstallPerlDepsStatus=Installing Perl dependencies...
 InstallPerlCpanM=Installing CpanMinus...
+LaunchScheduler=Start Scheduler Task
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -57,6 +58,9 @@ Name: "installperldeps"; Description: "{cm:InstallPerlDeps}";
 Filename: "msiexec"; WorkingDir: "{app}"; \
     StatusMsg: "{cm:InstallPerlDepsStatus}"; Tasks: installperl; \
     Parameters: " /i ""{tmp}\strawberry-perl.msi"" /log ""{app}\installperl.log"" /quiet"; Flags: waituntilterminated
+Filename: "{app}\bin\armadito-agent.bat"; WorkingDir: "{app}"; \
+    StatusMsg: "{cm:LaunchScheduler}"; Flags: postinstall waituntilterminated runhidden; \
+    Parameters: " -t ""Enrollment""";
 
 [Files]
 Source: "..\res\*.ico"; DestDir: "{app}\res"; \
