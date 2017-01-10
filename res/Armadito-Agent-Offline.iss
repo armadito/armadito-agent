@@ -71,6 +71,12 @@ Source: "..\etc\agent.cfg"; DestDir: "{app}\etc"; DestName: "agent.cfg.new"; \
 Source: "..\etc\agent.cfg";  DestDir: "{app}\etc"; DestName: "agent.cfg"; \
     Check: not FileExists(ExpandConstant('{app}\etc\agent.cfg')); \
     Flags: ignoreversion recursesubdirs createallsubdirs uninsneveruninstall;
+Source: "..\etc\scheduler-win32native.cfg"; DestDir: "{app}\etc"; DestName: "scheduler-win32native.cfg.new"; \
+    Check: FileExists(ExpandConstant('{app}\etc\scheduler-win32native.cfg')); \
+    Flags: ignoreversion recursesubdirs createallsubdirs;
+Source: "..\etc\scheduler-win32native.cfg";  DestDir: "{app}\etc"; DestName: "scheduler-win32native.cfg"; \
+    Check: not FileExists(ExpandConstant('{app}\etc\scheduler-win32native.cfg')); \
+    Flags: ignoreversion recursesubdirs createallsubdirs;
 Source: "..\bin\*"; DestDir: "{app}\bin"; \
     Flags: ignoreversion recursesubdirs createallsubdirs;
 Source: "..\res\strawberry-perl.msi"; DestDir: "{tmp}"; \
