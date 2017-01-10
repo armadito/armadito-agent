@@ -114,6 +114,7 @@ Type: dirifempty; Name: "{app}\var"
 [Code]
 var
   PerlPathPage: TInputDirWizardPage;
+  EnrollKeyPage: TInputQueryWizardPage;
 
 function NeedsAddEnvVariable(Param: String; EnvVar: String): Boolean;
 var
@@ -193,6 +194,21 @@ begin
 
 end;
 
+procedure CreateEnrollmentKeyPage();
+begin
+
+  EnrollKeyPage := CreateInputQueryPage(wpLicense,
+  'Agent Enrollment', 'Enrollment process configuration','');
+
+  EnrollKeyPage.Add('Please enter a valid enrollment key :', False);
+
+  if ExpandConstant('{param:ENROLLMENTKEY|false}') <> 'false' then
+  begin
+    EnrollKeyPage.Values[0] := ExpandConstant('{param:ENROLLMENTKEY}');
+  end;
+
+end;
+
 procedure CreateBottomPanel();
 var
   BackgroundBitmapImage: TBitmapImage;
@@ -218,6 +234,7 @@ end;
 
 procedure InitializeWizard();
 begin
+  CreateEnrollmentKeyPage();
   CreatePerlPathPage();
   CreateBottomPanel();
 end;
