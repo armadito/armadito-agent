@@ -60,6 +60,7 @@ sub init {
 		directory => $self->{vardir}
 	);
 
+    $self->{key} = defined($params{options}->{key}) ? $params{options}->{key} : "";
 	$self->{agent_id}     = 0;
 	$self->{scheduler_id} = 0;
 	$self->_getArmaditoIds();

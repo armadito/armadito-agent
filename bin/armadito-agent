@@ -38,6 +38,7 @@ GetOptions(
     'conf-reload-interval=i',
     'config=s',
     'setup',
+    'key|k=s',
     'wait|w=i',
     'wait-rand|wr=i',
     'list-tasks',
@@ -152,6 +153,9 @@ armadito-agent --server <server> --task <task>
     --antivirus antivirus  Antivirus to be managed
 	--list-avs             List supported antiviruses
 
+  Enrollment options:
+    --key|k enrollmentkey   Enrollment key string (format: XXXX-XXXX-XXXX-XXXX-XXXX)
+
   Configuration options:
     --conf-reload-interval=<SECONDS>   number of seconds between two
                                          configuration reloadings
@@ -229,6 +233,16 @@ List all available antiviruses and exit
 Manage the given Antivirus
 
 See option I<--list-avs> for the list of available antiviruses.
+
+=back
+
+=head2 Enrollment options
+
+=over
+
+=item B<--key|-k>=I<KEY>
+
+Enrollment key string (format: XXXX-XXXX-XXXX-XXXX-XXXX).
 
 =back
 

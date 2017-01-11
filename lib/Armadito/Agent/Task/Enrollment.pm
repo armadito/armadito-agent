@@ -3,6 +3,7 @@ package Armadito::Agent::Task::Enrollment;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Task';
+use Armadito::Agent::Tools::File qw( readFile );
 use Data::Dumper;
 use JSON;
 
@@ -30,7 +31,8 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 
-	$self->{jobj}->{task}->{obj} = '{}';
+    $self->_setEnrollmentKey();
+
 	my $json_text = to_json( $self->{jobj} );
 	print $json_text. "\n";
 
@@ -84,6 +86,52 @@ sub _updateStorage {
 		$self->{agent}->_storeArmaditoIds();
 		$self->{logger}->info( "Agent successfully enrolled with id " . $jobj->{agent_id} );
 	}
+}
+
+sub _setEnrollmentKey {
+    my ( $self ) = @_;
+
+    my $key = '';
+    my $json = '{}';
+
+    $key = $self->_getEnrollmentKey();
+
+    if($self->_isValidKeyFormat($key))
+    {
+       $json = '{ "key" : "'.$key.'"}';
+    }
+    else {
+        die "Invalid Key. Expected key format is : \n".
+        " [A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}\n".
+        " For example : AAAA-111A-DZ78-EE78-DDD1";
+    }
+
+	$self->{jobj}->{task}->{obj} = $json;
+}
+
+sub _getEnrollmentKey {
+    my ( $self ) = @_;
+
+    my $key = '';
+    my $keyfile = $self->{agent}->{vardir}."enrollment.key";
+
+    if($self->{agent}->{key} ne "") {
+        $key = $self->{agent}->{key};
+    }
+    elsif( -f $keyfile ) {
+        $key = readFile( filepath => $keyfile );
+    }
+    else {
+        $key = '';
+    }
+
+    return $key;
+}
+
+sub _isValidKeyFormat {
+    my ( $self, $key ) = @_;
+
+    return $key =~ m/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/msi;
 }
 
 1;
