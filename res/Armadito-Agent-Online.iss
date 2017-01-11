@@ -147,6 +147,12 @@ begin
   for I := 0 to GetArrayLength(SerialEdits) - 1 do
     Result := Result + SerialEdits[I].Text + ADelimiter;
   Delete(Result, Length(Result), 1);
+
+  if ExpandConstant('{param:KEY|false}') <> 'false' then
+  begin
+    Result := ExpandConstant('{param:KEY}');
+  end;
+
 end;
 
 procedure InstallEnrollmentKey;
