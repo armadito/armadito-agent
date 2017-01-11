@@ -134,7 +134,7 @@ const
   CF_TEXT = 1;
   VK_BACK = 8;
   SC_EDITCOUNT = 5;
-  SC_CHARCOUNT = 4;
+  SC_CHARCOUNT = 5;
   SC_DELIMITER = '-';
 
 function GetSerialNumber(ADelimiter: Char): string;

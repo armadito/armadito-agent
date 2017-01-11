@@ -92,21 +92,21 @@ sub _setEnrollmentKey {
     my ( $self ) = @_;
 
     my $key = '';
-    my $json = '{}';
+    my $jobj = {};
 
     $key = $self->_getEnrollmentKey();
 
     if($self->_isValidKeyFormat($key))
     {
-       $json = '{ "key" : "'.$key.'"}';
+       $jobj->{key} = $key;
     }
     else {
         die "Invalid Key. Expected key format is : \n".
-        " [A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}\n".
-        " For example : AAAA-111A-DZ78-EE78-DDD1";
+        " [A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}\n".
+        " For example : AAAAF-111AF-DZ78F-EE78F-DDD1F";
     }
 
-	$self->{jobj}->{task}->{obj} = $json;
+	$self->{jobj}->{task}->{obj} = $jobj;
 }
 
 sub _getEnrollmentKey {
@@ -131,7 +131,7 @@ sub _getEnrollmentKey {
 sub _isValidKeyFormat {
     my ( $self, $key ) = @_;
 
-    return $key =~ m/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/msi;
+    return $key =~ m/^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/msi;
 }
 
 1;

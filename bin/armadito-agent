@@ -154,7 +154,7 @@ armadito-agent --server <server> --task <task>
 	--list-avs             List supported antiviruses
 
   Enrollment options:
-    --key|k enrollmentkey   Enrollment key string (format: XXXX-XXXX-XXXX-XXXX-XXXX)
+    --key|k enrollmentkey   Enrollment key string (format: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX)
 
   Configuration options:
     --conf-reload-interval=<SECONDS>   number of seconds between two
@@ -242,7 +242,7 @@ See option I<--list-avs> for the list of available antiviruses.
 
 =item B<--key|-k>=I<KEY>
 
-Enrollment key string (format: XXXX-XXXX-XXXX-XXXX-XXXX).
+Enrollment key string (format: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX).
 
 =back
 
