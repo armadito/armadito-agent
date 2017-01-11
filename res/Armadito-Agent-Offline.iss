@@ -284,12 +284,6 @@ begin
   end;
 end;
 
-procedure CurPageChanged(CurPageID: Integer);
-begin
-  if CurPageID = SerialPage.ID then
-    WizardForm.NextButton.Enabled := IsValidInput;
-end;
-
 function NeedsAddEnvVariable(Param: String; EnvVar: String): Boolean;
 var
   OrigPath: String;
