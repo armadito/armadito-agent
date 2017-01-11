@@ -44,6 +44,7 @@ InstallPerlMessage=Install Strawberry perl distribution
 InstallPerlDeps=Install missing Perl dependencies
 InstallPerlDepsStatus=Installing Perl dependencies...
 InstallPerlCpanM=Installing CpanMinus...
+LaunchScheduler=Start Scheduler Task
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -61,7 +62,7 @@ Filename: "{code:GetPerlPath}\site\bin\cpanm.bat"; WorkingDir: "{app}"; \
     Parameters: "--installdeps --notest . > ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilidle
 Filename: "{app}\bin\armadito-agent.bat"; WorkingDir: "{app}"; \
     StatusMsg: "{cm:LaunchScheduler}"; Flags: postinstall waituntilterminated runhidden; \
-    Parameters: " -t ""Enrollment""";
+    Parameters: " -t ""Scheduler"""; BeforeInstall: InstallEnrollmentKey;
 
 [Files]
 Source: "..\res\*.ico"; DestDir: "{app}\res"; \
@@ -73,13 +74,13 @@ Source: "..\etc\agent.cfg"; DestDir: "{app}\etc"; DestName: "agent.cfg.new"; \
     Flags: ignoreversion recursesubdirs createallsubdirs;
 Source: "..\etc\agent.cfg";  DestDir: "{app}\etc"; DestName: "agent.cfg"; \
     Check: not FileExists(ExpandConstant('{app}\etc\agent.cfg')); \
-    Flags: ignoreversion recursesubdirs createallsubdirs;
+    Flags: ignoreversion recursesubdirs createallsubdirs uninsneveruninstall;
 Source: "..\etc\scheduler-win32native.cfg"; DestDir: "{app}\etc"; DestName: "scheduler-win32native.cfg.new"; \
     Check: FileExists(ExpandConstant('{app}\etc\scheduler-win32native.cfg')); \
     Flags: ignoreversion recursesubdirs createallsubdirs;
 Source: "..\etc\scheduler-win32native.cfg";  DestDir: "{app}\etc"; DestName: "scheduler-win32native.cfg"; \
     Check: not FileExists(ExpandConstant('{app}\etc\scheduler-win32native.cfg')); \
-    Flags: ignoreversion recursesubdirs createallsubdirs;
+    Flags: ignoreversion recursesubdirs createallsubdirs uninsneveruninstall;
 Source: "..\bin\*"; DestDir: "{app}\bin"; \
     Flags: ignoreversion recursesubdirs createallsubdirs;
 Source: "..\Makefile.PL"; DestDir: "{app}"; \
@@ -111,6 +112,19 @@ Type: filesandordirs; Name: "{app}\inc"
 Type: dirifempty; Name: "{app}\var"
 
 [Code]
+function SetFocus(hWnd: HWND): HWND;
+  external 'SetFocus@user32.dll stdcall';
+function OpenClipboard(hWndNewOwner: HWND): BOOL;
+  external 'OpenClipboard@user32.dll stdcall';
+function GetClipboardData(uFormat: UINT): THandle;
+  external 'GetClipboardData@user32.dll stdcall';
+function CloseClipboard: BOOL;
+  external 'CloseClipboard@user32.dll stdcall';
+function GlobalLock(hMem: THandle): PAnsiChar;
+  external 'GlobalLock@kernel32.dll stdcall';
+function GlobalUnlock(hMem: THandle): BOOL;
+  external 'GlobalUnlock@kernel32.dll stdcall';
+
 var
   PerlPathPage: TInputDirWizardPage;
   CpanURLEdit: TNewEdit;
@@ -409,6 +423,7 @@ end;
 
 procedure InitializeWizard();
 begin
+  CreateSerialNumberPage();
   CreatePerlPathPage();
   CreateBottomPanel();
 end;
