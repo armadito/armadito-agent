@@ -68,10 +68,10 @@ if($OSNAME eq "MSWin32"){
 }
 
 my %setup = (
-    confdir => $prefix.'etc',
-    datadir => $prefix.'share',
-    libdir  => $prefix.'lib',
-    vardir  => $prefix.'var'
+    confdir => $prefix.'etc/',
+    datadir => $prefix.'share/',
+    libdir  => $prefix.'lib/',
+    vardir  => $prefix.'var/'
 );
 
 if ($options->{setup}) {
