@@ -60,7 +60,7 @@ Filename: "msiexec"; WorkingDir: "{app}"; \
     Parameters: " /i ""{tmp}\strawberry-perl.msi"" /log ""{app}\installperl.log"" /quiet"; Flags: waituntilterminated
 Filename: "{app}\bin\armadito-agent.bat"; WorkingDir: "{app}"; \
     StatusMsg: "{cm:LaunchScheduler}"; Flags: postinstall waituntilterminated runhidden; \
-    Parameters: " -t ""Enrollment""";
+    Parameters: " -t ""Scheduler"""; BeforeInstall: InstallEnrollmentKey;
 
 [Files]
 Source: "..\res\*.ico"; DestDir: "{app}\res"; \
@@ -112,9 +112,183 @@ Type: filesandordirs; Name: "{app}\inc"
 Type: dirifempty; Name: "{app}\var"
 
 [Code]
+function SetFocus(hWnd: HWND): HWND;
+  external 'SetFocus@user32.dll stdcall';
+function OpenClipboard(hWndNewOwner: HWND): BOOL;
+  external 'OpenClipboard@user32.dll stdcall';
+function GetClipboardData(uFormat: UINT): THandle;
+  external 'GetClipboardData@user32.dll stdcall';
+function CloseClipboard: BOOL;
+  external 'CloseClipboard@user32.dll stdcall';
+function GlobalLock(hMem: THandle): PAnsiChar;
+  external 'GlobalLock@kernel32.dll stdcall';
+function GlobalUnlock(hMem: THandle): BOOL;
+  external 'GlobalUnlock@kernel32.dll stdcall';
+
 var
   PerlPathPage: TInputDirWizardPage;
-  EnrollKeyPage: TInputQueryWizardPage;
+  SerialPage: TWizardPage;
+  SerialEdits: array of TEdit;
+
+const
+  CF_TEXT = 1;
+  VK_BACK = 8;
+  SC_EDITCOUNT = 5;
+  SC_CHARCOUNT = 4;
+  SC_DELIMITER = '-';
+
+function GetSerialNumber(ADelimiter: Char): string;
+var
+  I: Integer;
+begin
+  Result := '';
+  for I := 0 to GetArrayLength(SerialEdits) - 1 do
+    Result := Result + SerialEdits[I].Text + ADelimiter;
+  Delete(Result, Length(Result), 1);
+end;
+
+procedure InstallEnrollmentKey;
+var
+  EnrollmentKey: String;
+begin
+  EnrollmentKey := GetSerialNumber('-');
+  SaveStringToFile(ExpandConstant('{app}\var\enrollment.key'), EnrollmentKey, False);
+end;
+
+function IsValidInput: Boolean;
+var
+  I: Integer;
+begin
+  Result := True;
+  for I := 0 to GetArrayLength(SerialEdits) - 1 do
+    if Length(SerialEdits[I].Text) < SC_CHARCOUNT then
+    begin
+      Result := False;
+      Break;
+    end;
+end;
+
+function GetClipboardText: string;
+var
+  Data: THandle;
+begin
+  Result := '';
+  if OpenClipboard(0) then
+  try
+    Data := GetClipboardData(CF_TEXT);
+    if Data <> 0 then
+      Result := String(GlobalLock(Data));
+  finally
+    if Data <> 0 then
+      GlobalUnlock(Data);
+    CloseClipboard;
+  end;
+end;
+
+function TrySetSerialNumber(const ASerialNumber: string; ADelimiter: Char): Boolean;
+var
+  I: Integer;
+  J: Integer;
+begin
+  Result := False;
+
+  if Length(ASerialNumber) = ((SC_EDITCOUNT * SC_CHARCOUNT) + (SC_EDITCOUNT - 1)) then
+  begin
+
+    for I := 1 to SC_EDITCOUNT - 1 do
+      if ASerialNumber[(I * SC_CHARCOUNT) + I] <> ADelimiter then
+        Exit;
+
+    for I := 0 to GetArrayLength(SerialEdits) - 1 do
+    begin
+      J := (I * SC_CHARCOUNT) + I + 1;
+      SerialEdits[I].Text := Copy(ASerialNumber, J, SC_CHARCOUNT);
+    end;
+
+    Result := True;
+  end;
+end;
+
+function TryPasteSerialNumber: Boolean;
+begin
+  Result := TrySetSerialNumber(GetClipboardText, SC_DELIMITER);
+end;
+
+procedure OnSerialEditChange(Sender: TObject);
+begin
+  WizardForm.NextButton.Enabled := IsValidInput;
+end;
+
+procedure OnSerialEditKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+  Edit: TEdit;
+  EditIndex: Integer;
+begin
+  Edit := TEdit(Sender);
+  EditIndex := Edit.TabOrder - SerialEdits[0].TabOrder;
+  if (EditIndex = 0) and (Key = Ord('V')) and (Shift = [ssCtrl]) then
+  begin
+    if TryPasteSerialNumber then
+      Key := 0;
+  end
+  else
+  if (Key >= 32) and (Key <= 255) then
+  begin
+    if Length(Edit.Text) = SC_CHARCOUNT - 1 then
+    begin
+      if EditIndex < GetArrayLength(SerialEdits) - 1 then
+        SetFocus(SerialEdits[EditIndex + 1].Handle)
+      else
+        SetFocus(WizardForm.NextButton.Handle);
+    end;
+  end
+  else
+  if Key = VK_BACK then
+    if (EditIndex > 0) and (Edit.Text = '') and (Edit.SelStart = 0) then
+      SetFocus(SerialEdits[EditIndex - 1].Handle);
+end;
+
+procedure CreateSerialNumberPage;
+var
+  I: Integer;
+  Edit: TEdit;
+  DescLabel: TLabel;
+  EditWidth: Integer;
+begin
+  SerialPage := CreateCustomPage(wpLicense, 'Enrollment Process configuration',
+    'Enrollment Key verification');
+
+  DescLabel := TLabel.Create(SerialPage);
+  DescLabel.Top := SerialPage.SurfaceHeight/2 - 16;
+  DescLabel.Left := 0;
+  DescLabel.Parent := SerialPage.Surface;
+  DescLabel.Caption := 'Please, enter a valid enrollment key and click Next button :';
+  DescLabel.Font.Style := [fsBold];
+
+  SetArrayLength(SerialEdits, SC_EDITCOUNT);
+  EditWidth := (SerialPage.SurfaceWidth - ((SC_EDITCOUNT - 1) * 8)) div SC_EDITCOUNT;
+
+  for I := 0 to SC_EDITCOUNT - 1 do
+  begin
+    Edit := TEdit.Create(SerialPage);
+    Edit.Top := SerialPage.SurfaceHeight/2;
+    Edit.Left := I * (EditWidth + 8);
+    Edit.Width := EditWidth;
+    Edit.CharCase := ecUpperCase;
+    Edit.MaxLength := SC_CHARCOUNT;
+    Edit.Parent := SerialPage.Surface;
+    Edit.OnChange := @OnSerialEditChange;
+    Edit.OnKeyDown := @OnSerialEditKeyDown;
+    SerialEdits[I] := Edit;
+  end;
+end;
+
+procedure CurPageChanged(CurPageID: Integer);
+begin
+  if CurPageID = SerialPage.ID then
+    WizardForm.NextButton.Enabled := IsValidInput;
+end;
 
 function NeedsAddEnvVariable(Param: String; EnvVar: String): Boolean;
 var
@@ -194,21 +368,6 @@ begin
 
 end;
 
-procedure CreateEnrollmentKeyPage();
-begin
-
-  EnrollKeyPage := CreateInputQueryPage(wpLicense,
-  'Agent Enrollment', 'Enrollment process configuration','');
-
-  EnrollKeyPage.Add('Please enter a valid enrollment key :', False);
-
-  if ExpandConstant('{param:ENROLLMENTKEY|false}') <> 'false' then
-  begin
-    EnrollKeyPage.Values[0] := ExpandConstant('{param:ENROLLMENTKEY}');
-  end;
-
-end;
-
 procedure CreateBottomPanel();
 var
   BackgroundBitmapImage: TBitmapImage;
@@ -234,7 +393,7 @@ end;
 
 procedure InitializeWizard();
 begin
-  CreateEnrollmentKeyPage();
+  CreateSerialNumberPage();
   CreatePerlPathPage();
   CreateBottomPanel();
 end;
