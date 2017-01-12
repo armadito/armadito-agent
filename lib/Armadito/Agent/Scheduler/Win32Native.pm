@@ -17,23 +17,23 @@ sub _loadConf {
 }
 
 sub _parseConf {
-    my ( $self, $conf_path ) = @_;
+	my ( $self, $conf_path ) = @_;
 
-    my $conf_file = readFile( filepath => $conf_path );
+	my $conf_file = readFile( filepath => $conf_path );
 
-    my $parser = Armadito::Agent::Patterns::Matcher->new( logger => $self->{logger} );
-    $parser->addExclusionPattern('^#');
+	my $parser = Armadito::Agent::Patterns::Matcher->new( logger => $self->{logger} );
+	$parser->addExclusionPattern('^#');
 
-    my $labels = [ 'options', 'name', 'args' ];
-    my $pattern = '^(.*?);(.*?);(.*?)$';
-    $parser->addPattern( 'tasks', $pattern, $labels );
+	my $labels = [ 'options', 'name', 'args' ];
+	my $pattern = '^(.*?);(.*?);(.*?)$';
+	$parser->addPattern( 'tasks', $pattern, $labels );
 
-    $parser->run( $conf_file, '\n' );
-    $parser->addHookForLabel( 'options', \&trimSpaces );
-    $parser->addHookForLabel( 'name', \&trimSpaces );
-    $parser->addHookForLabel( 'args', \&trimSpaces );
+	$parser->run( $conf_file, '\n' );
+	$parser->addHookForLabel( 'options', \&trimSpaces );
+	$parser->addHookForLabel( 'name',    \&trimSpaces );
+	$parser->addHookForLabel( 'args',    \&trimSpaces );
 
-    return $parser->getResults();
+	return $parser->getResults();
 }
 
 sub trimSpaces {
@@ -61,83 +61,83 @@ sub _getConfPath {
 }
 
 sub _createScheduledTask {
-    my ($self, $task) = @_;
+	my ( $self, $task ) = @_;
 
-    my $taskname = "ArmaditoAgentTask".$task->{name};
-    my $cmdline  = "schtasks /Create /F /RU SYSTEM ";
-    $cmdline    .= $task->{options}." /TN ".$taskname." ";
-    $cmdline    .= "/TR \"\\\"C:\\Program Files\\Armadito-Agent\\bin\\armadito-agent.bat\\\" -t ";
-    $cmdline    .= "'".$task->{name}."' ".$task->{args}." ";
-    $cmdline    .= "1>> \\\"C:\\Program Files\\Armadito-Agent\\var\\armadito-agent-".$task->{name}.".log\\\" 2>>&1 \"";
+	my $taskname = "ArmaditoAgentTask" . $task->{name};
+	my $cmdline  = "schtasks /Create /F /RU SYSTEM ";
+	$cmdline .= $task->{options} . " /TN " . $taskname . " ";
+	$cmdline .= "/TR \"\\\"C:\\Program Files\\Armadito-Agent\\bin\\armadito-agent.bat\\\" -t ";
+	$cmdline .= "'" . $task->{name} . "' " . $task->{args} . " ";
+	$cmdline .= "1>> \\\"C:\\Program Files\\Armadito-Agent\\var\\armadito-agent-" . $task->{name} . ".log\\\" 2>>&1 \"";
 
-    $self->{logger}->info($cmdline);
+	$self->{logger}->info($cmdline);
 
-    my $output  = capture( EXIT_ANY, $cmdline );
-    $self->{logger}->info($output);
-    $self->{logger}->info("Program exited with " . $EXITVAL . "\n");
+	my $output = capture( EXIT_ANY, $cmdline );
+	$self->{logger}->info($output);
+	$self->{logger}->info( "Program exited with " . $EXITVAL . "\n" );
 }
 
 sub _createAllTasks {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    foreach ( @{ $self->{config}->{tasks} } ) {
-        $self->_createScheduledTask($_);
-    }
+	foreach ( @{ $self->{config}->{tasks} } ) {
+		$self->_createScheduledTask($_);
+	}
 }
 
 sub _getExistingTasks {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    my $cmdline  = "schtasks /Query /FO CSV";
-    my $output  = capture( EXIT_ANY, $cmdline );
-    $self->{logger}->info("Program exited with " . $EXITVAL . "\n");
+	my $cmdline = "schtasks /Query /FO CSV";
+	my $output = capture( EXIT_ANY, $cmdline );
+	$self->{logger}->info( "Program exited with " . $EXITVAL . "\n" );
 
-    my $parser = Armadito::Agent::Patterns::Matcher->new( logger => $self->{logger} );
-    my $labels = ['name'];
-    my $pattern = '^"(\\\\ArmaditoAgentTask.*?)"';
-    $parser->addPattern( 'tasks', $pattern, $labels );
-    $parser->run( $output, '\n' );
-    $parser->addHookForLabel( 'name', \&trimSlashes );
+	my $parser  = Armadito::Agent::Patterns::Matcher->new( logger => $self->{logger} );
+	my $labels  = ['name'];
+	my $pattern = '^"(\\\\ArmaditoAgentTask.*?)"';
+	$parser->addPattern( 'tasks', $pattern, $labels );
+	$parser->run( $output, '\n' );
+	$parser->addHookForLabel( 'name', \&trimSlashes );
 
-    return $parser->getResults();
+	return $parser->getResults();
 }
 
 sub trimSlashes {
-    my ($match) = @_;
-    $match =~ s/^\\+//ms;
-    return $match;
+	my ($match) = @_;
+	$match =~ s/^\\+//ms;
+	return $match;
 }
 
 sub _deleteExistingTask {
-    my ($self, $task) = @_;
+	my ( $self, $task ) = @_;
 
-    my $cmdline  = "schtasks /Delete /F /TN \"".$task->{name}."\"";
-    $self->{logger}->info($cmdline);
+	my $cmdline = "schtasks /Delete /F /TN \"" . $task->{name} . "\"";
+	$self->{logger}->info($cmdline);
 
-    my $output  = capture( EXIT_ANY, $cmdline );
-    $self->{logger}->info($output);
-    $self->{logger}->info("Program exited with " . $EXITVAL . "\n");
+	my $output = capture( EXIT_ANY, $cmdline );
+	$self->{logger}->info($output);
+	$self->{logger}->info( "Program exited with " . $EXITVAL . "\n" );
 }
 
 sub _deleteExistingTasks {
-    my ($self) = @_;
+	my ($self) = @_;
 
-    my $existing_tasks = $self->_getExistingTasks();
+	my $existing_tasks = $self->_getExistingTasks();
 
-    foreach ( @{ $existing_tasks->{tasks} } ) {
-        $self->_deleteExistingTask($_);
-    }
+	foreach ( @{ $existing_tasks->{tasks} } ) {
+		$self->_deleteExistingTask($_);
+	}
 }
 
 sub run {
-    my ( $self, %params ) = @_;
+	my ( $self, %params ) = @_;
 
-    $self = $self->SUPER::run(%params);
-    $self->_loadConf();
-    $self->_deleteExistingTasks();
-    $self->_createAllTasks();
+	$self = $self->SUPER::run(%params);
+	$self->_loadConf();
+	$self->_deleteExistingTasks();
+	$self->_createAllTasks();
 
-    return $self;
+	return $self;
 }
 
 1;

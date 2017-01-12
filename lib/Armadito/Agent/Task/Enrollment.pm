@@ -31,7 +31,7 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 
-    $self->_setEnrollmentKey();
+	$self->_setEnrollmentKey();
 
 	my $json_text = to_json( $self->{jobj} );
 	print $json_text. "\n";
@@ -72,7 +72,7 @@ sub _handleResponse {
 
 	my $jobj = from_json( $response->content(), { utf8 => 1 } );
 	$self->_updateStorage($jobj);
-    $self->_rmEnrollmentKey();
+	$self->_rmEnrollmentKey();
 
 	return $self;
 }
@@ -90,65 +90,64 @@ sub _updateStorage {
 }
 
 sub _rmEnrollmentKey {
-    my ( $self ) = @_;
+	my ($self) = @_;
 
-    my $keyfile = $self->_getEnrollmentKeyPath();
+	my $keyfile = $self->_getEnrollmentKeyPath();
 
-    if( -f $keyfile ){
-         unlink $keyfile;
-    }
+	if ( -f $keyfile ) {
+		unlink $keyfile;
+	}
 }
 
 sub _setEnrollmentKey {
-    my ( $self ) = @_;
+	my ($self) = @_;
 
-    my $key = '';
-    my $jobj = {};
+	my $key  = '';
+	my $jobj = {};
 
-    $key = $self->_getEnrollmentKey();
+	$key = $self->_getEnrollmentKey();
 
-    if($self->_isValidKeyFormat($key))
-    {
-       $jobj->{key} = $key;
-    }
-    else {
-        die "Invalid Key. Expected key format is : \n".
-        " [A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}\n".
-        " For example : AAAAF-111AF-DZ78F-EE78F-DDD1F";
-    }
+	if ( $self->_isValidKeyFormat($key) ) {
+		$jobj->{key} = $key;
+	}
+	else {
+		die "Invalid Key. Expected key format is : \n"
+			. " [A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}\n"
+			. " For example : AAAAF-111AF-DZ78F-EE78F-DDD1F";
+	}
 
 	$self->{jobj}->{task}->{obj} = $jobj;
 }
 
 sub _getEnrollmentKey {
-    my ( $self ) = @_;
+	my ($self) = @_;
 
-    my $key = '';
-    my $keyfile = $self->_getEnrollmentKeyPath();
+	my $key     = '';
+	my $keyfile = $self->_getEnrollmentKeyPath();
 
-    if($self->{agent}->{key} ne "") {
-        $key = $self->{agent}->{key};
-    }
-    elsif( -f $keyfile ) {
-        $key = readFile( filepath => $keyfile );
-    }
-    else {
-        die "No enrollment key found.";
-    }
+	if ( $self->{agent}->{key} ne "" ) {
+		$key = $self->{agent}->{key};
+	}
+	elsif ( -f $keyfile ) {
+		$key = readFile( filepath => $keyfile );
+	}
+	else {
+		die "No enrollment key found.";
+	}
 
-    return $key;
+	return $key;
 }
 
 sub _getEnrollmentKeyPath {
-    my ( $self ) = @_;
+	my ($self) = @_;
 
-    return $self->{agent}->{vardir}."enrollment.key";
+	return $self->{agent}->{vardir} . "enrollment.key";
 }
 
 sub _isValidKeyFormat {
-    my ( $self, $key ) = @_;
+	my ( $self, $key ) = @_;
 
-    return $key =~ m/^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/msi;
+	return $key =~ m/^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/msi;
 }
 
 1;
