@@ -72,6 +72,7 @@ sub _handleResponse {
 
 	my $jobj = from_json( $response->content(), { utf8 => 1 } );
 	$self->_updateStorage($jobj);
+    $self->_rmEnrollmentKey();
 
 	return $self;
 }
@@ -86,6 +87,16 @@ sub _updateStorage {
 		$self->{agent}->_storeArmaditoIds();
 		$self->{logger}->info( "Agent successfully enrolled with id " . $jobj->{agent_id} );
 	}
+}
+
+sub _rmEnrollmentKey {
+    my ( $self ) = @_;
+
+    my $keyfile = $self->_getEnrollmentKeyPath();
+
+    if( -f $keyfile ){
+         unlink $keyfile;
+    }
 }
 
 sub _setEnrollmentKey {
@@ -113,7 +124,7 @@ sub _getEnrollmentKey {
     my ( $self ) = @_;
 
     my $key = '';
-    my $keyfile = $self->{agent}->{vardir}."enrollment.key";
+    my $keyfile = $self->_getEnrollmentKeyPath();
 
     if($self->{agent}->{key} ne "") {
         $key = $self->{agent}->{key};
@@ -122,10 +133,16 @@ sub _getEnrollmentKey {
         $key = readFile( filepath => $keyfile );
     }
     else {
-        $key = '';
+        die "No enrollment key found.";
     }
 
     return $key;
+}
+
+sub _getEnrollmentKeyPath {
+    my ( $self ) = @_;
+
+    return $self->{agent}->{vardir}."enrollment.key";
 }
 
 sub _isValidKeyFormat {
