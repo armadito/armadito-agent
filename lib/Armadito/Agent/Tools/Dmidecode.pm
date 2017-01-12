@@ -8,7 +8,7 @@ use English qw(-no_match_vars);
 use Memoize;
 
 use Armadito::Agent::Tools qw(trimWhitespaces);
-use Armadito::Agent::Tools::File qw(getFileHandle);
+use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 
 our @EXPORT_OK = qw(
 	getDmidecodeInfos
@@ -19,13 +19,11 @@ memoize('getDmidecodeInfos');
 sub getDmidecodeInfos {
 	my (%params) = @_;
 
-	$params{command} = 'dmidecode';
-	my $handle = getFileHandle(%params);
-	return unless $handle;
-
+	my $output = capture( EXIT_ANY, "dmidecode" );
 	my ( $info, $block, $type );
+	my @lines = split( /\n/, $output );
 
-	while ( my $line = <$handle> ) {
+	foreach my $line (@lines) {
 		chomp $line;
 
 		if ( $line =~ /DMI type (\d+)/ ) {
@@ -57,7 +55,6 @@ sub getDmidecodeInfos {
 
 		$block->{$1} = trimWhitespaces($2);
 	}
-	close $handle;
 
 	# do not return anything if dmidecode output is obviously truncated
 	return if keys %$info < 2;
