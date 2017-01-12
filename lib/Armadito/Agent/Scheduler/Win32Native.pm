@@ -67,7 +67,8 @@ sub _createScheduledTask {
     my $cmdline  = "schtasks /Create /F /RU SYSTEM ";
     $cmdline    .= $task->{options}." /TN ".$taskname." ";
     $cmdline    .= "/TR \"\\\"C:\\Program Files\\Armadito-Agent\\bin\\armadito-agent.bat\\\" -t ";
-    $cmdline    .= "'".$task->{name}."' ".$task->{args}."\" ";
+    $cmdline    .= "'".$task->{name}."' ".$task->{args}." ";
+    $cmdline    .= "1>> \\\"C:\\Program Files\\Armadito-Agent\\var\\armadito-agent-".$task->{name}.".log\\\" 2>>&1 \"";
 
     $self->{logger}->info($cmdline);
 
