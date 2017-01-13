@@ -1,7 +1,7 @@
 Source: libarmadito-agent-perl
 Section: perl
 Priority: optional
-Maintainer: vhamon <vhamon@>
+Maintainer: vhamon <vhamon@teclib.com>
 Build-Depends: debhelper (>= 9)
 Build-Depends-Indep: libdate-calc-perl,
  libdbd-sqlite-perl,
