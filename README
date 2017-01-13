@@ -33,7 +33,7 @@ On ubuntu :
 On Windows :
   cpan install App::cpanminus
   cpan install inc::Module::Install
-  cpanm --quiet --installdeps --notest .  
+  cpanm --quiet --installdeps --notest .
 
 ## Author(s)
 
