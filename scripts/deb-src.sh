@@ -24,7 +24,7 @@ function usage()
 function mkdir_if_needed()
 {
     local dir
-    
+
     for dir in $* ; do
 	[ -d $dir ] || mkdir -p $dir
     done
@@ -93,7 +93,7 @@ function build_deb_src()
     if test "$TARBALL_EXT" = 'gz' ; then TAR_FLAG=z ; else TAR_FLAG=j ; fi
 
     cp $TARBALL $BUILD_DIR/$DEBIAN_TARBALL
-    
+
     (
 	cd $BUILD_DIR
 	tar xv${TAR_FLAG}f $DEBIAN_TARBALL
@@ -110,7 +110,7 @@ function build_deb_src()
 	cd $BUILD_DIR/$PKG-$VERSION
 
 	if [ ! -z "$BUILD_VERSION" ] ; then
-	    local DEBIAN_VERSION=$(dpkg-parsechangelog --show-field Version | sed -r -e "s/$SRC_VERSION//") 
+	    local DEBIAN_VERSION=$(dpkg-parsechangelog --show-field Version | sed -r -e "s/$SRC_VERSION//")
 	    dch --newversion $VERSION$DEBIAN_VERSION --distribution $DISTRIB --controlmaint "$BUILD_VERSION"
 	fi
 
