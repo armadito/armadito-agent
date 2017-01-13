@@ -34,6 +34,7 @@ requires 'Time::Piece'           => '0';
 requires 'IPC::System::Simple'   => '0';
 requires 'File::Which'           => '0';
 requires 'Memoize'               => '0';
+requires 'LWP::UserAgent'        => '0';
 
 if ( $OSNAME eq "MSWin32" ) {
 	requires 'Win32::OLE' => '0';

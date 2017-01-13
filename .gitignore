@@ -4,10 +4,8 @@
 .last_cover_stats
 .tidyall.d/
 /.build/
-/Armadito-Agent-*.tar.gz
 /Armadito-Agent-*
-/libarmadito-agent-perl-*.tar.gz
-/libarmadito-agent-perl-*
+/Armadito-Agent-*.tar.gz
 /MANIFEST.bak
 /META.json
 /META.yml
@@ -17,6 +15,8 @@
 /_eumm/
 /bin/armadito-agent.bat
 /blib/
+/libarmadito-agent-perl-*
+/libarmadito-agent-perl-*.tar.gz
 /out/
 /pm_to_blib
 /res/strawberry-perl*

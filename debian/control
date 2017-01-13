@@ -4,14 +4,13 @@ Priority: optional
 Maintainer: vhamon <vhamon@teclib.com>
 Build-Depends: debhelper (>= 9)
 Build-Depends-Indep: libdate-calc-perl,
- libdbd-sqlite-perl,
+ libdbd-sqlite3-perl,
  libfile-which-perl,
  libhttp-message-perl,
  libipc-system-simple-perl,
  libjson-perl,
  libparse-syslog-perl,
  libperl-critic-perl,
- libperl-perl,
  libreadonly-perl,
  libtest-compile-perl,
  libtest-perl-critic-perl,
@@ -20,6 +19,7 @@ Build-Depends-Indep: libdate-calc-perl,
  liburi-perl,
  libxml-libxml-perl,
  libxml-treepp-perl,
+ libwww-perl,
  perl
 Standards-Version: 3.9.6
 Homepage: https://metacpan.org/release/Armadito-Agent
@@ -28,18 +28,18 @@ Package: libarmadito-agent-perl
 Architecture: all
 Depends: ${misc:Depends}, ${perl:Depends},
  libdate-calc-perl,
- libdbd-sqlite-perl,
+ libdbd-sqlite3-perl,
  libfile-which-perl,
  libhttp-message-perl,
  libipc-system-simple-perl,
  libjson-perl,
  libparse-syslog-perl,
  libperl-critic-perl,
- libperl-perl,
  libreadonly-perl,
  libtry-tiny-perl,
  libuniversal-require-perl,
  liburi-perl,
+ libwww-perl,
  libxml-libxml-perl
 Description: Armadito Agent for Linux and Windows
  Agent interfacing between Armadito Antivirus and Armadito plugin for GLPI for
