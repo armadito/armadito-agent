@@ -1,0 +1,7 @@
+[PerlTidy]
+select = {lib,t}/**/*.{pl,pm,t}
+select = Makefile.PL
+argv = --profile=$ROOT/.perltidyrc
+
+[SortLines]
+select = .gitignore

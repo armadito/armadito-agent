@@ -1,0 +1,12 @@
+# please alpha sort config items as you add them
+
+severity = 4
+theme = core
+verbose = %f: [%p] %m at line %l, column %c.\n
+
+[-InputOutput::RequireBriefOpen]
+[-Modules::RequireExplicitPackage]
+[-Subroutines::RequireFinalReturn]
+
+[RegularExpressions::RequireExtendedFormatting]
+minimum_regex_length_to_complain_about = 5
