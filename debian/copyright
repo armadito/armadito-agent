@@ -8,14 +8,13 @@ Copyright: 2006-2010 OCS Inventory contributors
 2010-2012 FusionInventory Team
 2011-2017 Teclib
 
-License: GPL-3+
+License: GPL-3.0+
 
 Files: debian/*
-Copyright: 2017, vhamon <vhamon@>
- 2017, vhamon <vhamon@teclib.com>
-License: GPL-3+
+Copyright: 2017, vhamon <vhamon@teclib.com>
+License: GPL-3.0+
 
-License: GPL-3+
+License: GPL-3.0+
  Armadito Agent is a free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
