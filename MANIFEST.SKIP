@@ -29,11 +29,13 @@ CVS/
 var/
 ^tools*
 ^Armadito-Agent.*
-/tarballs/
 ^setup.sh
 debian
 ^\.tidy
 \.perltidyrc
 .perlcriticrc
-^do_all.sh
-/scripts/
+^do_all.*
+scripts/
+^version
+out/
+packaging/
