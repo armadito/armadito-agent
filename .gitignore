@@ -4,8 +4,10 @@
 .last_cover_stats
 .tidyall.d/
 /.build/
-/Armadito-Agent*.tar.gz
+/Armadito-Agent-*.tar.gz
 /Armadito-Agent-*
+/libarmadito-agent-perl-*.tar.gz
+/libarmadito-agent-perl-*
 /MANIFEST.bak
 /META.json
 /META.yml
