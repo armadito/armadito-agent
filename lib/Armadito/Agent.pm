@@ -13,7 +13,7 @@ use Armadito::Agent::Storage;
 use Armadito::Agent::Antivirus;
 use Armadito::Agent::Logger qw (LOG_DEBUG LOG_INFO LOG_DEBUG2);
 
-our $VERSION = "0.1.0_02";
+our $VERSION = "0.1.1";
 
 my @supported_antiviruses = ( "Armadito", "Eset", "Kaspersky" );
 my @supported_tasks  = ( "State",      "Enrollment", "Getjobs", "Runjobs", "Alerts", "Scan", "AVConfig", "Scheduler" );
@@ -217,7 +217,7 @@ Armadito::Agent - Armadito Agent
 
 =head1 VERSION
 
-0.1.0_02
+0.1.1
 
 =head1 DESCRIPTION
 
