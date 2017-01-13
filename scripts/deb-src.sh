@@ -2,9 +2,9 @@
 
 function usage()
 {
-    echo "Usage: deb-src.sh [-d DISTRIB] [-k GPG_KEY_ID] [-b BUILD_VERSION] [-D BUILD_DIR] TARBALL"
+    echo "Usage: deb-src.sh [-d DISTRIB] [-k GPG_KEY_ID] [-v BUILD_VERSION] [-D BUILD_DIR] TARBALL"
     echo "Create a Debian source package from tarball"
-    echo "Example: deb-src.sh -d trusty -k BEEFFACE -D $HOME/armadito/build/pkg armadito-core-0.10.1.tar.gz"
+    echo "Example: deb-src.sh -d trusty -v 10 -k BEEFFACE -D $HOME/armadito/build/pkg armadito-core-0.10.1.tar.gz"
     echo ""
     echo "Argument:"
     echo "  TARBALL          source tarball"
@@ -12,7 +12,7 @@ function usage()
     echo "Options:"
     echo "  -d DISTRIB          distrib code name: trusty, wily, xenial... (default to $(lsb_release -cs))"
     echo "  -k GPG_KEY_ID       GPG key id for package signing (if none, first key of the keyring will be used)"
-    echo "  -b BUILD_VERSION    build version appended to source version"
+    echo "  -v BUILD_VERSION    build version appended to source version"
     echo "  -D BUILD_DIR        build package in this directory (default to /var/tmp)"
     echo ""
 
@@ -76,6 +76,7 @@ function build_deb_src()
     local PKG=$(pkg $TARBALL)
     local TARBALL_EXT=$(tarball_extension $TARBALL)
     local SRC_VERSION=$(version $TARBALL)
+    local DEBIAN_VERSION=$4
 
     if [ ! -z "$BUILD_VERSION" ] ; then
 	VERSION=$SRC_VERSION.$BUILD_VERSION
@@ -84,9 +85,9 @@ function build_deb_src()
     fi
 
     local DEBIAN_TARBALL=${PKG}_$VERSION.orig.tar.$TARBALL_EXT
-    local DEBIAN_DIR=$SCRIPT_DIR/../packages/ubuntu/$PKG/debian
+    local DEBIAN_DIR=$SCRIPT_DIR/../debian
 
-    mkdir_if_needed $BUILD_DIR
+    mkdir_if_needed $BUILD_DIR/$PKG-$VERSION/debian
 
     /bin/rm -rf $BUILD_DIR/$PKG-$VERSION
 
@@ -103,7 +104,7 @@ function build_deb_src()
 	fi
     )
 
-    cp -r $DEBIAN_DIR $BUILD_DIR/$PKG-$VERSION
+    cp -r $DEBIAN_DIR $BUILD_DIR/$PKG-$VERSION/debian
 
     # we append the distro to the package version
     (
@@ -126,7 +127,7 @@ function build_deb_src()
 
 if [ $# -eq 0 ] ; then usage ; fi
 
-while getopts "d:k:b:D:h" opt; do
+while getopts "d:k:v:D:h" opt; do
     case $opt in
 	d)
 	    DISTRIB=$OPTARG
@@ -134,7 +135,7 @@ while getopts "d:k:b:D:h" opt; do
 	k)
 	    GPG_KEY_ID=$OPTARG
 	    ;;
-	b)
+	v)
 	    BUILD_VERSION=$OPTARG
 	    ;;
 	D)
@@ -171,8 +172,3 @@ TARBALL=$1
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 build_deb_src "$TARBALL" "$DISTRIB" "$GPG_KEY_ID" "$BUILD_VERSION" "$BUILD_DIR"
-
-exit 0
-
-# ===================
-dput -u ppa:armadito/armadito-agent $PKGDIR/${PKG}_$VERSION-${BUILDVER}_source.changes
