@@ -125,9 +125,9 @@ sub setLinuxVariables {
 	%Variables = (
 		DESTDIR              => '',
 		PREFIX               => '/usr/local',
-		INSTALLSCRIPT        => '$(DESTDIR)$(PREFIX)/bin',
-		INSTALLSITESCRIPT    => '$(DESTDIR)$(PREFIX)/bin',
-		INSTALLVENDORSCRIPT  => '$(DESTDIR)$(PREFIX)/bin',
+		INSTALLSCRIPT        => '$(PREFIX)/bin',
+		INSTALLSITESCRIPT    => '$(PREFIX)/bin',
+		INSTALLVENDORSCRIPT  => '$(PREFIX)/bin',
 		INSTALLLIB           => '$(DATADIR)/lib',
 		INSTALLSITELIB       => '$(DATADIR)/lib',
 		INSTALLVENDORLIB     => '$(DATADIR)/lib',
