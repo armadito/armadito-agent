@@ -123,22 +123,23 @@ sub setWin32Variables {
 sub setLinuxVariables {
 
 	%Variables = (
+		DESTDIR              => '',
 		PREFIX               => '/usr/local',
-		INSTALLSCRIPT        => '$(PREFIX)/bin',
-		INSTALLSITESCRIPT    => '$(PREFIX)/bin',
-		INSTALLVENDORSCRIPT  => '$(PREFIX)/bin',
+		INSTALLSCRIPT        => '$(DESTDIR)$(PREFIX)/bin',
+		INSTALLSITESCRIPT    => '$(DESTDIR)$(PREFIX)/bin',
+		INSTALLVENDORSCRIPT  => '$(DESTDIR)$(PREFIX)/bin',
 		INSTALLLIB           => '$(DATADIR)/lib',
 		INSTALLSITELIB       => '$(DATADIR)/lib',
 		INSTALLVENDORLIB     => '$(DATADIR)/lib',
-		INSTALLMAN1DIR       => '$(PREFIX)/share/man/man1',
-		INSTALLSITEMAN1DIR   => '$(PREFIX)/share/man/man1',
-		INSTALLVENDORMAN1DIR => '$(PREFIX)/share/man/man1',
-		INSTALLMAN3DIR       => '$(PREFIX)/share/man/man3',
-		INSTALLSITEMAN3DIR   => '$(PREFIX)/share/man/man3',
-		INSTALLVENDORMAN3DIR => '$(PREFIX)/share/man/man3',
-		SYSCONFDIR           => '$(PREFIX)/etc/armadito-agent',
-		DATADIR              => '$(PREFIX)/share/armadito-agent',
-		LOCALSTATEDIR        => '$(PREFIX)/var/armadito-agent',
+		INSTALLMAN1DIR       => '$(DESTDIR)$(PREFIX)/share/man/man1',
+		INSTALLSITEMAN1DIR   => '$(DESTDIR)$(PREFIX)/share/man/man1',
+		INSTALLVENDORMAN1DIR => '$(DESTDIR)$(PREFIX)/share/man/man1',
+		INSTALLMAN3DIR       => '$(DESTDIR)$(PREFIX)/share/man/man3',
+		INSTALLSITEMAN3DIR   => '$(DESTDIR)$(PREFIX)/share/man/man3',
+		INSTALLVENDORMAN3DIR => '$(DESTDIR)$(PREFIX)/share/man/man3',
+		SYSCONFDIR           => '$(DESTDIR)$(PREFIX)/etc/armadito-agent',
+		DATADIR              => '$(DESTDIR)$(PREFIX)/share/armadito-agent',
+		LOCALSTATEDIR        => '$(DESTDIR)$(PREFIX)/var/armadito-agent',
 	);
 }
 
