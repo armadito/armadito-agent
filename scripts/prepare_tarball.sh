@@ -3,7 +3,6 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOTDIR=$DIR/../
 TARBALL_VERSION=$(cat $ROOTDIR/version)
-BUILD_VERSION=1
 
 set -e
 cd $ROOTDIR
