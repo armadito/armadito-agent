@@ -48,7 +48,7 @@ test_requires 'Test::Perl::Critic' => '0';
 install_script 'bin/armadito-agent';
 
 resources
-	homepage   => "http://www.teclib-edition.com/en/teclib-products/armadito-antivirus/",
+	homepage   => "http://www.armadito.com/",
 	bugtracker => "https://github.com/armadito/armadito-agent/issues",
 	repository => "https://github.com/armadito/armadito-agent",
 	IRC        => "http://webchat.freenode.net/#armadito";
