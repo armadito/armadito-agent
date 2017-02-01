@@ -20,6 +20,7 @@ Build-Depends-Indep: libdate-calc-perl,
  libxml-libxml-perl,
  libxml-treepp-perl,
  libwww-perl,
+ libmodule-install-perl,
  perl
 Standards-Version: 3.9.6
 Homepage: https://metacpan.org/release/Armadito-Agent
@@ -40,7 +41,8 @@ Depends: ${misc:Depends}, ${perl:Depends},
  libuniversal-require-perl,
  liburi-perl,
  libwww-perl,
- libxml-libxml-perl
+ libxml-libxml-perl,
+ libmodule-install-perl
 Description: Armadito Agent for Linux and Windows
  Agent interfacing between Armadito Antivirus and Armadito plugin for GLPI for
  Windows and Linux.
