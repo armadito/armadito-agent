@@ -1,5 +1,14 @@
 Revision history for Perl extension Armadito::Agent.
 
+0.10.1 01/02/2017 
+        - new code structure for Antivirus specific stuff
+        - Add support for Kaspersky AV 17.0.0
+        - Add support for ESET nod32
+	- Add Pattern::Matcher for easier parsing
+	- Add Cron Scheduler wrapper
+        - Add Win32Native Scheduler wrapper
+	- Refactor logger and config
+
 0.1.0_02 24/08/2016
 	- Add ArmaditoAV api RESTful client implementation
 	- State task with ArmaditoAV
