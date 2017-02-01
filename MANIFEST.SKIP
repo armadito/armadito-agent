@@ -30,12 +30,12 @@ var/
 ^tools*
 ^Armadito-Agent.*
 ^setup.sh
-debian
 ^\.tidy
 \.perltidyrc
 .perlcriticrc
 ^do_all.*
 scripts/
 ^version
+build/
 out/
 packaging/
