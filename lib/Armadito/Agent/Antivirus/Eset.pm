@@ -54,7 +54,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Eset - ESET Antivirus' class.
+Armadito::Agent::Antivirus::Eset - ESET Antivirus' class.
 
 =head1 DESCRIPTION
 

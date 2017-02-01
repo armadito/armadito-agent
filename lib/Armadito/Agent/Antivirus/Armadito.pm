@@ -40,7 +40,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Antivirus - Armadito Agent Antivirus base class.
+Armadito::Agent::Antivirus::Armadito - Armadito Agent Antivirus base class.
 
 =head1 DESCRIPTION
 

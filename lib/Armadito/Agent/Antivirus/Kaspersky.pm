@@ -70,7 +70,7 @@ __END__
 
 =head1 NAME
 
-Armadito::Agent::Kapersky - Kaspersky Antivirus' class.
+Armadito::Agent::Antivirus::Kapersky - Kaspersky Antivirus' class.
 
 =head1 DESCRIPTION
 
