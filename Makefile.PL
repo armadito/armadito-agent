@@ -35,6 +35,7 @@ requires 'IPC::System::Simple'   => '0';
 requires 'File::Which'           => '0';
 requires 'Memoize'               => '0';
 requires 'LWP::UserAgent'        => '0';
+requires 'List::Util'            => '1.47';
 
 if ( $OSNAME eq "MSWin32" ) {
 	requires 'Win32::OLE' => '0';
