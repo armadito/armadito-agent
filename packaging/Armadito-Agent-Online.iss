@@ -43,7 +43,8 @@ SetupLogging=yes
 InstallPerlMessage=Install Strawberry perl distribution
 InstallPerlDeps=Install missing Perl dependencies
 InstallPerlDepsStatus=Installing Perl dependencies...
-InstallPerlCpanM=Installing CpanMinus...
+MkMyConfig=Make cpan myconfig...
+InstallPerlCpanM=Installing CpanMinus and inc::Module::Install...
 LaunchScheduler=Start Scheduler Task
 
 [Languages]
@@ -55,11 +56,17 @@ Name: "installperldeps"; Description: "{cm:InstallPerlDeps}";
 
 [Run]
 Filename: "{code:GetPerlPath}\bin\cpan.bat"; WorkingDir: "{app}"; \
+    StatusMsg: "{cm:MkMyConfig}"; \
+    Parameters: "mkmyconfig > ""{app}\installcpanm.log"" 2>&1"; Flags: runhidden waituntilterminated
+Filename: "{code:GetPerlPath}\bin\cpan.bat"; WorkingDir: "{app}"; \
     StatusMsg: "{cm:InstallPerlCpanM}"; Tasks: installperldeps; \
-    Parameters: "App::cpanminus > ""{app}\installcpanm.log"" 2>&1"; Flags: runhidden waituntilidle
+    Parameters: "App::cpanminus inc::Module::Install >> ""{app}\installcpanm.log"" 2>&1"; Flags: runhidden waituntilterminated
+Filename: "{code:GetPerlPath}\bin\cpanm.bat"; WorkingDir: "{app}"; \
+    StatusMsg: "{cm:InstallPerlDepsStatus}"; Tasks: installperldeps; \
+    Parameters: "--installdeps --notest . > ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilterminated
 Filename: "{code:GetPerlPath}\site\bin\cpanm.bat"; WorkingDir: "{app}"; \
     StatusMsg: "{cm:InstallPerlDepsStatus}"; Tasks: installperldeps; \
-    Parameters: "--installdeps --notest . > ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilidle
+    Parameters: "--installdeps --notest . >> ""{app}\installdeps.log"" 2>&1"; Flags: runhidden waituntilterminated
 Filename: "{app}\bin\armadito-agent.bat"; WorkingDir: "{app}"; \
     StatusMsg: "{cm:LaunchScheduler}"; Flags: postinstall waituntilterminated runhidden; \
     Parameters: " -t ""Scheduler"""; BeforeInstall: InstallEnrollmentKey;
