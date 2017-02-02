@@ -359,7 +359,7 @@ begin
   '', False, 'New Folder');
 
   PerlPathPage.Add('Select an existing or new directory :');
-  PerlPathPage.Values[0] := GetPreviousData('PerlPath', 'C:\Perl');
+  PerlPathPage.Values[0] := GetPreviousData('PerlPath', 'C:\strawberry\perl');
 
   if ExpandConstant('{param:PERLPATH|false}') <> 'false' then
   begin
@@ -411,20 +411,6 @@ begin
     Result := True;
   end else begin
     Result := False;
-  end;
-end;
-
-function NextButtonClick(CurPageID: Integer): Boolean;
-begin
-  if CurPageID = PerlPathPage.ID then begin
-    if isPerlInstalled(PerlPathPage.Values[0]) then begin
-      MsgBox('Perl already installed in '+ PerlPathPage.Values[0], mbError, MB_OK);
-      Result := False;
-    end else begin
-      Result := True;
-    end;
-  end else begin
-    Result := True;
   end;
 end;
 
