@@ -34,6 +34,17 @@ sub getOperatingSystemInfo {
 	return $os_info;
 }
 
+sub getJobj {
+	my ($self) = @_;
+
+	return {
+		name         => $self->{name},
+		version      => $self->{version},
+		os_info      => $self->{os_info},
+		scancli_path => $self->{scancli_path}
+	};
+}
+
 1;
 
 __END__
@@ -56,3 +67,6 @@ Instanciate Armadito module.
 
 Get Operating system information.
 
+=head2 getJobj ( $self )
+
+Return unblessed object for json encapsulation.
