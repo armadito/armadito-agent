@@ -26,16 +26,6 @@ sub new {
 	return $self;
 }
 
-sub _handleError {
-	my ( $self, $response ) = @_;
-
-	$self->{logger}->info( "Error Response : " . $response->content() );
-	my $obj = from_json( $response->content(), { utf8 => 1 } );
-	$self->{logger}->error( Dumper($obj) );
-
-	return $self;
-}
-
 sub _sendAlerts {
 	my ( $self, $alerts ) = @_;
 

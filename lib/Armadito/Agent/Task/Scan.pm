@@ -44,16 +44,6 @@ sub _validateScanObj {
 	$scanobj->{scan_path} = decode_base64( $scanobj->{scan_path} );
 }
 
-sub _handleError {
-	my ( $self, $response ) = @_;
-
-	$self->{logger}->info( "Error Response : " . $response->content() );
-	my $obj = from_json( $response->content(), { utf8 => 1 } );
-	$self->{logger}->error( Dumper($obj) );
-
-	return $self;
-}
-
 sub sendScanResults {
 	my ( $self, $scanresults ) = @_;
 
