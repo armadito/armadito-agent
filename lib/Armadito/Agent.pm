@@ -62,6 +62,12 @@ sub init {
 	$self->{scheduler_id} = 0;
 	$self->_getArmaditoIds();
 
+	$self->_initAntivirus();
+}
+
+sub _initAntivirus {
+	my ($self) = @_;
+
 	my $class = "Armadito::Agent::Antivirus::$self->{config}->{antivirus}";
 	$class->require();
 	$self->{antivirus} = $class->new( logger => $self->{logger} );
