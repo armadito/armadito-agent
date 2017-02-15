@@ -27,10 +27,7 @@ sub new {
 		confdir => $params{confdir},
 		datadir => $params{datadir},
 		libdir  => $params{libdir},
-		vardir  => $params{vardir},
-		sigterm => $params{sigterm},
-		targets => [],
-		tasks   => []
+		vardir  => $params{vardir}
 	};
 
 	bless $self, $class;
