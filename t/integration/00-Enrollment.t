@@ -4,17 +4,12 @@ use warnings;
 use Test::More;
 
 use English qw(-no_match_vars);
-use Getopt::Long;
-use Pod::Usage;
-use UNIVERSAL::require;
-use IPC::System::Simple qw(capture);
-use Data::Dumper;
 use Try::Tiny;
-use Cwd 'abs_path';
 
 use Armadito::Agent;
 use Armadito::Agent::Antivirus;
 use Armadito::Agent::Task::Enrollment;
+use JSON;
 
 sub initAgent {
 
@@ -34,7 +29,7 @@ sub doEnrollment {
 	my $agent = initAgent();
 	$agent->{config} = Armadito::Agent::Config->new();
 	$agent->{config}->loadDefaults( $agent->_getDefaultConf() );
-	$agent->{key}          = "";
+	$agent->{key}          = "AAAAF-111AF-DZ78F-EE78F-DDD1F";
 	$agent->{agent_id}     = 0;
 	$agent->{scheduler_id} = 0;
 
@@ -47,6 +42,10 @@ sub doEnrollment {
 
 	is( $task->{jobj}->{agent_id},                     0,       "TaskObjAgent" );
 	is( $task->{jobj}->{task}->{antivirus}->{version}, "1.0.1", "TaskAV" );
+
+	$task->_setEnrollmentKey();
+	my $json_text = to_json( $task->{jobj} );
+
 }
 
 plan tests => 3;
