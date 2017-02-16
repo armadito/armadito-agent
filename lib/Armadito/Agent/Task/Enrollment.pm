@@ -34,7 +34,6 @@ sub run {
 	$self->_setEnrollmentKey();
 
 	my $json_text = to_json( $self->{jobj} );
-	print $json_text. "\n";
 
 	my $response = $self->{glpi_client}->sendRequest(
 		"url"   => $self->{agent}->{config}->{server}[0] . "/api/agents",
