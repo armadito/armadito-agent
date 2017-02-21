@@ -5,4 +5,4 @@ set programpath=%~dp0\..
 
 call pl2bat %programpath%\bin\armadito-agent
 
-"C:\Program Files (x86)\Inno Setup 5\iscc" /Qp /dMyAppVersion=%version% %programpath%\packaging\Armadito-Agent-Online.iss
+"C:\Program Files (x86)\Inno Setup 5\iscc" /Qp /dMyAppVersion=%version% %programpath%\build\windows\packages\Armadito-Agent-Online.iss
