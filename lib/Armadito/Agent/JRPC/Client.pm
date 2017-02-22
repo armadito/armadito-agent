@@ -72,4 +72,5 @@ the logger object to use (default: a new stderr logger)
 
 =head2 call($jobj)
 
-Send given json object.
+Send A json obj and return server response jobj.
+

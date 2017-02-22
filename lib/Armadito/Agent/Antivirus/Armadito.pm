@@ -70,4 +70,3 @@ Return unblessed object for json ecnapsulation.
 
 Return Antivirus Version by using RESTful API /version.
 
-
