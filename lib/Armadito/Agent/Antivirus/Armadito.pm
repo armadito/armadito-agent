@@ -40,13 +40,9 @@ sub getVersion {
 
 	$self->{jrpc_client} = Armadito::Agent::JRPC::Client->new( sock_path => "\0/tmp/.armadito-daemon" );
 	my $response = $self->{jrpc_client}->call($callobj);
+	close( $self->{jrpc_client}->{sock} );
 
-	print Dumper($response) . "\n";
-
-	$self->{av_client} = Armadito::Agent::HTTP::Client::ArmaditoAV->new( taskobj => $self );
-	my $jobj = $self->{av_client}->getAntivirusVersion();
-
-	return $jobj->{"antivirus-version"};
+	return $response->{result}->{"antivirus-version"};
 }
 1;
 
