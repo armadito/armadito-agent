@@ -4,6 +4,9 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Antivirus';
 use Armadito::Agent::HTTP::Client::ArmaditoAV;
+use Armadito::Agent::JRPC::Client;
+use English qw(-no_match_vars);
+use Data::Dumper;
 
 sub new {
 	my ( $class, %params ) = @_;
@@ -28,6 +31,17 @@ sub getJobj {
 
 sub getVersion {
 	my ($self) = @_;
+
+	my $callobj = {
+		jsonrpc => "2.0",
+		method  => "status",
+		id      => 1234
+	};
+
+	$self->{jrpc_client} = Armadito::Agent::JRPC::Client->new( sock_path => "\0/tmp/.armadito-daemon" );
+	my $response = $self->{jrpc_client}->call($callobj);
+
+	print Dumper($response) . "\n";
 
 	$self->{av_client} = Armadito::Agent::HTTP::Client::ArmaditoAV->new( taskobj => $self );
 	my $jobj = $self->{av_client}->getAntivirusVersion();
