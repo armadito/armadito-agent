@@ -2,35 +2,22 @@ package Armadito::Agent::Antivirus::Armadito::Task::Scan;
 
 use strict;
 use warnings;
-use MIME::Base64;
 use base 'Armadito::Agent::Task::Scan';
-use Armadito::Agent::HTTP::Client::ArmaditoAV;
-
-sub getScanAPIMessage {
-	my ($self) = @_;
-
-	return "{ 'path' : '" . $self->{job}->{obj}->{scan_path} . "' }";
-}
+use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 
 sub run {
 	my ( $self, %params ) = @_;
 
 	$self = $self->SUPER::run(%params);
 
-	$self->{logger}->info("Armadito Scan launched.");
-	$self->{av_client} = Armadito::Agent::HTTP::Client::ArmaditoAV->new( taskobj => $self );
-	$self->{av_client}->register();
+	my $bin_path     = $self->{agent}->{antivirus}->{program_path} . "armadito-scan";
+	my $scan_path    = $self->{job}->{obj}->{scan_path};
+	my $scan_options = $self->{job}->{obj}->{scan_options};
 
-	my $response = $self->{av_client}->sendRequest(
-		"url"   => $self->{av_client}->{server_url} . "/api/scan",
-		message => $self->getScanAPIMessage(),
-		method  => "POST"
-	);
-
-	die "ArmaditoAV Scan request failed." if ( !$response->is_success() );
-
-	$self->{av_client}->pollEvents();
-	$self->{av_client}->unregister();
+	my $cmdline = "\"" . $bin_path . "\" --json " . $scan_options . " \"" . $scan_path . "\"";
+	my $output = capture( EXIT_ANY, $cmdline );
+	$self->{logger}->info($output);
+	$self->{logger}->info( "Program exited with " . $EXITVAL . "\n" );
 
 	return $self;
 }
