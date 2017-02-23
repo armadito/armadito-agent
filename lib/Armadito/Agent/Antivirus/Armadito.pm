@@ -4,14 +4,17 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Antivirus';
 use Armadito::Agent::HTTP::Client::ArmaditoAV;
+use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 
 sub new {
 	my ( $class, %params ) = @_;
 
 	my $self = $class->SUPER::new(%params);
 
-	$self->{name}    = "Armadito";
-	$self->{version} = $self->getVersion();
+	$self->{av_class}     = __PACKAGE__;
+	$self->{name}         = "Armadito";
+	$self->{program_path} = $self->getProgramPath();
+	$self->{version}      = $self->getVersion();
 
 	return $self;
 }

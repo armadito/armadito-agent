@@ -11,6 +11,7 @@ sub new {
 
 	my $self = $class->SUPER::new(%params);
 
+	$self->{av_class}     = __PACKAGE__;
 	$self->{name}         = "Kaspersky";
 	$self->{program_path} = $self->getProgramPath();
 	$self->{scancli_path} = $self->{program_path} . "\\avp.com";
@@ -40,30 +41,6 @@ sub getVersion {
 	return "unknown";
 }
 
-sub getProgramPath {
-	my ($self) = @_;
-
-	my $osclass = $self->getOSClass();
-	return $osclass->getProgramPath();
-}
-
-sub getDataPath {
-	my ($self) = @_;
-
-	my $osclass = $self->getOSClass();
-	return $osclass->getDataPath();
-}
-
-sub getOSClass {
-	my ($self) = @_;
-
-	my $class = "Armadito::Agent::Antivirus::Kaspersky::" . $self->{os_info}->{libpath};
-	$class->require();
-	my $osclass = $class->new( logger => $self->{logger}, antivirus => $self );
-
-	return $osclass;
-}
-
 1;
 
 __END__
@@ -89,9 +66,5 @@ Return unblessed object for json encapsulation.
 =head2 getVersion ( $self )
 
 Return Antivirus' Version.
-
-=head2 getProgramPath ( $self )
-
-Return Antivirus' Program path.
 
 
