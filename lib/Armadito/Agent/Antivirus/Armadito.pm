@@ -5,6 +5,7 @@ use warnings;
 use base 'Armadito::Agent::Antivirus';
 use Armadito::Agent::HTTP::Client::ArmaditoAV;
 use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
+use JSON;
 
 sub new {
 	my ( $class, %params ) = @_;
@@ -23,19 +24,21 @@ sub getJobj {
 	my ($self) = @_;
 
 	return {
-		name    => $self->{name},
-		os_info => $self->{os_info},
-		version => $self->{version}
+		name         => $self->{name},
+		os_info      => $self->{os_info},
+		version      => $self->{version},
+		program_path => $self->{program_path}
 	};
 }
 
 sub getVersion {
 	my ($self) = @_;
 
-	$self->{av_client} = Armadito::Agent::HTTP::Client::ArmaditoAV->new( taskobj => $self );
-	my $jobj = $self->{av_client}->getAntivirusVersion();
+	my $cmdline = "\"" . $self->{program_path} . "armadito-info\" --json";
+	my $output  = capture( EXIT_ANY, $cmdline );
+	my $jobj    = from_json( $output, { utf8 => 1 } );
 
-	return $jobj->{"antivirus-version"};
+	return $jobj->{antivirus_version};
 }
 1;
 
