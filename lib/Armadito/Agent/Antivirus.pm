@@ -30,8 +30,35 @@ sub getOperatingSystemInfo {
 	if ( $OSNAME eq "MSWin32" ) {
 		$os_info->{libpath} = "Win32";
 	}
+	else {
+		$os_info->{libpath} = "Linux";
+	}
 
 	return $os_info;
+}
+
+sub getOSClass {
+	my ($self) = @_;
+
+	my $class = $self->{av_class} . "::" . $self->{os_info}->{libpath};
+	$class->require();
+	my $osclass = $class->new( logger => $self->{logger}, antivirus => $self );
+
+	return $osclass;
+}
+
+sub getProgramPath {
+	my ($self) = @_;
+
+	my $osclass = $self->getOSClass();
+	return $osclass->getProgramPath();
+}
+
+sub getDataPath {
+	my ($self) = @_;
+
+	my $osclass = $self->getOSClass();
+	return $osclass->getDataPath();
 }
 
 sub getJobj {
@@ -70,3 +97,11 @@ Get Operating system information.
 =head2 getJobj ( $self )
 
 Return unblessed object for json encapsulation.
+
+=head2 getProgramPath ( $self )
+
+Return Antivirus' Program path. i.e. bin directory.
+
+=head2 getDataPath ( $self )
+
+Return Antivirus' data path.
