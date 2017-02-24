@@ -14,6 +14,7 @@ our @EXPORT_OK = qw(
 	msFiletimeToUnixTimestamp
 	iso8601ToUnixTimestamp
 	nowToISO8601
+	secondsToDuration
 );
 
 # ; Time Start:   2016-11-30 16:04:34
@@ -25,10 +26,10 @@ sub computeDuration {
 	my $format = '%Y-%m-%d %H:%M:%S';
 	my $diff = Time::Piece->strptime( $params{end}, $format ) - Time::Piece->strptime( $params{start}, $format );
 
-	return _secondsToDuration( $diff->seconds );
+	return secondsToDuration( $diff->seconds );
 }
 
-sub _secondsToDuration {
+sub secondsToDuration {
 	my $totalsecs = shift;
 	my ( $hours, $mins, $secs, $leftover ) = ( 0, 0, 0, 0 );
 
