@@ -5,7 +5,6 @@ use warnings;
 use base 'Armadito::Agent::Task::Scan';
 use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 use Armadito::Agent::Patterns::Matcher;
-use Armadito::Agent::Task::Alerts;
 use Armadito::Agent::Tools::Time qw(computeDuration iso8601ToUnixTimestamp);
 
 # 2016-11-30 16:04:36     C:\for_eric\75c1ae242d07bb738a5d9a9766c2a7de//data0000  detected        Exploit.JS.Pdfka.flm
@@ -47,7 +46,23 @@ sub _parseScanOutput {
 	$parser->addHookForLabel( 'start_time',     \&LocalToTimestamp );
 	$parser->addHookForLabel( 'end_time',       \&LocalToTimestamp );
 
-	return $parser->getResults();
+	my $results = $parser->getResults();
+	$self->{alerts} = $results->{alerts};
+	$self->_setResults($results);
+}
+
+sub _setResults {
+	my ( $self, $results ) = @_;
+
+	delete( $results->{alerts} );
+	$self->{results} = $results;
+
+	$self->{results}->{progress} = 100;
+	$self->{results}->{job_id}   = $self->{job}->{job_id};
+	$self->{results}->{duration} = computeDuration(
+		start => $self->{results}->{start_time}[0],
+		end   => $self->{results}->{end_time}[0]
+	);
 }
 
 sub formatFilePath {
@@ -75,27 +90,14 @@ sub run {
 
 	my $cmdline = "\"" . $bin_path . "\" SCAN \"" . $scan_path . "\" " . $scan_options;
 	my $output = capture( EXIT_ANY, $cmdline );
+
 	$self->{logger}->info($output);
 	$self->{logger}->info( "Program exited with " . $EXITVAL . "\n" );
 
-	my $results = $self->_parseScanOutput($output);
-	$results->{progress} = 100;
-	$results->{job_id}   = $self->{job}->{job_id};
-	$results->{duration} = computeDuration(
-		start => $results->{start_time}[0],
-		end   => $results->{end_time}[0]
-	);
+	$self->_parseScanOutput($output);
 
-	my $alert_task = Armadito::Agent::Task::Alerts->new( agent => $self->{agent} );
-	my $alert_jobj = {
-		alerts => $results->{alerts},
-		job_id => $self->{job}->{job_id}
-	};
-
-	delete( $results->{alerts} );
-	$self->sendScanResults($results);
-	$alert_task->run();
-	$alert_task->_sendAlerts($alert_jobj);
+	$self->sendScanResults();
+	$self->sendScanAlerts();
 }
 
 1;

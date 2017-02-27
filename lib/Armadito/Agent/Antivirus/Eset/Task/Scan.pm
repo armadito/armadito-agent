@@ -5,7 +5,6 @@ use warnings;
 use base 'Armadito::Agent::Task::Scan';
 use IPC::System::Simple qw(capture);
 use Armadito::Agent::Patterns::Matcher;
-use Armadito::Agent::Task::Alerts;
 
 #name="/home/malwares/contagio-malware/jar/MALWARE_JAR_200_files/Mal_Java_64FD14CEF0026D4240A4550E6A6F9E83.jar » ZIP » a/kors.class", threat="a variant of Java/Exploit.Agent.OKJ trojan", action="action selection postponed until scan completion", info=""
 
@@ -34,7 +33,22 @@ sub _parseScanOutput {
 
 	$parser->run( $output, '\n' );
 
-	return $parser->getResults();
+	my $results = $parser->getResults();
+	$self->{alerts} = $results->{alerts};
+	$self->_setResults($results);
+}
+
+sub _setResults {
+	my ( $self, $results ) = @_;
+
+	delete( $results->{alerts} );
+
+	$self->{results}                     = $results;
+	$self->{results}->{start_time}       = "";
+	$self->{results}->{suspicious_count} = 0;
+	$self->{results}->{progress}         = 100;
+	$self->{results}->{job_id}           = $self->{job}->{job_id};
+	$self->{results}->{duration}[0]      = "0" . $results->{duration}[0];
 }
 
 sub run {
@@ -48,21 +62,10 @@ sub run {
 
 	my $output = capture( [ 0, 1, 10, 50 ], $bin_path . " " . $scan_options . " " . $scan_path );
 	$self->{logger}->debug2($output);
+	$self->_parseScanOutput($output);
 
-	my $results = $self->_parseScanOutput($output);
-	$results->{start_time}       = "";
-	$results->{suspicious_count} = 0;
-	$results->{progress}         = 100;
-	$results->{job_id}           = $self->{job}->{job_id};
-	$results->{duration}[0]      = "0" . $results->{duration}[0];
-
-	my $alert_task = Armadito::Agent::Task::Alerts->new( agent => $self->{agent} );
-	my $alert_jobj = { "alerts" => $results->{alerts} };
-
-	delete( $results->{alerts} );
-	$self->sendScanResults($results);
-	$alert_task->run();
-	$alert_task->_sendAlerts($alert_jobj);
+	$self->sendScanResults();
+	$self->sendScanAlerts();
 }
 
 1;

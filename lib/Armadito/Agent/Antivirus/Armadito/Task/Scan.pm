@@ -5,7 +5,6 @@ use warnings;
 use base 'Armadito::Agent::Task::Scan';
 use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 use Armadito::Agent::Tools::Time qw(secondsToDuration);
-use Armadito::Agent::Task::Alerts;
 use JSON;
 
 sub _parseScanOutput {
@@ -37,9 +36,7 @@ sub _parseScanOutput {
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self            = $self->SUPER::run(%params);
-	$self->{results} = {};
-	$self->{alerts}  = [];
+	$self = $self->SUPER::run(%params);
 
 	my $bin_path     = $self->{agent}->{antivirus}->{program_path} . "armadito-scan";
 	my $scan_path    = $self->{job}->{obj}->{scan_path};
@@ -63,16 +60,8 @@ sub run {
 	$self->{logger}->info( "Program exited with " . $EXITVAL . "\n" );
 	$self->_parseScanOutput($output);
 
-	$self->sendScanResults( $self->{results} );
-
-	my $alert_task = Armadito::Agent::Task::Alerts->new( agent => $self->{agent} );
-	my $alert_jobj = {
-		alerts => $self->{alerts},
-		job_id => $self->{job}->{job_id}
-	};
-
-	$alert_task->run();
-	$alert_task->_sendAlerts($alert_jobj);
+	$self->sendScanResults();
+	$self->sendScanAlerts();
 
 	return $self;
 }

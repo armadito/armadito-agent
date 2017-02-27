@@ -3,7 +3,7 @@ package Armadito::Agent::Task::Scan;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Task';
-
+use Armadito::Agent::Task::Alerts;
 use MIME::Base64;
 use Data::Dumper;
 use JSON;
@@ -22,8 +22,10 @@ sub new {
 		antivirus => $self->{agent}->{antivirus}->getJobj()
 	};
 
+	$self->{results}      = {};
+	$self->{alerts}       = [];
 	$self->{jobj}->{task} = $task;
-	$self->{job} = $params{job};
+	$self->{job}          = $params{job};
 	$self->_validateScanObj( $self->{job}->{obj} );
 
 	return $self;
@@ -45,9 +47,9 @@ sub _validateScanObj {
 }
 
 sub sendScanResults {
-	my ( $self, $scanresults ) = @_;
+	my ($self) = @_;
 
-	$self->{jobj}->{task}->{obj} = $scanresults;
+	$self->{jobj}->{task}->{obj} = $self->{results};
 	my $json_text = to_json( $self->{jobj} );
 
 	my $response = $self->{glpi_client}->sendRequest(
@@ -65,6 +67,19 @@ sub sendScanResults {
 	}
 }
 
+sub sendScanAlerts {
+	my ($self) = @_;
+
+	my $alert_task = Armadito::Agent::Task::Alerts->new( agent => $self->{agent} );
+	my $alert_jobj = {
+		alerts => $self->{alerts},
+		job_id => $self->{job}->{job_id}
+	};
+
+	$alert_task->run();
+	$alert_task->_sendAlerts($alert_jobj);
+}
+
 1;
 
 __END__
@@ -79,11 +94,19 @@ This task inherits from L<Armadito::Agent::Task>. Launch a Antivirus on-demand s
 
 =head1 FUNCTIONS
 
+=head2 new ( $self, %params )
+
+Instanciate Task.
+
 =head2 run ( $self, %params )
 
 Run the task.
 
-=head2 new ( $self, %params )
+=head2 sendScanAlerts ( $self )
 
-Instanciate Task.
+Send to GLPI alerts stored in $self->{alerts}.
+
+=head2 sendScanResults ( $self )
+
+Send to GLPI Scan results stored in $self->{results}.
 
