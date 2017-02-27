@@ -64,6 +64,8 @@ makemaker_args(
 			t/*/*/*.t
 			t/*/*/*/*.t
 			t/*/*/*/*/*.t
+			t/*/*/*/*/*/*.t
+			t/*/*/*/*/*/*/*.t
 			)
 	},
 	INSTALLMAN3DIR => 'none'
