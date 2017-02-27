@@ -62,7 +62,10 @@ sub testScanOutput {
 		job   => $testscan->{job}
 	);
 
-	$scan_class->_parseScanOutput($output);
+	$scan_class->{start_time} = "1488207680";
+	$scan_class->{end_time}   = "1488207696";
+	$scan_class->{output}     = $output;
+	$scan_class->_parseScanOutput();
 }
 
 plan tests => 1;

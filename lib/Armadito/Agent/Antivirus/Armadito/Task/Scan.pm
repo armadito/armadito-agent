@@ -8,9 +8,9 @@ use Armadito::Agent::Tools::Time qw(secondsToDuration);
 use JSON;
 
 sub _parseScanOutput {
-	my ( $self, $output ) = @_;
+	my ($self) = @_;
 
-	my @events = split( "\n\n", $output );
+	my @events = split( "\n\n", $self->{output} );
 
 	foreach my $event (@events) {
 		my $jobj = from_json( $event, { utf8 => 1 } );
@@ -31,6 +31,34 @@ sub _parseScanOutput {
 			$self->{results}->{suspicious_count} = $jobj->{u}->{ev_on_demand_completed}->{total_suspicious_count};
 		}
 	}
+
+	$self->_setResults();
+}
+
+sub _setResults {
+	my ($self) = @_;
+
+	$self->{results}->{progress} = 100;
+	$self->{results}->{job_id}   = $self->{job}->{job_id};
+	$self->{results}->{duration} = secondsToDuration( $self->{end_time} - $self->{start_time} );
+}
+
+sub _execScan {
+	my ($self) = @_;
+
+	my $bin_path     = $self->{agent}->{antivirus}->{program_path} . "armadito-scan";
+	my $scan_path    = $self->{job}->{obj}->{scan_path};
+	my $scan_options = $self->{job}->{obj}->{scan_options};
+	my $cmdline      = "\"" . $bin_path . "\" --json " . $scan_options . " \"" . $scan_path . "\"";
+
+	$self->{start_time} = time;
+	$self->{output}     = capture( EXIT_ANY, $cmdline );
+	$self->{end_time}   = time;
+	$self->{logger}->debug2( $self->{output} );
+
+	if ( $EXITVAL != 0 ) {
+		die "CLI scan failed.";
+	}
 }
 
 sub run {
@@ -38,28 +66,8 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 
-	my $bin_path     = $self->{agent}->{antivirus}->{program_path} . "armadito-scan";
-	my $scan_path    = $self->{job}->{obj}->{scan_path};
-	my $scan_options = $self->{job}->{obj}->{scan_options};
-
-	my $cmdline = "\"" . $bin_path . "\" --json " . $scan_options . " \"" . $scan_path . "\"";
-
-	my $start_time = time;
-	my $output     = capture( EXIT_ANY, $cmdline );
-	my $end_time   = time;
-
-	if ( $EXITVAL != 0 ) {
-		die "CLI scan failed.";
-	}
-
-	$self->{results}->{progress} = 100;
-	$self->{results}->{job_id}   = $self->{job}->{job_id};
-	$self->{results}->{duration} = secondsToDuration( $end_time - $start_time );
-
-	$self->{logger}->info($output);
-	$self->{logger}->info( "Program exited with " . $EXITVAL . "\n" );
-	$self->_parseScanOutput($output);
-
+	$self->_execScan();
+	$self->_parseScanOutput();
 	$self->sendScanResults();
 	$self->sendScanAlerts();
 
