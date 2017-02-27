@@ -3,8 +3,6 @@ package Armadito::Agent::Antivirus::Armadito::Task::Scan;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Task::Scan';
-use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
-use Armadito::Agent::Tools::Time qw(secondsToDuration);
 use JSON;
 
 sub _parseScanOutput {
@@ -32,33 +30,17 @@ sub _parseScanOutput {
 		}
 	}
 
-	$self->_setResults();
+	$self->setResults();
 }
 
-sub _setResults {
-	my ($self) = @_;
-
-	$self->{results}->{progress} = 100;
-	$self->{results}->{job_id}   = $self->{job}->{job_id};
-	$self->{results}->{duration} = secondsToDuration( $self->{end_time} - $self->{start_time} );
-}
-
-sub _execScan {
+sub _setCmd {
 	my ($self) = @_;
 
 	my $bin_path     = $self->{agent}->{antivirus}->{program_path} . "armadito-scan";
 	my $scan_path    = $self->{job}->{obj}->{scan_path};
 	my $scan_options = $self->{job}->{obj}->{scan_options};
-	my $cmdline      = "\"" . $bin_path . "\" --json " . $scan_options . " \"" . $scan_path . "\"";
 
-	$self->{start_time} = time;
-	$self->{output}     = capture( EXIT_ANY, $cmdline );
-	$self->{end_time}   = time;
-	$self->{logger}->debug2( $self->{output} );
-
-	if ( $EXITVAL != 0 ) {
-		die "CLI scan failed.";
-	}
+	$self->{cmdline} = "\"" . $bin_path . "\" --json " . $scan_options . " \"" . $scan_path . "\"";
 }
 
 sub run {
@@ -66,8 +48,10 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 
-	$self->_execScan();
+	$self->_setCmd();
+	$self->execScanCmd();
 	$self->_parseScanOutput();
+
 	$self->sendScanResults();
 	$self->sendScanAlerts();
 

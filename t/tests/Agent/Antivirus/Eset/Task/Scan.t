@@ -30,6 +30,9 @@ Cleaned:           files - 0, objects 0
 		job   => $testscan->{job}
 	);
 
+	$scan_class->{start_time} = "1488207680";
+	$scan_class->{end_time}   = "1488207689";
+	$scan_class->{output}     = $output;
 	$scan_class->_parseScanOutput($output);
 }
 

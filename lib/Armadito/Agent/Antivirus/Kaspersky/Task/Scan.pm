@@ -3,9 +3,8 @@ package Armadito::Agent::Antivirus::Kaspersky::Task::Scan;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Task::Scan';
-use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 use Armadito::Agent::Patterns::Matcher;
-use Armadito::Agent::Tools::Time qw(computeDuration iso8601ToUnixTimestamp);
+use Armadito::Agent::Tools::Time qw(iso8601ToUnixTimestamp);
 
 # 2016-11-30 16:04:36     C:\for_eric\75c1ae242d07bb738a5d9a9766c2a7de//data0000  detected        Exploit.JS.Pdfka.flm
 # 2016-11-30 16:04:36     C:\for_eric\779cb6dc0055bdf63cbb2c9f9f3a95cc//data0000  suspicion       HEUR:Exploit.Script.Generic
@@ -23,11 +22,9 @@ use Armadito::Agent::Tools::Time qw(computeDuration iso8601ToUnixTimestamp);
 # ;  ------------------
 
 sub _parseScanOutput {
-	my ( $self, $output ) = @_;
+	my ($self) = @_;
 
 	my $parser = Armadito::Agent::Patterns::Matcher->new( logger => $self->{logger} );
-	$parser->addPattern( 'start_time',       '^; Time Start:\s+?(\d+.*)' );
-	$parser->addPattern( 'end_time',         '^; Time Finish:\s+?(\d+.*)' );
 	$parser->addPattern( 'scanned_count',    '^; Processed objects:\s+?(\d+)' );
 	$parser->addPattern( 'malware_count',    '^; Total detected:\s+?(\d+)' );
 	$parser->addPattern( 'suspicious_count', '^; Suspicions:\s+?(\d+)' );
@@ -39,12 +36,10 @@ sub _parseScanOutput {
 	$pattern = '^(\d{4,}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+(.*)\s+suspicion\s+([\w\.:]+)';
 	$parser->addPattern( 'alerts', $pattern, $labels );
 
-	$parser->run( $output, '\n' );
+	$parser->run( $self->{output}, '\n' );
 
 	$parser->addHookForLabel( 'filepath',       \&formatFilePath );
 	$parser->addHookForLabel( 'detection_time', \&LocalToTimestamp );
-	$parser->addHookForLabel( 'start_time',     \&LocalToTimestamp );
-	$parser->addHookForLabel( 'end_time',       \&LocalToTimestamp );
 
 	my $results = $parser->getResults();
 	$self->{alerts} = $results->{alerts};
@@ -56,13 +51,7 @@ sub _setResults {
 
 	delete( $results->{alerts} );
 	$self->{results} = $results;
-
-	$self->{results}->{progress} = 100;
-	$self->{results}->{job_id}   = $self->{job}->{job_id};
-	$self->{results}->{duration} = computeDuration(
-		start => $self->{results}->{start_time}[0],
-		end   => $self->{results}->{end_time}[0]
-	);
+	$self->setResults();
 }
 
 sub formatFilePath {
@@ -79,22 +68,24 @@ sub LocalToTimestamp {
 	return iso8601ToUnixTimestamp( $match, "Local" );
 }
 
-sub run {
-	my ( $self, %params ) = @_;
-
-	$self = $self->SUPER::run(%params);
+sub _setCmd {
+	my ($self) = @_;
 
 	my $bin_path     = $self->{agent}->{antivirus}->{scancli_path};
 	my $scan_path    = $self->{job}->{obj}->{scan_path};
 	my $scan_options = $self->{job}->{obj}->{scan_options};
 
-	my $cmdline = "\"" . $bin_path . "\" SCAN \"" . $scan_path . "\" " . $scan_options;
-	my $output = capture( EXIT_ANY, $cmdline );
+	$self->{cmdline} = "\"" . $bin_path . "\" SCAN \"" . $scan_path . "\" " . $scan_options;
+}
 
-	$self->{logger}->info($output);
-	$self->{logger}->info( "Program exited with " . $EXITVAL . "\n" );
+sub run {
+	my ( $self, %params ) = @_;
 
-	$self->_parseScanOutput($output);
+	$self = $self->SUPER::run(%params);
+
+	$self->_setCmd();
+	$self->execScanCmd();
+	$self->_parseScanOutput();
 
 	$self->sendScanResults();
 	$self->sendScanAlerts();

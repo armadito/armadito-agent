@@ -3,6 +3,8 @@ package Armadito::Agent::Task::Scan;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Task';
+use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
+use Armadito::Agent::Tools::Time qw(secondsToDuration);
 use Armadito::Agent::Task::Alerts;
 use MIME::Base64;
 use Data::Dumper;
@@ -78,6 +80,30 @@ sub sendScanAlerts {
 
 	$alert_task->run();
 	$alert_task->_sendAlerts($alert_jobj);
+}
+
+sub execScanCmd {
+	my ( $self, %params ) = @_;
+
+	my $exit_modes = $params{exit_modes} ? $params{exit_modes} : EXIT_ANY;
+
+	$self->{start_time} = time;
+	$self->{output}     = capture( $exit_modes, $self->{cmdline} );
+	$self->{end_time}   = time;
+
+	$self->{logger}->debug2( $self->{output} );
+
+	if ( $EXITVAL != 0 ) {
+		die "execScanCmd failed.";
+	}
+}
+
+sub setResults {
+	my ($self) = @_;
+
+	$self->{results}->{progress} = 100;
+	$self->{results}->{job_id}   = $self->{job}->{job_id};
+	$self->{results}->{duration} = secondsToDuration( $self->{end_time} - $self->{start_time} );
 }
 
 1;
