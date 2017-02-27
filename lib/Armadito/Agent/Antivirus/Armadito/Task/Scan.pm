@@ -20,9 +20,16 @@ sub _parseScanOutput {
 			my $alert = {
 				detection_time => $jobj->{timestamp},
 				filepath       => $jobj->{u}->{ev_detection}->{path},
-				name           => $jobj->{u}->{ev_detection}->{module_report}
+				name           => $jobj->{u}->{ev_detection}->{module_report},
+				action         => $jobj->{u}->{ev_detection}->{scan_action},
+				module_name    => $jobj->{u}->{ev_detection}->{module_name}
 			};
 			push( @{ $self->{alerts} }, $alert );
+		}
+		elsif ( $jobj->{type} eq "EVENT_ON_DEMAND_COMPLETED" ) {
+			$self->{results}->{scanned_count}    = $jobj->{u}->{ev_on_demand_completed}->{total_scanned_count};
+			$self->{results}->{malware_count}    = $jobj->{u}->{ev_on_demand_completed}->{total_malware_count};
+			$self->{results}->{suspicious_count} = $jobj->{u}->{ev_on_demand_completed}->{total_suspicious_count};
 		}
 	}
 }
