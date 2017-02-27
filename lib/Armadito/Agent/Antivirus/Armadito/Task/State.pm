@@ -3,24 +3,43 @@ package Armadito::Agent::Antivirus::Armadito::Task::State;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Task::State';
+use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
+use JSON;
 
 sub run {
 	my ( $self, %params ) = @_;
 
 	$self = $self->SUPER::run(%params);
-	$self->{av_client} = Armadito::Agent::HTTP::Client::ArmaditoAV->new( taskobj => $self );
-	$self->{av_client}->register();
 
-	my $response = $self->{av_client}->sendRequest(
-		"url"  => $self->{av_client}->{server_url} . "/api/status",
-		method => "GET"
-	);
+	my $cmdline = "\"" . $self->{agent}->{antivirus}->{program_path} . "armadito-info\" --json";
+	my $output  = capture( EXIT_ANY, $cmdline );
+	my $jobj    = from_json( $output, { utf8 => 1 } );
 
-	die "Unable to get AV status with ArmaditoAV api."
-		if ( !$response->is_success() );
+	$self->{logger}->info($output);
+	$self->{logger}->info( "Program exited with " . $EXITVAL . "\n" );
 
-	$self->{av_client}->pollEvents();
-	$self->{av_client}->unregister();
+	my $dbinfo = {
+		global_status           => $jobj->{global_status},
+		global_update_timestamp => $jobj->{global_update_ts},
+		modules                 => []
+	};
+
+	foreach ( @{ $jobj->{module_infos} } ) {
+		my $module_info = {
+			name                 => $_->{name},
+			mod_status           => $_->{mod_status},
+			mod_update_timestamp => $_->{mod_update_ts}
+		};
+
+		push( @{ $dbinfo->{modules} }, $module_info );
+	}
+
+	$self->{data} = {
+		dbinfo    => $dbinfo,
+		avdetails => []
+	};
+
+	$self->_sendToGLPI( $self->{data} );
 
 	return $self;
 }
