@@ -3,7 +3,6 @@ package Armadito::Agent::Antivirus::Armadito;
 use strict;
 use warnings;
 use base 'Armadito::Agent::Antivirus';
-use Armadito::Agent::HTTP::Client::ArmaditoAV;
 use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 use JSON;
 
