@@ -4,20 +4,68 @@ use strict;
 use warnings;
 use base 'Armadito::Agent::Task::Scan';
 use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
+use Armadito::Agent::Tools::Time qw(secondsToDuration);
+use Armadito::Agent::Task::Alerts;
+use JSON;
+
+sub _parseScanOutput {
+	my ( $self, $output ) = @_;
+
+	my @events = split( "\n\n", $output );
+
+	foreach my $event (@events) {
+		my $jobj = from_json( $event, { utf8 => 1 } );
+
+		if ( $jobj->{type} eq "EVENT_DETECTION" ) {
+			my $alert = {
+				detection_time => $jobj->{timestamp},
+				filepath       => $jobj->{u}->{ev_detection}->{path},
+				name           => $jobj->{u}->{ev_detection}->{module_report}
+			};
+			push( @{ $self->{alerts} }, $alert );
+		}
+	}
+}
 
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self = $self->SUPER::run(%params);
+	$self            = $self->SUPER::run(%params);
+	$self->{results} = {};
+	$self->{alerts}  = [];
 
 	my $bin_path     = $self->{agent}->{antivirus}->{program_path} . "armadito-scan";
 	my $scan_path    = $self->{job}->{obj}->{scan_path};
 	my $scan_options = $self->{job}->{obj}->{scan_options};
 
 	my $cmdline = "\"" . $bin_path . "\" --json " . $scan_options . " \"" . $scan_path . "\"";
-	my $output = capture( EXIT_ANY, $cmdline );
+
+	my $start_time = time;
+	my $output     = capture( EXIT_ANY, $cmdline );
+	my $end_time   = time;
+
+	if ( $EXITVAL != 0 ) {
+		die "CLI scan failed.";
+	}
+
+	$self->{results}->{progress} = 100;
+	$self->{results}->{job_id}   = $self->{job}->{job_id};
+	$self->{results}->{duration} = secondsToDuration( $end_time - $start_time );
+
 	$self->{logger}->info($output);
 	$self->{logger}->info( "Program exited with " . $EXITVAL . "\n" );
+	$self->_parseScanOutput($output);
+
+	$self->sendScanResults( $self->{results} );
+
+	my $alert_task = Armadito::Agent::Task::Alerts->new( agent => $self->{agent} );
+	my $alert_jobj = {
+		alerts => $self->{alerts},
+		job_id => $self->{job}->{job_id}
+	};
+
+	$alert_task->run();
+	$alert_task->_sendAlerts($alert_jobj);
 
 	return $self;
 }
