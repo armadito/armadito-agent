@@ -24,6 +24,17 @@ sub getProgramPath {
 	return "";
 }
 
+sub getConfPath {
+	my ($self) = @_;
+
+	my $path = "/etc/armadito/";
+	if ( -f $path . "armadito.conf" ) {
+		return $path;
+	}
+
+	return "";
+}
+
 1;
 
 __END__
@@ -45,3 +56,7 @@ Instanciate module.
 =head2 getProgramPath ( $self )
 
 Return the path where Armadito command line interface binaries are installed.
+
+=head2 getConfPath ( $self )
+
+Return the path where Armadito configuration files are.
