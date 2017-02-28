@@ -193,8 +193,18 @@ sub displaySupportedAVs {
 	}
 }
 
+sub _checkIfSuperUser {
+	my ($self) = @_;
+
+	if ($<) {
+		die "Error: you must run this program as superuser.\n";
+	}
+}
+
 sub runTask {
 	my ( $self, $task ) = @_;
+
+	$self->_checkIfSuperUser();
 
 	my $class     = "Armadito::Agent::Task::$task";
 	my $antivirus = $self->{config}->{antivirus};
