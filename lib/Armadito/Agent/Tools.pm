@@ -6,14 +6,9 @@ use base 'Exporter';
 use English qw(-no_match_vars);
 
 our @EXPORT_OK = qw(
-	getNoWhere
 	trimWhitespaces
 	getOSTempDir
 );
-
-sub getNoWhere {
-	return $OSNAME eq 'MSWin32' ? 'nul' : '/dev/null';
-}
 
 sub trimWhitespaces {
 	my ($string) = @_;
@@ -41,10 +36,6 @@ Armadito::Agent::Tools - Various tools used in Armadito Agent.
 This module provides some basic functions for multiple usages.
 
 =head1 FUNCTIONS
-
-=head2 getNoWhere()
-
-Get OS noWhere. For example: /dev/null on Linux.
 
 =head2 getOSTempDir()
 

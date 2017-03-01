@@ -9,7 +9,6 @@ use Encode;
 use English qw(-no_match_vars);
 use Memoize;
 use File::Which;
-use Armadito::Agent::Tools qw (getNoWhere);
 
 our @EXPORT_OK = qw(
 	readFile
