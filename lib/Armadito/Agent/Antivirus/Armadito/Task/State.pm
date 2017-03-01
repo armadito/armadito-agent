@@ -29,8 +29,7 @@ sub getDbInfo {
 	my $output  = capture( EXIT_ANY, $cmdline );
 	my $jobj    = from_json( $output, { utf8 => 1 } );
 
-	$self->{logger}->info($output);
-	$self->{logger}->info( "Program exited with " . $EXITVAL . "\n" );
+	$self->{logger}->debug($output);
 
 	$self->{data}->{dbinfo} = {
 		global_status           => $jobj->{global_status},
