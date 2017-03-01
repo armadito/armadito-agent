@@ -11,6 +11,20 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 
+	$self->{data} = {
+		dbinfo    => {},
+		avdetails => []
+	};
+
+	$self->getDbInfo();
+	$self->_sendToGLPI( $self->{data} );
+
+	return $self;
+}
+
+sub getDbInfo {
+	my ($self) = @_;
+
 	my $cmdline = "\"" . $self->{agent}->{antivirus}->{program_path} . "armadito-info\" --json";
 	my $output  = capture( EXIT_ANY, $cmdline );
 	my $jobj    = from_json( $output, { utf8 => 1 } );
@@ -18,7 +32,7 @@ sub run {
 	$self->{logger}->info($output);
 	$self->{logger}->info( "Program exited with " . $EXITVAL . "\n" );
 
-	my $dbinfo = {
+	$self->{data}->{dbinfo} = {
 		global_status           => $jobj->{global_status},
 		global_update_timestamp => $jobj->{global_update_ts},
 		modules                 => []
@@ -31,17 +45,8 @@ sub run {
 			mod_update_timestamp => $_->{mod_update_ts}
 		};
 
-		push( @{ $dbinfo->{modules} }, $module_info );
+		push( @{ $self->{data}->{dbinfo}->{modules} }, $module_info );
 	}
-
-	$self->{data} = {
-		dbinfo    => $dbinfo,
-		avdetails => []
-	};
-
-	$self->_sendToGLPI( $self->{data} );
-
-	return $self;
 }
 
 1;
