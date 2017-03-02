@@ -40,8 +40,6 @@ sub _getStoredJobs {
 		}
 		$self->{jobs} = $data->{jobs};
 	}
-
-	return $self;
 }
 
 sub _rmJobFromStorage {
@@ -67,22 +65,18 @@ sub _sortJobsByPriority {
 	my ($self) = @_;
 
 	@{ $self->{jobs} } = reverse sort { $a->{job_priority} <=> $b->{job_priority} } @{ $self->{jobs} };
-
-	return $self;
 }
 
 sub run {
 	my ( $self, %params ) = @_;
 
 	$self = $self->SUPER::run(%params);
-	$self = $self->_getStoredJobs();
+	$self->_getStoredJobs();
 
 	if ( scalar @{ $self->{jobs} } > 0 ) {
-		$self = $self->_sortJobsByPriority();
-		$self = $self->_runJobs();
+		$self->_sortJobsByPriority();
+		$self->_runJobs();
 	}
-
-	return $self;
 }
 
 sub _runJob {
@@ -123,8 +117,6 @@ sub _runJob {
 		start_time => $start_time,
 		end_time   => time
 	};
-
-	return $self;
 }
 
 sub _runJobs {
@@ -135,8 +127,6 @@ sub _runJobs {
 		$self->_sendStatus();
 		$self->_rmJobFromStorage( $job->{job_id} );
 	}
-
-	return $self;
 }
 
 sub _sendStatus {
