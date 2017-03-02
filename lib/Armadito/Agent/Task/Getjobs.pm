@@ -5,7 +5,6 @@ use warnings;
 use base 'Armadito::Agent::Task';
 
 use Armadito::Agent::Storage;
-use Data::Dumper;
 use JSON;
 
 sub new {
@@ -49,15 +48,11 @@ sub _storeJobs {
 sub _handleResponse {
 	my ( $self, $response ) = @_;
 
-	$self->{logger}->info( "Successful Response : " . $response->content() );
 	my $obj = from_json( $response->content(), { utf8 => 1 } );
 
 	if ( defined( $obj->{jobs} ) && ref( $obj->{jobs} ) eq "ARRAY" ) {
 		$self->_storeJobs( $obj->{jobs} );
 	}
-
-	$self->{logger}->info( "all Jobs : " . Dumper($obj) );
-	return $self;
 }
 
 sub run {
