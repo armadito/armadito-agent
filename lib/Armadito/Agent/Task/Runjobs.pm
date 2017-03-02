@@ -15,10 +15,6 @@ sub new {
 
 	my $self = $class->SUPER::new(%params);
 
-	if ( $params{debug} ) {
-		$self->{debug} = 1;
-	}
-
 	my $task = {
 		name      => "Runjobs",
 		antivirus => $self->{agent}->{antivirus}->getJobj()
