@@ -29,8 +29,7 @@ sub new {
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self = $self->SUPER::run(%params);
-
+	$self->SUPER::run(%params);
 	$self->_setEnrollmentKey();
 
 	my $json_text = to_json( $self->{jobj} );

@@ -70,7 +70,7 @@ sub _sortJobsByPriority {
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self = $self->SUPER::run(%params);
+	$self->SUPER::run(%params);
 	$self->_getStoredJobs();
 
 	if ( scalar @{ $self->{jobs} } > 0 ) {

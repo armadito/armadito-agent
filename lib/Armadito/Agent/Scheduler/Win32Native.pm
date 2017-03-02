@@ -132,7 +132,7 @@ sub _deleteExistingTasks {
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self = $self->SUPER::run(%params);
+	$self->SUPER::run(%params);
 	$self->_loadConf();
 	$self->_deleteExistingTasks();
 	$self->_createAllTasks();

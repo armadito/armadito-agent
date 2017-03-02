@@ -9,7 +9,8 @@ use Time::Local;
 
 sub run {
 	my ( $self, %params ) = @_;
-	$self = $self->SUPER::run(%params);
+
+	$self->SUPER::run(%params);
 
 	$self->{data} = {
 		dbinfo    => {},

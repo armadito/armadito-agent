@@ -24,7 +24,7 @@ sub _getDatabasesInfo {
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self = $self->SUPER::run(%params);
+	$self->SUPER::run(%params);
 
 	my $dbinfo = $self->_getDatabasesInfo();
 

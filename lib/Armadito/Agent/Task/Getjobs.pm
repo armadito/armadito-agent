@@ -63,7 +63,7 @@ sub _handleResponse {
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self = $self->SUPER::run(%params);
+	$self->SUPER::run(%params);
 
 	my $response = $self->{glpi_client}->sendRequest(
 		"url" => $self->{agent}->{config}->{server}[0] . "/api/jobs",

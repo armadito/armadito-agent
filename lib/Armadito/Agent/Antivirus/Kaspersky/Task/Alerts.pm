@@ -7,7 +7,7 @@ use base 'Armadito::Agent::Task::Alerts';
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self = $self->SUPER::run(%params);
+	$self->SUPER::run(%params);
 
 	my $osclass = $self->{agent}->{antivirus}->getOSClass();
 	my $alerts = { alerts => $osclass->getAlerts() };

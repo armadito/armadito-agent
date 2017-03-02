@@ -57,7 +57,7 @@ sub _setCmd {
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self = $self->SUPER::run(%params);
+	$self->SUPER::run(%params);
 
 	$self->_setCmd();
 	$self->execScanCmd( exit_modes => [ 0, 1, 10, 50 ] );

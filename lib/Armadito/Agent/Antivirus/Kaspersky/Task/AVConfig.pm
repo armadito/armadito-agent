@@ -12,7 +12,7 @@ use Data::Dumper;
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self = $self->SUPER::run(%params);
+	$self->SUPER::run(%params);
 
 	my $export_path = getOSTempDir() . "exported_settings.xml";
 	rmFile( filepath => $export_path );

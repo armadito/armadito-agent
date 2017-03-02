@@ -7,7 +7,7 @@ use base 'Armadito::Agent::Task::Alerts';
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self = $self->SUPER::run(%params);
+	$self->SUPER::run(%params);
 
 	# TODO : Parse::Syslog or Win32::Eventlog
 

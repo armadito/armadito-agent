@@ -9,7 +9,7 @@ use Armadito::Agent::Patterns::Matcher;
 sub run {
 	my ( $self, %params ) = @_;
 
-	$self = $self->SUPER::run(%params);
+	$self->SUPER::run(%params);
 
 	my $conf_path = $self->_getOSConfPath() . "armadito.conf";
 	my $conf = readFile( filepath => $conf_path );

@@ -40,7 +40,8 @@ sub _parseLogs {
 
 sub run {
 	my ( $self, %params ) = @_;
-	$self = $self->SUPER::run(%params);
+
+	$self->SUPER::run(%params);
 
 	my $eset_logs = $self->_getSystemLogs();
 	if ( $eset_logs eq "" ) {
