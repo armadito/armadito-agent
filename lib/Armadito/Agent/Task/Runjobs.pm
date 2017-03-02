@@ -107,7 +107,7 @@ sub _runJob {
 			end_time   => time
 		};
 
-		return $self;
+		return;
 	};
 
 	$self->{jobj}->{task}->{obj} = {
