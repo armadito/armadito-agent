@@ -25,6 +25,7 @@ sub new {
 	};
 
 	$self->{jobj}->{task} = $task;
+	$self->{jobs} = [];
 
 	return $self;
 }
@@ -75,8 +76,11 @@ sub run {
 
 	$self = $self->SUPER::run(%params);
 	$self = $self->_getStoredJobs();
-	$self = $self->_sortJobsByPriority();
-	$self = $self->_runJobs();
+
+	if ( scalar @{ $self->{jobs} } > 0 ) {
+		$self = $self->_sortJobsByPriority();
+		$self = $self->_runJobs();
+	}
 
 	return $self;
 }
