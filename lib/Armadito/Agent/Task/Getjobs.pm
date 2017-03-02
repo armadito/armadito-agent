@@ -57,8 +57,8 @@ sub run {
 	$self->SUPER::run(%params);
 
 	my $response = $self->{glpi_client}->sendRequest(
-		"url" => $self->{agent}->{config}->{server}[0] . "/api/jobs",
-		args  => {
+		url  => $self->{agent}->{config}->{server}[0] . "/api/jobs",
+		args => {
 			antivirus => $self->{jobj}->{task}->{antivirus}->{name},
 			agent_id  => $self->{jobj}->{agent_id}
 		},

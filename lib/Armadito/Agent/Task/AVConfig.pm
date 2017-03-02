@@ -45,7 +45,7 @@ sub _sendToGLPI {
 	$self->{logger}->debug($json_text);
 
 	my $response = $self->{glpi_client}->sendRequest(
-		"url"   => $self->{glpi_url} . "/api/avconfigs",
+		url     => $self->{glpi_url} . "/api/avconfigs",
 		message => $json_text,
 		method  => "POST"
 	);

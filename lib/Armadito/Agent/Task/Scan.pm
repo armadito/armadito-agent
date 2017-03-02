@@ -51,7 +51,7 @@ sub sendScanResults {
 	my $json_text = to_json( $self->{jobj} );
 
 	my $response = $self->{glpi_client}->sendRequest(
-		"url"   => $self->{agent}->{config}->{server}[0] . "/api/scans",
+		url     => $self->{agent}->{config}->{server}[0] . "/api/scans",
 		message => $json_text,
 		method  => "POST"
 	);

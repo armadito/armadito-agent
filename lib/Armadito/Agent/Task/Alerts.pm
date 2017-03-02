@@ -31,7 +31,7 @@ sub _sendAlerts {
 	$self->{logger}->debug($json_text);
 
 	my $response = $self->{glpi_client}->sendRequest(
-		"url"   => $self->{glpi_url} . "/api/alerts",
+		url     => $self->{glpi_url} . "/api/alerts",
 		message => $json_text,
 		method  => "POST"
 	);

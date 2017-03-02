@@ -35,7 +35,7 @@ sub sendSchedulerInfos {
 	my $json_text = to_json( $self->{jobj} );
 
 	my $response = $self->{glpi_client}->sendRequest(
-		"url"   => $self->{agent}->{config}->{server}[0] . "/api/schedulers",
+		url     => $self->{agent}->{config}->{server}[0] . "/api/schedulers",
 		message => $json_text,
 		method  => "POST"
 	);
