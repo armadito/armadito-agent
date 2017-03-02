@@ -31,9 +31,6 @@ sub _getStoredJobs {
 
 	my $data = $self->{agent}->{armadito_storage}->restore( name => 'Armadito-Agent-Jobs' );
 	if ( defined( $data->{jobs} ) ) {
-		foreach my $job ( @{ $data->{jobs} } ) {
-			$self->{logger}->info( "Job " . $job->{job_id} . " - " . $job->{job_priority} );
-		}
 		$self->{jobs} = $data->{jobs};
 	}
 }
