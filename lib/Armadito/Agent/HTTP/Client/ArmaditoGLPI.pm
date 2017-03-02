@@ -15,6 +15,7 @@ use URI::Escape;
 
 sub new {
 	my ( $class, %params ) = @_;
+
 	my $self = $class->SUPER::new(%params);
 
 	return $self;

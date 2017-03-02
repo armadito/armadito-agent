@@ -102,8 +102,6 @@ sub run {
 	$self->SUPER::run(%params);
 	$self->_loadConf();
 	$self->_updateCronTab();
-
-	return $self;
 }
 
 1;

@@ -18,8 +18,6 @@ sub run {
 
 	$self->getDbInfo();
 	$self->_sendToGLPI( $self->{data} );
-
-	return $self;
 }
 
 sub getDbInfo {

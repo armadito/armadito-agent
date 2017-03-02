@@ -46,15 +46,13 @@ sub run {
 	my $eset_logs = $self->_getSystemLogs();
 	if ( $eset_logs eq "" ) {
 		$self->{logger}->info("No alerts found.");
-		return $self;
+		return;
 	}
 
 	my $alerts   = $self->_parseLogs($eset_logs);
 	my $n_alerts = @{ $alerts->{alerts} };
 	$self->{logger}->info( $n_alerts . " alert(s) found." );
 	$self->_sendAlerts($alerts);
-
-	return $self;
 }
 
 1;

@@ -136,8 +136,6 @@ sub run {
 	$self->_loadConf();
 	$self->_deleteExistingTasks();
 	$self->_createAllTasks();
-
-	return $self;
 }
 
 1;

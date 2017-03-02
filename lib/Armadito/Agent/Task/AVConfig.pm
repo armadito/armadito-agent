@@ -57,8 +57,6 @@ sub _sendToGLPI {
 		$self->_handleError($response);
 		$self->{logger}->info("AVConfig failed...");
 	}
-
-	return 1;
 }
 
 1;

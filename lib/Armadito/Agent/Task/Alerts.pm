@@ -43,8 +43,6 @@ sub _sendAlerts {
 		$self->_handleError($response);
 		$self->{logger}->info("Alerts failed...");
 	}
-
-	return 1;
 }
 
 1;

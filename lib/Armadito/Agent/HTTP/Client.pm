@@ -30,7 +30,6 @@ sub new {
 		ca_cert_dir  => $params{ca_cert_dir},
 		ca_cert_file => $params{ca_cert_file}
 	};
-	bless $self, $class;
 
 	$self->{ua} = LWP::UserAgent->new(
 		requests_redirectable => [ 'POST', 'GET', 'HEAD' ],
@@ -47,6 +46,7 @@ sub new {
 		$self->{ua}->env_proxy();
 	}
 
+	bless $self, $class;
 	return $self;
 }
 

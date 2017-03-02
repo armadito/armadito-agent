@@ -12,8 +12,6 @@ sub run {
 	if ( $self->{use_glpiclient} ) {
 		$self->initGLPIClient();
 	}
-
-	return $self;
 }
 
 sub initGLPIClient {
@@ -61,8 +59,6 @@ sub _handleError {
 	$self->{logger}->info( "Error Response : " . $response->content() );
 	my $obj = from_json( $response->content(), { utf8 => 1 } );
 	$self->{logger}->error( Dumper($obj) );
-
-	return $self;
 }
 
 1;

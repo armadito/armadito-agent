@@ -44,8 +44,6 @@ sub run {
 		$self->_handleError($response);
 		$self->{logger}->info("Enrollment failed...");
 	}
-
-	return $self;
 }
 
 sub _handleError {
@@ -56,7 +54,6 @@ sub _handleError {
 		my $obj = from_json( $response->content(), { utf8 => 1 } );
 		$self->{logger}->error( $obj->{message} );
 	}
-	return $self;
 }
 
 sub _handleResponse {
@@ -67,8 +64,6 @@ sub _handleResponse {
 	my $jobj = from_json( $response->content(), { utf8 => 1 } );
 	$self->_updateStorage($jobj);
 	$self->_rmEnrollmentKey();
-
-	return $self;
 }
 
 sub _updateStorage {

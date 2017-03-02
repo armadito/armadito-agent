@@ -10,8 +10,6 @@ sub run {
 	$self->SUPER::run(%params);
 
 	# TODO : Parse::Syslog or Win32::Eventlog
-
-	return $self;
 }
 
 1;

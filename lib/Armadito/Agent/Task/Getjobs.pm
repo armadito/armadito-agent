@@ -73,8 +73,6 @@ sub run {
 		$self->_handleError($response);
 		$self->{logger}->info("Getjobs failed...");
 	}
-
-	return $self;
 }
 
 1;

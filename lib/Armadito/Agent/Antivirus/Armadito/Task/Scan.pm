@@ -54,8 +54,6 @@ sub run {
 
 	$self->sendScanResults();
 	$self->sendScanAlerts();
-
-	return $self;
 }
 
 1;
