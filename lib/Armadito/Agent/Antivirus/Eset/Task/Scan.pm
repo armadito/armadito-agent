@@ -60,11 +60,16 @@ sub run {
 	$self->SUPER::run(%params);
 
 	$self->_setCmd();
-	$self->execScanCmd( exit_modes => [ 0, 1, 10, 50 ] );
-	$self->_parseScanOutput();
-
-	$self->sendScanResults();
-	$self->sendScanAlerts();
+	$self->execScanCmd();
+    
+    if($self->{cmd_exitval} != 100) {
+       	$self->_parseScanOutput();
+        $self->sendScanResults();
+        $self->sendScanAlerts();
+    }
+    else {
+        die "Eset Scan CLI returned error (code :".$self->{cmd_exitval}.") : ".$self->{output};
+    }
 }
 
 1;

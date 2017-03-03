@@ -50,10 +50,15 @@ sub run {
 
 	$self->_setCmd();
 	$self->execScanCmd();
-	$self->_parseScanOutput();
-
-	$self->sendScanResults();
-	$self->sendScanAlerts();
+    
+    if($self->{cmd_exitval} == 0) {
+    	$self->_parseScanOutput();
+        $self->sendScanResults();
+        $self->sendScanAlerts();
+    }
+    else {
+        die "Armadito Scan CLI returned error : (code :".$self->{cmd_exitval}.") ".$self->{output};
+    }
 }
 
 1;

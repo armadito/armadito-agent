@@ -85,10 +85,18 @@ sub run {
 
 	$self->_setCmd();
 	$self->execScanCmd();
-	$self->_parseScanOutput();
+    
+    if( $self->{cmd_exitval} == 0   ||
+        $self->{cmd_exitval} == 101 ||
+        $self->{cmd_exitval} == 102 ) {
 
-	$self->sendScanResults();
-	$self->sendScanAlerts();
+    	$self->_parseScanOutput();
+        $self->sendScanResults();
+        $self->sendScanAlerts();
+    }
+    else {
+        die "Kaspersky Scan CLI error (code :".$self->{cmd_exitval}.") : ".$self->{output};
+    }
 }
 
 1;
