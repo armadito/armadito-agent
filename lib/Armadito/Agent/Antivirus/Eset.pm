@@ -11,8 +11,9 @@ sub new {
 
 	my $self = $class->SUPER::new(%params);
 
+	$self->{av_class}     = __PACKAGE__;
 	$self->{name}         = "Eset";
-	$self->{scancli_path} = $self->getScanCliPath();
+	$self->{program_path} = $self->getProgramPath();
 	$self->{version}      = $self->getVersion();
 
 	return $self;
@@ -25,14 +26,14 @@ sub getJobj {
 		name         => $self->{name},
 		version      => $self->{version},
 		os_info      => $self->{os_info},
-		scancli_path => $self->{scancli_path}
+		program_path => $self->{program_path}
 	};
 }
 
 sub getVersion {
 	my ($self) = @_;
 
-	my $output = capture( $self->{scancli_path} . " --version" );
+	my $output = capture( $self->{program_path} . "esets_scan --version" );
 	$self->{logger}->info($output);
 
 	if ( $output =~ m/\)\s+([0-9\.]+)$/ms ) {
@@ -40,12 +41,6 @@ sub getVersion {
 	}
 
 	return "unknown";
-}
-
-sub getScanCliPath {
-	my ($self) = @_;
-
-	return "/opt/eset/esets/sbin/esets_scan";
 }
 
 1;

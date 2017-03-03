@@ -30,6 +30,12 @@ sub getSystemLogs {
 	return $selected_logs;
 }
 
+sub getProgramPath {
+	my ($self) = @_;
+
+	return "/opt/eset/esets/sbin/";
+}
+
 1;
 
 __END__
