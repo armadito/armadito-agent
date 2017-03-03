@@ -25,7 +25,7 @@ sub new {
 	$self->{jobj}->{task} = $task;
 	$self->{job}          = $params{job};
 	$self->_validateScanObj( $self->{job}->{obj} );
-    $self->{cmd_exitval} = -999;
+	$self->{cmd_exitval} = -999;
 
 	return $self;
 }
@@ -80,14 +80,14 @@ sub sendScanAlerts {
 }
 
 sub execScanCmd {
-	my ( $self ) = @_;
+	my ($self) = @_;
 
 	$self->{start_time} = time;
 	$self->{output}     = capture( EXIT_ANY, $self->{cmdline} );
 	$self->{end_time}   = time;
 
 	$self->{logger}->debug2( $self->{output} );
-    $self->{cmd_exitval} = $EXITVAL;
+	$self->{cmd_exitval} = $EXITVAL;
 }
 
 sub setResults {

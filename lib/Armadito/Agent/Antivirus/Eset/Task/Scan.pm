@@ -61,15 +61,15 @@ sub run {
 
 	$self->_setCmd();
 	$self->execScanCmd();
-    
-    if($self->{cmd_exitval} != 100) {
-       	$self->_parseScanOutput();
-        $self->sendScanResults();
-        $self->sendScanAlerts();
-    }
-    else {
-        die "Eset Scan CLI returned error (code :".$self->{cmd_exitval}.") : ".$self->{output};
-    }
+
+	if ( $self->{cmd_exitval} != 100 ) {
+		$self->_parseScanOutput();
+		$self->sendScanResults();
+		$self->sendScanAlerts();
+	}
+	else {
+		die "Eset Scan CLI returned error (code :" . $self->{cmd_exitval} . ") : " . $self->{output};
+	}
 }
 
 1;
