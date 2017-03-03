@@ -14,7 +14,6 @@ sub new {
 	$self->{av_class}     = __PACKAGE__;
 	$self->{name}         = "Kaspersky";
 	$self->{program_path} = $self->getProgramPath();
-	$self->{scancli_path} = $self->{program_path} . "\\avp.com";
 	$self->{version}      = $self->getVersion();
 
 	return $self;
@@ -27,7 +26,7 @@ sub getJobj {
 		name         => $self->{name},
 		version      => $self->{version},
 		os_info      => $self->{os_info},
-		scancli_path => $self->{scancli_path}
+		program_path => $self->{program_path}
 	};
 }
 

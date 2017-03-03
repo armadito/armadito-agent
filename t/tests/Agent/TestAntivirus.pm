@@ -11,7 +11,7 @@ sub new {
 	my $antivirus = Armadito::Agent::Antivirus->new();
 	$antivirus->{name}         = "TestAV";
 	$antivirus->{version}      = "1.0.1";
-	$antivirus->{scancli_path} = "/usr/bin/avtest-scan-cli";
+	$antivirus->{program_path} = "/usr/bin/";
 
 	my $self = { antivirus => $antivirus };
 

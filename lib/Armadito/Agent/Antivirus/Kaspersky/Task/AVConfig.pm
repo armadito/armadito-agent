@@ -26,7 +26,7 @@ sub run {
 sub _exportSettings {
 	my ( $self, $export_path ) = @_;
 
-	my $bin_path = $self->{agent}->{antivirus}->{scancli_path};
+	my $bin_path = $self->{agent}->{antivirus}->{program_path} . "avp.com";
 
 	my $cmdline = "\"" . $bin_path . "\" EXPORT \"" . $export_path . "\"";
 	my $output = capture( EXIT_ANY, $cmdline );

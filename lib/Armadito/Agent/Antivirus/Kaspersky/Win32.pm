@@ -23,7 +23,7 @@ sub getProgramPath {
 	my $install_path = $self->getInstallPath();
 
 	if ( $self->_isProgramInDir($install_path) ) {
-		return $self->{program_path};
+		return $self->{program_path} . "\\";
 	}
 
 	return "";

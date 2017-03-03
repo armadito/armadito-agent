@@ -71,7 +71,7 @@ sub LocalToTimestamp {
 sub _setCmd {
 	my ($self) = @_;
 
-	my $bin_path     = $self->{agent}->{antivirus}->{scancli_path};
+	my $bin_path     = $self->{agent}->{antivirus}->{program_path} . "avp.com";
 	my $scan_path    = $self->{job}->{obj}->{scan_path};
 	my $scan_options = $self->{job}->{obj}->{scan_options};
 
