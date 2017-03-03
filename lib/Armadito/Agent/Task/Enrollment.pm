@@ -50,6 +50,7 @@ sub _handleError {
 	my ( $self, $response ) = @_;
 
 	$self->{logger}->error( "Error Response : " . $response->content() . "\n" );
+
 	if ( $response->content() =~ /^\s*\{/ ) {
 		my $obj = from_json( $response->content(), { utf8 => 1 } );
 		$self->{logger}->error( $obj->{message} );
@@ -59,7 +60,7 @@ sub _handleError {
 sub _handleResponse {
 	my ( $self, $response ) = @_;
 
-	$self->{logger}->info( $response->content() );
+	$self->{logger}->debug( $response->content() );
 
 	my $jobj = from_json( $response->content(), { utf8 => 1 } );
 	$self->_updateStorage($jobj);
