@@ -76,6 +76,7 @@ sub _runJob {
 	my ( $self, $job ) = @_;
 	my $config     = ();
 	my $start_time = time;
+	my $error      = "";
 
 	try {
 		my $antivirus = $self->{jobj}->{task}->{antivirus}->{name};
@@ -91,21 +92,27 @@ sub _runJob {
 		$taskclass->run();
 	}
 	catch {
-		$self->{logger}->error($_);
-		$self->{jobj}->{task}->{obj} = {
-			code       => 1,
-			message    => encode_base64($_),
-			job_id     => $job->{job_id},
-			start_time => $start_time,
-			end_time   => time
-		};
-
-		return;
+		$error = $_ if defined($_);
 	};
 
+	$self->_setJobStatusResponse( $job, $error, $start_time );
+}
+
+sub _setJobStatusResponse {
+	my ( $self, $job, $error, $start_time ) = @_;
+
+	my $code    = 0;
+	my $message = "runJob successful";
+
+	if ( $error ne "" ) {
+		$code    = 1;
+		$message = encode_base64($error);
+		$self->{logger}->error($error);
+	}
+
 	$self->{jobj}->{task}->{obj} = {
-		code       => 0,
-		message    => "runJob successful",
+		code       => $code,
+		message    => $message,
 		job_id     => $job->{job_id},
 		start_time => $start_time,
 		end_time   => time
@@ -116,6 +123,7 @@ sub _runJobs {
 	my ($self) = @_;
 
 	foreach my $job ( @{ $self->{jobs} } ) {
+		$self->{logger}->debug( "Run job " . $job->{job_id} );
 		$self->_runJob($job);
 		$self->_sendStatus();
 		$self->_rmJobFromStorage( $job->{job_id} );
@@ -126,6 +134,8 @@ sub _sendStatus {
 	my ($self) = @_;
 
 	my $json_text = to_json( $self->{jobj} );
+
+	$self->{logger}->debug2($json_text);
 
 	my $response = $self->{glpi_client}->sendRequest(
 		url     => $self->{agent}->{config}->{server}[0] . "/api/jobs",
