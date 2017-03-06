@@ -14,7 +14,7 @@ sub _getDatabasesInfo {
 	$parser->addPattern( 'global_update_timestamp', 'LastUpdate=(\d+)' );
 	$parser->addPattern( 'last_update_attempt',     'LastUpdateAttempt=(\d+)' );
 
-	my $data_filepath = "/var/opt/eset/esets/lib/data/data.txt";
+	my $data_filepath = $self->{agent}->{antivirus}->getDataPath() . "data.txt";
 	my $data = readFile( filepath => $data_filepath );
 
 	$parser->run( $data, '\n' );

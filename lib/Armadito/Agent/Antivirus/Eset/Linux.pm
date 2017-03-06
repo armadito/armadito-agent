@@ -36,6 +36,12 @@ sub getProgramPath {
 	return "/opt/eset/esets/sbin/";
 }
 
+sub getDataPath {
+	my ($self) = @_;
+
+	return "/var/opt/eset/esets/lib/data/";
+}
+
 1;
 
 __END__
