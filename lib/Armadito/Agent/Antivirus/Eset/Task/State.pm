@@ -26,9 +26,12 @@ sub run {
 
 	$self->SUPER::run(%params);
 
-	my $dbinfo = $self->_getDatabasesInfo();
+	my $jobj = {
+		dbinfo    => $self->_getDatabasesInfo(),
+		avdetails => []
+	};
 
-	$self->_sendToGLPI($dbinfo);
+	$self->_sendToGLPI($jobj);
 }
 
 1;
