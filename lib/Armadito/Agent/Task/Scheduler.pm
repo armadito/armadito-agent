@@ -19,8 +19,8 @@ sub new {
 	};
 
 	$self->{scheduler} = {
-		name => $self->{agent}->{config}->{scheduler},
-		conf => {}
+		name        => $self->{agent}->{config}->{scheduler},
+		confdetails => []
 	};
 
 	$self->{jobj}->{task} = $task;
@@ -29,9 +29,9 @@ sub new {
 }
 
 sub sendSchedulerInfos {
-	my ( $self, $schedulerinfos ) = @_;
+	my ($self) = @_;
 
-	$self->{jobj}->{task}->{obj} = $schedulerinfos;
+	$self->{jobj}->{task}->{obj} = $self->{scheduler};
 	my $json_text = to_json( $self->{jobj} );
 
 	my $response = $self->{glpi_client}->sendRequest(

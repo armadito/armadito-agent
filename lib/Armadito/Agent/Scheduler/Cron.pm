@@ -13,7 +13,7 @@ use Data::Dumper;
 sub _loadConf {
 	my ( $self, %params ) = @_;
 
-	$self->{config} = $self->_parseConf( $self->_getConfPath() );
+	$self->{conf} = $self->_parseConf( $self->_getConfPath() );
 }
 
 sub _parseConf {
@@ -72,7 +72,7 @@ sub _updateCronTab {
 	$content .= "# last modification by armadito-agent : " . nowToISO8601('Local') . "\n\n";
 	$content .= "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n\n";
 
-	foreach ( @{ $self->{config}->{tasks} } ) {
+	foreach ( @{ $self->{conf}->{tasks} } ) {
 		$content .= $self->_addCronTask($_);
 	}
 
@@ -88,20 +88,47 @@ sub _addCronTask {
 
 	return
 		  $task->{freq} . "\t"
-		. $self->{config}->{user}[0] . "\t"
+		. $self->{conf}->{user}[0] . "\t"
 		. abs_path($0)
 		. " -t \""
 		. $task->{name} . "\" "
 		. $task->{args} . " " . ">>"
-		. $self->{config}->{logfile}[0] . ' 2>&1' . "\n";
+		. $self->{conf}->{logfile}[0] . ' 2>&1' . "\n";
+}
+
+sub _setSchedulerInfos {
+	my ($self) = @_;
+
+	$self->_addConfDetail( "scheduler:user",    $self->{conf}->{user}[0] );
+	$self->_addConfDetail( "scheduler:logfile", $self->{conf}->{logfile}[0] );
+
+	foreach ( @{ $self->{conf}->{tasks} } ) {
+		$self->_addConfDetail( "scheduler:task:" . $_->{name} . ":freq", $_->{freq} );
+		$self->_addConfDetail( "scheduler:task:" . $_->{name} . ":args", $_->{args} );
+	}
+}
+
+sub _addConfDetail {
+	my ( $self, $attr, $value ) = @_;
+
+	my $entry = {
+		attr  => $attr,
+		value => $value
+	};
+
+	push( @{ $self->{scheduler}->{confdetails} }, $entry );
 }
 
 sub run {
 	my ( $self, %params ) = @_;
 
 	$self->SUPER::run(%params);
+
 	$self->_loadConf();
 	$self->_updateCronTab();
+
+	$self->_setSchedulerInfos();
+	$self->sendSchedulerInfos();
 }
 
 1;
