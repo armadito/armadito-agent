@@ -5,6 +5,7 @@ use warnings;
 use Armadito::Agent;
 use Armadito::Agent::HTTP::Client::ArmaditoGLPI;
 use Armadito::Agent::Tools::Inventory qw(getUUID);
+use JSON;
 
 sub run {
 	my ( $self, %params ) = @_;
