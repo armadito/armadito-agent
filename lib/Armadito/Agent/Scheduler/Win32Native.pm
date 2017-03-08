@@ -13,7 +13,7 @@ use Data::Dumper;
 sub _loadConf {
 	my ( $self, %params ) = @_;
 
-	$self->{config} = $self->_parseConf( $self->_getConfPath() );
+	$self->{conf} = $self->_parseConf( $self->_getConfPath() );
 }
 
 sub _parseConf {
@@ -80,7 +80,7 @@ sub _createScheduledTask {
 sub _createAllTasks {
 	my ($self) = @_;
 
-	foreach ( @{ $self->{config}->{tasks} } ) {
+	foreach ( @{ $self->{conf}->{tasks} } ) {
 		$self->_createScheduledTask($_);
 	}
 }
@@ -129,13 +129,22 @@ sub _deleteExistingTasks {
 	}
 }
 
+sub _setSchedulerInfos {
+	my ($self) = @_;
+
+}
+
 sub run {
 	my ( $self, %params ) = @_;
 
 	$self->SUPER::run(%params);
+
 	$self->_loadConf();
 	$self->_deleteExistingTasks();
 	$self->_createAllTasks();
+
+	$self->_setSchedulerInfos();
+	$self->sendSchedulerInfos();
 }
 
 1;
