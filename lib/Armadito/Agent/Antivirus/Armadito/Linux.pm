@@ -3,6 +3,7 @@ package Armadito::Agent::Antivirus::Armadito::Linux;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
+use Parse::Syslog;
 
 sub new {
 	my ( $class, %params ) = @_;
@@ -11,6 +12,22 @@ sub new {
 
 	bless $self, $class;
 	return $self;
+}
+
+sub getSystemLogs {
+	my ($self) = @_;
+
+	my $selected_logs = "";
+	my $tsnow         = time;
+	my $tssince       = $tsnow - 3600;                           # last hour
+	my $parser        = Parse::Syslog->new('/var/log/syslog');
+
+	while ( my $sl = $parser->next ) {
+		$selected_logs .= "timestamp=\"" . $sl->{timestamp} . "\", " . $sl->{text} . "\n"
+			if ( $sl->{program} eq "armadito-journal" && $sl->{timestamp} >= $tssince );
+	}
+
+	return $selected_logs;
 }
 
 sub getProgramPath {
@@ -60,3 +77,7 @@ Return the path where Armadito command line interface binaries are installed.
 =head2 getConfPath ( $self )
 
 Return the path where Armadito configuration files are.
+
+=head2 getSystemLogs ( $self )
+
+Get Armadito AV alert logs in Syslog.
