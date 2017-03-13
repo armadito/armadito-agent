@@ -56,7 +56,7 @@ Armadito::Agent::Antivirus::Armadito::Task::State - State Task for Armadito Anti
 
 =head1 DESCRIPTION
 
-This task inherits from L<Armadito::Agent::Task:State>. Ask for Armadito Antivirus state using AV's API REST protocol and then send it in a json formatted POST request to Armadito plugin for GLPI.
+This task inherits from L<Armadito::Agent::Task:State>. Get databases information with armadito-info binary.
 
 =head1 FUNCTIONS
 

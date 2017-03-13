@@ -71,7 +71,7 @@ Armadito::Agent::Antivirus::Armadito::Task::Scan - Scan Task for Armadito Antivi
 
 =head1 DESCRIPTION
 
-This task inherits from L<Armadito::Agent::Task:Scan>. Launch an Armadito Antivirus on-demand scan using AV's API REST protocol and then send a brief report in a json formatted POST request to Armadito plugin for GLPI.
+This task inherits from L<Armadito::Agent::Task:Scan>. Launch an Armadito Antivirus on-demand scan using AV's command line interface and then send a brief report in a json formatted POST request to Armadito plugin for GLPI.
 
 =head1 FUNCTIONS
 

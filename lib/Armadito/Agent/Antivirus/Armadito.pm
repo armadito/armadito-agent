@@ -59,10 +59,10 @@ Instanciate Armadito module. Set task's default logger.
 
 =head2 getJobj ( $self )
 
-Return unblessed object for json ecnapsulation.
+Return unblessed object for json encapsulation.
 
 =head2 getVersion ( $self )
 
-Return Antivirus Version by using RESTful API /version.
+Return antivirus' version
 
 
