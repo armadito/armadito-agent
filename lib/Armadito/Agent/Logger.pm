@@ -26,13 +26,24 @@ our @EXPORT_OK = qw/LOG_DEBUG2 LOG_DEBUG LOG_INFO LOG_WARNING LOG_ERROR LOG_NONE
 
 sub new {
 	my ( $class, %params ) = @_;
+
 	my $self = { verbosity => defined $params{verbosity} ? $params{verbosity} : $LOG_INFO };
 	bless $self, $class;
+
+	$self->_setBackends();
+	$self->debug($Armadito::Agent::VERSION_STRING);
+
+	return $self;
+}
+
+sub _setBackends {
+	my ( $self, %params ) = @_;
 
 	my %backends;
 	foreach ( $params{backends} ? @{ $params{backends} } : 'Stderr' ) {
 		my $backend = ucfirst($_);
 		next if $backends{$backend};
+
 		my $package = "Armadito::Agent::Logger::$backend";
 		$package->require();
 		if ($EVAL_ERROR) {
@@ -41,13 +52,10 @@ sub new {
 		}
 
 		$backends{$backend} = 1;
-		push( @{ $self->{backends} }, $package->new(%params) );
 
+		push( @{ $self->{backends} }, $package->new(%params) );
 		$self->debug("Logger backend $backend initialised");
 	}
-
-	$self->debug($Armadito::Agent::VERSION_STRING);
-	return $self;
 }
 
 sub _log {
